@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "ProceduralMeshComponent.h"
 #include "CubeFEM.generated.h"
 
 UCLASS()
@@ -18,7 +19,8 @@ public:
 	virtual void BeginPlay() override;
 
 	//virtual void EndPlay() override;
-
+	void PostActorCreated() override;
+	void PostLoad() override;
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
@@ -26,6 +28,8 @@ public:
 	
 	float RunningTime;
 	float resMethod;
+
+	void CreateTriangle();
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "My DLL Library")
@@ -39,4 +43,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "My DLL Library")
 		static void freeDLL();
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	UProceduralMeshComponent * mesh;
 };
