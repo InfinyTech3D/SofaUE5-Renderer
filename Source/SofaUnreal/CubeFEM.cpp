@@ -96,16 +96,17 @@ void ACubeFEM::BeginPlay()
 	bool res = importDLL("SofaDLLs", "SofaAdvancePhysicsAPI.dll");
 	//bool res = importDLL("SofaDLLs", "SofaPhysicsAPI.dll");
 	//res = importDLL("SofaDLLs", "SofaGuiMain.dll");
-	if (res)
+	if (res) {
 		res = importMethodFooPluginFunction();
+
+		if (res)
+			resMethod = FooPluginFunctionFromDLL();
+		else
+			resMethod = -20.0f;
+	}
 	else
 		resMethod = -10.0f;
-
-	if (res)
-		resMethod = FooPluginFunctionFromDLL();
-	else
-		resMethod = -20.0f;
-
+	
 	Super::BeginPlay();	
 
 }

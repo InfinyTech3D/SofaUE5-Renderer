@@ -315,7 +315,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development_Editor|x64'">
     <IncludePath />
     <ReferencePath />
-    <LibraryPath />
+    <LibraryPath>C:\Users\Belcurves\projects\Unreal Projects\SofaUnreal\Plugins\SofaDLLs;$(LibraryPath)</LibraryPath>
     <LibraryWPath />
     <SourcePath />
     <ExcludePath />
