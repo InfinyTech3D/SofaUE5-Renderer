@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<None Include="..\..\SofaUnreal.uproject" />
+		<Filter Include="Source">
+			<UniqueIdentifier>{CCD23EA0-80C0-48FD-87D5-3E065805139D}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\SofaUnreal.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<None Include="..\..\Source\SofaUnrealEditor.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<Filter Include="Config">
+			<UniqueIdentifier>{634CAD02-0743-4EF4-9B5F-E4039F404ADC}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Config\DefaultEditor.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEngine.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultGame.ini">
+			<Filter>Config</Filter>
+		</None >
+		<Filter Include="Source\SofaUnreal">
+			<UniqueIdentifier>{53F86E49-20CF-4262-96E5-B8AF31E5A228}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\SofaUnreal\SofaUnreal.Build.cs">
+			<Filter>Source\SofaUnreal</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\SofaUnreal\SofaUnreal.cpp">
+			<Filter>Source\SofaUnreal</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\SofaUnreal\SofaUnreal.h">
+			<Filter>Source\SofaUnreal</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\SofaUnreal\SofaUnrealGameMode.cpp">
+			<Filter>Source\SofaUnreal</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\SofaUnreal\SofaUnrealGameMode.h">
+			<Filter>Source\SofaUnreal</Filter>
+		</ClInclude >
+	</ItemGroup>
+</Project>

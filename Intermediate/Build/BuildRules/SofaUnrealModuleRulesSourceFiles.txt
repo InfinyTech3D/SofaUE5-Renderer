@@ -1,0 +1,3 @@
+C:\Users\Belcurves\projects\Unreal Projects\SofaUnreal\Source\SofaUnreal\SofaUnreal.Build.cs
+C:\Users\Belcurves\projects\Unreal Projects\SofaUnreal\Source\SofaUnreal.Target.cs
+C:\Users\Belcurves\projects\Unreal Projects\SofaUnreal\Source\SofaUnrealEditor.Target.cs
