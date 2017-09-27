@@ -4,6 +4,7 @@
 
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
 #include "SofaVisualMesh.generated.h"
 
 UCLASS()
@@ -21,6 +22,8 @@ public:
 	//virtual void EndPlay() override;
 	void PostActorCreated() override;
 	void PostLoad() override;
+
+	void setSofaImpl(Sofa3DObject * impl);
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
@@ -35,5 +38,6 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere)
 		UProceduralMeshComponent * mesh;
-	
+
+	Sofa3DObject * m_impl;
 };

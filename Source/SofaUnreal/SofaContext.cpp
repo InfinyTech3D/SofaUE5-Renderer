@@ -2,6 +2,7 @@
 
 #include "SofaUnreal.h"
 #include "SofaContext.h"
+#include "SofaVisualMesh.h"
 
 /*
 void *v_sofaDLLHandle;
@@ -81,10 +82,7 @@ void ASofaContext::BeginPlay()
 		if (resScene)
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "scene ok");
 		else
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "scene failed");	
-
-		int nbr = m_sofaAPI->getNumberObjects();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(nbr));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "scene failed");			
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, filePath.FilePath);
@@ -92,6 +90,36 @@ void ASofaContext::BeginPlay()
 	toto = m_sofaAPI->getTestName().c_str();
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, toto);
 
+	// Create the actor of the scene:
+	int nbr = m_sofaAPI->getNumberObjects();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(nbr));
+	
+	for (int i = 0; i < nbr; i++)
+	{
+		FString type = m_sofaAPI->get3DObjectType(i).c_str();
+		FString name = m_sofaAPI->get3DObjectName(i).c_str();
+
+		if (!type.Compare("SofaVisual3DObject"))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, type);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, name);
+
+			UWorld* const World = GetWorld();
+			if (World == NULL)
+				continue;
+
+			ASofaVisualMesh* visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
+			visuMesh->SetActorLabel(name);
+
+			Sofa3DObject * impl = m_sofaAPI->get3DObject(m_sofaAPI->get3DObjectName(i));
+			visuMesh->setSofaImpl(impl);
+		}
+	}
+	
+	/*
+	
+	
+	*/
 	// Import the SofaPAPI dll
 	//bool res = importDLL("SofaDLLs", "SofaAdvancePhysicsAPI.dll");
 
@@ -99,7 +127,18 @@ void ASofaContext::BeginPlay()
 
 	//}
 }
-
+/*
+void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (m_sofaAPI)
+	{
+	//	m_sofaAPI->stop();
+		delete m_sofaAPI;
+		m_sofaAPI = NULL;
+	}
+	Super::EndPlay(EndPlayReason);
+}
+*/
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )
 {

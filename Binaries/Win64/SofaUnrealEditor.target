@@ -2,7 +2,7 @@
 	"TargetName" : "SofaUnrealEditor",
 	"Platform" : "Win64",
 	"Configuration" : "Development",
-	"BuildId" : "39225025-beb9-4022-b907-74a5192bb327",
+	"BuildId" : "2c2f4d66-b19f-49c6-8ff2-7c94901590e0",
 	"Version" : 
 	{
 		"MajorVersion" : 4,
@@ -15,15 +15,15 @@
 	"BuildProducts" :
 	[
 		{
-			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-SofaUnreal-8025.dll",
+			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-SofaUnreal-2901.dll",
 			"Type" : "DynamicLibrary"
 		},
 		{
-			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-SofaUnreal-8025.pdb",
+			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-SofaUnreal-2901.pdb",
 			"Type" : "SymbolFile"
 		},
 		{
-			"Path" : "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-SofaUnreal-8025.lib",
+			"Path" : "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-SofaUnreal-2901.lib",
 			"Type" : "ImportLibrary"
 		}
 	],

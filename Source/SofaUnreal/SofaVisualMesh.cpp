@@ -6,7 +6,9 @@
 
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
+	: m_impl(NULL)
 {
+
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	m_scaleOsci = 20.0f;
@@ -15,10 +17,22 @@ ASofaVisualMesh::ASofaVisualMesh()
 	RootComponent = mesh;
 }
 
+void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
+{
+	m_impl = impl;
+}
+
 // Called when the game starts or when spawned
 void ASofaVisualMesh::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (m_impl != NULL)
+	{
+		FString type2 = m_impl->getObjectType().c_str();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
+	}
+
 	
 }
 
