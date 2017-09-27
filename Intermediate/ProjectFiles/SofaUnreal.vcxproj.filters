@@ -58,9 +58,15 @@
     <ClInclude Include="..\..\Source\SofaUnreal\SofaContext.h">
       <Filter>Source\SofaUnreal</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\SofaUnreal\SofaVisualMesh.h">
+      <Filter>Source\SofaUnreal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\SofaUnreal\SofaContext.cpp">
+      <Filter>Source\SofaUnreal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\SofaUnreal\SofaVisualMesh.cpp">
       <Filter>Source\SofaUnreal</Filter>
     </ClCompile>
   </ItemGroup>

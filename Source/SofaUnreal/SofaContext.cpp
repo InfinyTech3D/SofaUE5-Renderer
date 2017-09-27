@@ -76,13 +76,15 @@ void ASofaContext::BeginPlay()
 		const char* scenePath = "C:/Users/Belcurves/projects/Unreal Projects/SofaUnreal/Content/SofaScenes/TriangleSurfaceCutting.scn"; //TCHAR_TO_ANSI(*filePath.FilePath);
 
 		
-
-		bool resScene = false; //m_sofaAPI->load(scenePath);
+		bool resScene = m_sofaAPI->load(scenePath);
 		
 		if (resScene)
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "scene ok");
 		else
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "scene failed");	
+
+		int nbr = m_sofaAPI->getNumberObjects();
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::FromInt(nbr));
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, filePath.FilePath);

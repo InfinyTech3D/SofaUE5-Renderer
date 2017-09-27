@@ -406,6 +406,8 @@
     <NMakeOutput>..\..\Binaries\HTML5\SofaUnreal-HTML5-Shipping.exe</NMakeOutput>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\SofaUnreal\SofaVisualMesh.cpp" />
+    <ClInclude Include="..\..\Source\SofaUnreal\SofaVisualMesh.h" />
     <None Include="..\..\SofaUnreal.uproject" />
     <None Include="..\..\Source\SofaUnreal.Target.cs" />
     <None Include="..\..\Source\SofaUnrealEditor.Target.cs" />

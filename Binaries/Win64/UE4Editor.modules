@@ -1,8 +1,8 @@
 {
 	"Changelist" : 3039270,
-	"BuildId" : "21859808-03b6-4a14-b45b-e3f704d1ea95",
+	"BuildId" : "39225025-beb9-4022-b907-74a5192bb327",
 	"Modules" : 
 	{
-		"SofaUnreal" : "UE4Editor-SofaUnreal-2743.dll"
+		"SofaUnreal" : "UE4Editor-SofaUnreal-8025.dll"
 	}
 }
