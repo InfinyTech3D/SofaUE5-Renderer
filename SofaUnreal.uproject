@@ -7,11 +7,10 @@
 		{
 			"Name": "SofaUnreal",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
 		}
-	],
-    "AdditionalDependencies": [
-	    "Engine",
-        "ProceduralMeshComponent"
-    ]
+	]
 }
