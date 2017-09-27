@@ -29,6 +29,10 @@ public:
 	float RunningTime;
 	float resMethod;
 
+	//How long, in seconds, the countdown will run
+	UPROPERTY(EditAnywhere)
+	float m_scaleOsci;
+
 	void CreateTriangle();
 
 public:

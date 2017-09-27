@@ -88,6 +88,7 @@ ACubeFEM::ACubeFEM()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	resMethod = 10.f;
+	m_scaleOsci = 20.0f;
 
 	mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	RootComponent = mesh;
@@ -198,7 +199,7 @@ void ACubeFEM::Tick( float DeltaTime )
 
 	FVector NewLocation = GetActorLocation();
 	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
-	NewLocation.Z += DeltaHeight * 20.0f;       //Scale our height by a factor of 20
+	NewLocation.Z += DeltaHeight * m_scaleOsci;       //Scale our height by a factor of 20
 	RunningTime += DeltaTime;
 	SetActorLocation(NewLocation);		
 	
