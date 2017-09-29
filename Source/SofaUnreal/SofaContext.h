@@ -19,7 +19,9 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void BeginDestroy() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
@@ -32,6 +34,7 @@ private:
 	int32 m_dllLoadStatus;
 
 	FString m_apiName;
+	bool m_isInit;
 
 	SofaAdvancePhysicsAPI* m_sofaAPI;
 };
