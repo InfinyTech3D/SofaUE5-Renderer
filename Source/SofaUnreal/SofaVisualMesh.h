@@ -7,6 +7,8 @@
 #include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
 #include "SofaVisualMesh.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
+
 UCLASS()
 class SOFAUNREAL_API ASofaVisualMesh : public AActor
 {

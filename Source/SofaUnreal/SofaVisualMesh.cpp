@@ -20,81 +20,93 @@ ASofaVisualMesh::ASofaVisualMesh()
 void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
 {
 	m_impl = impl;
+	CreateTriangle();
 }
 
 // Called when the game starts or when spawned
 void ASofaVisualMesh::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (m_impl != NULL)
-	{
-		FString type2 = m_impl->getObjectType().c_str();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
-	}
-
-	
 }
 
 // This is called when actor is spawned (at runtime or when you drop it into the world in editor)
 void ASofaVisualMesh::PostActorCreated()
 {
 	Super::PostActorCreated();
-	CreateTriangle();
+	//CreateTriangle();
 }
 
 // This is called when actor is already in level and map is opened
 void ASofaVisualMesh::PostLoad()
 {
 	Super::PostLoad();
-	CreateTriangle();
+	//CreateTriangle();
 }
 
 // Called every frame
 void ASofaVisualMesh::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
+	/*
 	FVector NewLocation = GetActorLocation();
 	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
 	NewLocation.Z += DeltaHeight * m_scaleOsci;       //Scale our height by a factor of 20
 	RunningTime += DeltaTime;
-	SetActorLocation(NewLocation);
+	SetActorLocation(NewLocation);*/
 }
-
+DEFINE_LOG_CATEGORY(YourLog);
 void ASofaVisualMesh::CreateTriangle()
 {
-	TArray<FVector> vertices;
-	vertices.Add(FVector(0, 0, 0));
-	vertices.Add(FVector(0, 100, 0));
-	vertices.Add(FVector(0, 0, 100));
+	if (m_impl == NULL)
+		return;
 
+	FString type2 = m_impl->getObjectType().c_str();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
+
+	
+	// Get topology elements numbers
+	int nbrV = m_impl->getNbVertices();
+	int nbrTri = m_impl->getNbTriangles();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrTri));
+
+	float* sofaVertices = new float[nbrV*3];
+	float* sofaNormals = new float[nbrV*3];
+	float* sofaTexCoords = new float[nbrV * 2];
+	int* sofaTriangles = new int[nbrTri*3];
+
+	// Get the different buffers
+	m_impl->getVPositions(sofaVertices);
+	m_impl->getVNormals(sofaNormals);
+	m_impl->getTriangles(sofaTriangles);
+	m_impl->getVTexCoords(sofaTexCoords);
+
+	// Convert in Unreal structure
+
+	TArray<FVector> vertices; vertices;
 	TArray<int32> Triangles;
-	Triangles.Add(0);
-	Triangles.Add(1);
-	Triangles.Add(2);
-
 	TArray<FVector> normals;
-	normals.Add(FVector(1, 0, 0));
-	normals.Add(FVector(1, 0, 0));
-	normals.Add(FVector(1, 0, 0));
-
 	TArray<FVector2D> UV0;
-	UV0.Add(FVector2D(0, 0));
-	UV0.Add(FVector2D(10, 0));
-	UV0.Add(FVector2D(0, 10));
-
-
 	TArray<FProcMeshTangent> tangents;
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-	tangents.Add(FProcMeshTangent(0, 1, 0));
-
 	TArray<FLinearColor> vertexColors;
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-	vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
 
+	for (int i = 0; i < nbrV; i++)
+	{
+		vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+		normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
+		
+		UV0.Add(FVector2D(sofaTexCoords[i * 3], sofaTexCoords[i * 3 + 1]));
+		tangents.Add(FProcMeshTangent(0, 1, 0));
+		vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
+	}
+
+	for (int i = 0; i < nbrTri; i++)
+	{
+		Triangles.Add(sofaTriangles[i * 3]);
+		Triangles.Add(sofaTriangles[i * 3 + 1]);
+		Triangles.Add(sofaTriangles[i * 3 + 2]);
+	}
+	
 	mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 
 	// Enable collision data
