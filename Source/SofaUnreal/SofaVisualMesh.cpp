@@ -20,7 +20,8 @@ ASofaVisualMesh::ASofaVisualMesh()
 void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
 {
 	m_impl = impl;
-	CreateTriangle();
+	createMesh();
+	SetActorScale3D(FVector(10.0, 10.0, 10.0));
 }
 
 // Called when the game starts or when spawned
@@ -33,20 +34,24 @@ void ASofaVisualMesh::BeginPlay()
 void ASofaVisualMesh::PostActorCreated()
 {
 	Super::PostActorCreated();
-	//CreateTriangle();
+	//createMesh();
 }
 
 // This is called when actor is already in level and map is opened
 void ASofaVisualMesh::PostLoad()
 {
 	Super::PostLoad();
-	//CreateTriangle();
+	//createMesh();
 }
 
 // Called every frame
 void ASofaVisualMesh::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+
+	updateMesh();
+
+
 	/*
 	FVector NewLocation = GetActorLocation();
 	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
@@ -54,8 +59,34 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 	RunningTime += DeltaTime;
 	SetActorLocation(NewLocation);*/
 }
+
+
+void ASofaVisualMesh::updateMesh()
+{
+	if (m_impl == NULL)
+		return;
+
+	int nbrV = m_impl->getNbVertices();
+	float* sofaVertices = new float[nbrV * 3];
+	float* sofaNormals = new float[nbrV * 3];
+
+	// Get the different buffers
+	m_impl->getVPositions(sofaVertices);
+	m_impl->getVNormals(sofaNormals);
+
+	TArray<FVector> vertices;
+	TArray<FVector> normals;
+	for (int i = 0; i < nbrV; i++)
+	{
+		vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+		normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
+	}
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
+	mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
+}
+
 //DEFINE_LOG_CATEGORY(YourLog);
-void ASofaVisualMesh::CreateTriangle()
+void ASofaVisualMesh::createMesh()
 {
 	if (m_impl == NULL)
 		return;
@@ -83,7 +114,7 @@ void ASofaVisualMesh::CreateTriangle()
 
 	// Convert in Unreal structure
 
-	TArray<FVector> vertices; vertices;
+	TArray<FVector> vertices;
 	TArray<int32> Triangles;
 	TArray<FVector> normals;
 	TArray<FVector2D> UV0;

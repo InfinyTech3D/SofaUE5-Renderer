@@ -34,7 +34,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		float m_scaleOsci;
 
-	void CreateTriangle();
+	void createMesh();
+
+	void updateMesh();
+
 	float RunningTime;
 
 private:
