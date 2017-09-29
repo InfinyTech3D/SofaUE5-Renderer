@@ -58,6 +58,7 @@ public class SofaUnreal : ModuleRules
             */
 
             PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, "SofaAdvancePhysicsAPI.lib"));
+            PublicAdditionalLibraries.Add(Path.Combine(LibrariesPath, "SofaPhysicsAPI.lib"));
         }
 
         if (isLibrarySupported)
