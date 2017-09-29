@@ -40,6 +40,9 @@ public:
 
 	float RunningTime;
 
+	bool isStatic;
+
+
 private:
 	UPROPERTY(VisibleAnywhere)
 		UProceduralMeshComponent * mesh;

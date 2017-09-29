@@ -133,7 +133,7 @@ void ASofaContext::BeginPlay()
 		//FString type = m_sofaAPI->get3DObjectType(i).c_str();
 		//FString name = m_sofaAPI->get3DObjectName(i).c_str();
 
-		if (!FType.Compare("SofaVisual3DObject"))
+		if (FType.Compare("SofaVisual3DObject") == 0)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FType);
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FName);
@@ -146,6 +146,7 @@ void ASofaContext::BeginPlay()
 			//visuMesh->SetActorLabel(name);
 
 			Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name);
+			//visuMesh->isStatic = true;
 			visuMesh->setSofaImpl(impl);
 		}
 	}

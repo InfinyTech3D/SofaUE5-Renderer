@@ -7,6 +7,7 @@
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
 	: m_impl(NULL)
+	, isStatic(false)
 {
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -49,7 +50,8 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	updateMesh();
+	if (!isStatic)
+		updateMesh();
 
 
 	/*
