@@ -54,7 +54,7 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 	RunningTime += DeltaTime;
 	SetActorLocation(NewLocation);*/
 }
-DEFINE_LOG_CATEGORY(YourLog);
+//DEFINE_LOG_CATEGORY(YourLog);
 void ASofaVisualMesh::CreateTriangle()
 {
 	if (m_impl == NULL)

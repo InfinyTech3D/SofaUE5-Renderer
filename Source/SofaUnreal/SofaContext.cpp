@@ -7,6 +7,8 @@
 #include <string>
 #include "SofaAdvancePhysicsAPI/SofaPhysicsBindings.h"
 
+DEFINE_LOG_CATEGORY(YourLog);
+
 /*
 void *v_sofaDLLHandle;
 
@@ -46,9 +48,12 @@ void ASofaContext::freeDLL()
 // Sets default values
 ASofaContext::ASofaContext()
 	: m_dllLoadStatus(0)
+	, Dt(0.02)
+	, Gravity(0, -9.8, 0)
 	, m_apiName("")
 	, m_isInit(false)
 	, m_sofaAPI(NULL)
+
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -93,6 +98,9 @@ void ASofaContext::BeginPlay()
 			
 		m_isInit = true;
 	}
+	this->setDT(Dt);
+	this->setGravity(Gravity);
+
 	m_sofaAPI->start();
 
 	// Create the actor of the scene:
@@ -144,6 +152,23 @@ void ASofaContext::BeginPlay()
 	
 }
 
+void ASofaContext::setDT(float value)
+{
+	if (m_sofaAPI)
+		m_sofaAPI->setTimeStep(value);
+}
+
+void ASofaContext::setGravity(FVector value)
+{
+	if (m_sofaAPI) {
+		double* grav = new double[3];
+		grav[0] = value.X;
+		grav[1] = value.Y;
+		grav[2] = value.Z;
+		m_sofaAPI->setGravity(grav);
+	}		
+}
+
 void ASofaContext::BeginDestroy()
 {	
 	if (m_sofaAPI)
@@ -165,11 +190,21 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
+void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChangedEvent)
+{
+	FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+	FString name = PropertyName.GetPlainNameString();
+	UE_LOG(YourLog, Warning, TEXT("Dt changed?"), Dt);
+	UE_LOG(YourLog, Warning, TEXT("name: "), *name);
+}
+
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	//toto = "Truc2";// FString::SanitizeFloat(resMethod);
-	
+
+	if (m_sofaAPI)
+		m_sofaAPI->step();
+	//toto = "Truc2";// FString::SanitizeFloat(resMethod);	
 }
 
