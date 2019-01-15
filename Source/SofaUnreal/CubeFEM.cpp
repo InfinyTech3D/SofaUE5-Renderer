@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SofaUnreal.h"
 #include "CubeFEM.h"
+#include "SofaUnreal.h"
 
 typedef float(*_FooPluginFunction)(); // Declare a method to store the DLL method getInvertedBool.
 _FooPluginFunction m_FooPluginFunctionDll;
@@ -203,9 +203,10 @@ void ACubeFEM::Tick( float DeltaTime )
     RunningTime += DeltaTime;
     SetActorLocation(NewLocation);
 
-    FString toto = FString::SanitizeFloat(resMethod);
+    //FString toto = FString::SanitizeFloat(resMethod);
 
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, toto);
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, toto);
+    UE_LOG(YourLog, Warning, TEXT("Plugin load res: %d"), resMethod);
 }
 
 

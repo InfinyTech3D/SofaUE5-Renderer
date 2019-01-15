@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SofaUnreal.h"
 #include "SofaContext.h"
+#include "SofaUnreal.h"
 #include "SofaVisualMesh.h"
 #include <vector>
 #include <string>
-#include "SofaAdvancePhysicsAPI/SofaPhysicsBindings.h"
+#include <SofaAdvancePhysicsAPI/SofaPhysicsBindings.h>
+#include <SofaAdvancePhysicsAPI/SofaPhysicsDefines.h>
 
 DEFINE_LOG_CATEGORY(YourLog);
 
@@ -145,7 +146,8 @@ void ASofaContext::BeginPlay()
             ASofaVisualMesh* visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
             //visuMesh->SetActorLabel(name);
 
-            Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name);
+            int res = SAPAPI_SUCCESS;
+            Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name, &res);
             //visuMesh->isStatic = true;
             visuMesh->setSofaImpl(impl);
         }

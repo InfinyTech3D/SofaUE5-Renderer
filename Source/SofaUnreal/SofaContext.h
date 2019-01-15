@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
+#include <SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h>
 #include "GameFramework/Actor.h"
 #include "SofaContext.generated.h"
 
