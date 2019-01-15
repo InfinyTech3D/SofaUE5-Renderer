@@ -5,21 +5,10 @@ using System.Collections.Generic;
 
 public class SofaUnrealTarget : TargetRules
 {
-	public SofaUnrealTarget(TargetInfo Target)
+	public SofaUnrealTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-	}
 
-	//
-	// TargetRules interface.
-	//
-
-	public override void SetupBinaries(
-		TargetInfo Target,
-		ref List<UEBuildBinaryConfiguration> OutBuildBinaryConfigurations,
-		ref List<string> OutExtraModuleNames
-		)
-	{
-		OutExtraModuleNames.AddRange( new string[] { "SofaUnreal" } );
+		ExtraModuleNames.AddRange( new string[] { "SofaUnreal" } );
 	}
 }
