@@ -12,40 +12,40 @@
 UCLASS()
 class SOFAUNREAL_API ASofaVisualMesh : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASofaVisualMesh();
+    GENERATED_BODY()
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+public:
+    // Sets default values for this actor's properties
+    ASofaVisualMesh();
 
-	//virtual void EndPlay() override;
-	void PostActorCreated() override;
-	void PostLoad() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
-	void setSofaImpl(Sofa3DObject * impl);
-	
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
+    //virtual void EndPlay() override;
+    void PostActorCreated() override;
+    void PostLoad() override;
 
-	//How long, in seconds, the countdown will run
-	UPROPERTY(EditAnywhere)
-		float m_scaleOsci;
+    void setSofaImpl(Sofa3DObject * impl);
 
-	void createMesh();
+    // Called every frame
+    virtual void Tick( float DeltaSeconds ) override;
 
-	void updateMesh();
+    //How long, in seconds, the countdown will run
+    UPROPERTY(EditAnywhere)
+        float m_scaleOsci;
 
-	float RunningTime;
+    void createMesh();
 
-	bool isStatic;
+    void updateMesh();
+
+    float RunningTime;
+
+    bool isStatic;
 
 
 private:
-	UPROPERTY(VisibleAnywhere)
-		UProceduralMeshComponent * mesh;
+    UPROPERTY(VisibleAnywhere)
+        UProceduralMeshComponent * mesh;
 
-	Sofa3DObject * m_impl;
+    Sofa3DObject * m_impl;
 };

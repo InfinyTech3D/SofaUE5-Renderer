@@ -11,46 +11,46 @@ DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
 UCLASS()
 class SOFAUNREAL_API ASofaContext : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ASofaContext();
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	virtual void BeginDestroy() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
-
-
-	void setDT(float value);
-
-	void setGravity(FVector value);
+    GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-		FFilePath filePath;
+    // Sets default values for this actor's properties
+    ASofaContext();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-		float Dt;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-		FVector Gravity;
+    virtual void BeginDestroy() override;
+
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+    // Called every frame
+    virtual void Tick( float DeltaSeconds ) override;
+
+
+    void setDT(float value);
+
+    void setGravity(FVector value);
+
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        FFilePath filePath;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        float Dt;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        FVector Gravity;
 
 
 
 private:
-	int32 m_dllLoadStatus;
+    int32 m_dllLoadStatus;
 
-	FString m_apiName;
-	bool m_isInit;
+    FString m_apiName;
+    bool m_isInit;
 
-	SofaAdvancePhysicsAPI* m_sofaAPI;
+    SofaAdvancePhysicsAPI* m_sofaAPI;
 };

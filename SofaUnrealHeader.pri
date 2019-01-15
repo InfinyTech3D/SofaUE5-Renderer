@@ -10905,9 +10905,12 @@ HEADERS += \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Public/RuntimeTests.h" \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Public/ShaderComparisonTests.h" \
 	"$$unrealRootPath/Engine/Plugins/Tests/ScreenshotTools/Source/ScreenshotTools/Public/ScreenshotTools.h" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/CubeFEM.h" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/MyActorTest.h" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaContext.h" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaUnreal.h" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaUnrealGameModeBase.h" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaVisualMesh.h" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/mytestClass.h" \
  
 

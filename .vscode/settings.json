@@ -1,5 +1,6 @@
 {
 	"files.exclude": {
+		"/home/epernod/Documents/Unreal Projects/SofaUnreal/.git": true,
 		"/home/epernod/Documents/Unreal Projects/SofaUnreal/.idea": true,
 		"/home/epernod/Documents/Unreal Projects/SofaUnreal/.kdev4": true,
 		"/home/epernod/Documents/Unreal Projects/SofaUnreal/.vscode": true,

@@ -8412,9 +8412,12 @@ SOURCES += \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Private/Shaders/ShaderComparisonTests.cpp" \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Private/Slate/RichTextMarkupProcessingTest.cpp" \
 	"$$unrealRootPath/Engine/Plugins/Tests/ScreenshotTools/Source/ScreenshotTools/Private/ScreenshotTools.cpp" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/CubeFEM.cpp" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/MyActorTest.cpp" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaContext.cpp" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaUnreal.cpp" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaUnrealGameModeBase.cpp" \
+	"$$SofaUnrealRootPath/Source/SofaUnreal/SofaVisualMesh.cpp" \
 	"$$SofaUnrealRootPath/Source/SofaUnreal/mytestClass.cpp" \
  
 
