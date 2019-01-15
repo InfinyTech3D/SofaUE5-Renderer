@@ -1,0 +1,1710 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "SofaUnreal Mac Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Mac Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Mac DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Mac Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Shipping Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Shipping Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Mac Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Shipping Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Test Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Test Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Mac Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Mac Test Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Mac",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal IOS Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal IOS DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal IOS Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Shipping Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Shipping Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal IOS Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Shipping Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Test Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Test Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal IOS Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal IOS Test Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"IOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal HTML5 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal HTML5 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal HTML5 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Shipping Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Shipping Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal HTML5 Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Shipping Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Test Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Test Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal HTML5 Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal HTML5 Test Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"HTML5",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Linux Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Linux DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Linux Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Shipping Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Shipping Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Linux Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Shipping Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Test Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Test Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal Linux Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal Linux Test Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"Linux",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal TVOS Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal TVOS DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal TVOS Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Shipping Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Shipping Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal TVOS Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Shipping Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Shipping",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Test Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Test Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnreal TVOS Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnreal TVOS Test Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnreal",
+				"TVOS",
+				"Test",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Linux Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Linux DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Linux Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Linux Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Linux",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Debug Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Debug Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Mac Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Debug Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Debug",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac DebugGame Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Mac DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac DebugGame Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"DebugGame",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Development Build",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Development Rebuild",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"SofaUnrealEditor Mac Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		},
+		{
+			"label": "SofaUnrealEditor Mac Development Clean",
+			"group": "build",
+			"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+			"args": [
+				"SofaUnrealEditor",
+				"Mac",
+				"Development",
+				"/home/epernod/Documents/Unreal Projects/SofaUnreal/SofaUnreal.uproject",
+				"-waitmutex",
+				"-clean"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "/home/epernod/projects/UnrealEngine"
+			}
+		}
+	]
+}
