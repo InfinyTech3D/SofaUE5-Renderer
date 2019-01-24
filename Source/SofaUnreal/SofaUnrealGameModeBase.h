@@ -14,7 +14,4 @@ class SOFAUNREAL_API ASofaUnrealGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
-	
-	
 };

@@ -1,11 +1,9 @@
 Binaries/*
-Content/StarterContent/*
-DerivedDataCache/*
-Saved/*
 
-
-.vs/
 SofaUnreal.VC.VC.opendb
 SofaUnreal.VC.db
-Intermediate/AssetRegistryCache/
+
 Intermediate/Build/
+Intermediate/AssetRegistryCache/
+
+Intermediate/ReimportCache/
