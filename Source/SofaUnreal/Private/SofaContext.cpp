@@ -7,46 +7,11 @@
 //#include "SofaVisualMesh.h"
 #include <vector>
 #include <string>
-//#include <SofaAdvancePhysicsAPI/SofaPhysicsBindings.h>
+#include <SofaAdvancePhysicsAPI/SofaPhysicsBindings.h>
 //#include <SofaAdvancePhysicsAPI/SofaPhysicsDefines.h>
 
 DEFINE_LOG_CATEGORY(YourLog);
 
-/*
-void *v_sofaDLLHandle;
-
-#pragma region Load DLL
-// Method to import a DLL.
-bool ASofaContext::importDLL(FString folder, FString name)
-{
-    FString filePath = *FPaths::GamePluginsDir() + folder + "/" + name;
-
-    if (FPaths::FileExists(filePath))
-    {
-        v_sofaDLLHandle = FPlatformProcess::GetDllHandle(*filePath); // Retrieve the DLL.
-        if (v_sofaDLLHandle != NULL)
-        {
-            return true;
-        }
-    }
-    return false;	// Return an error.
-}
-#pragma endregion Load DLL
-
-#pragma region Unload DLL
-// If you love something  set it free.
-void ASofaContext::freeDLL()
-{
-    if (v_sofaDLLHandle != NULL)
-    {
-        //m_FooPluginFunctionDll = NULL;
-
-        FPlatformProcess::FreeDllHandle(v_sofaDLLHandle);
-        v_sofaDLLHandle = NULL;
-    }
-}
-#pragma endregion Unload DLL
-*/
 
 // Sets default values
 ASofaContext::ASofaContext()
@@ -61,19 +26,20 @@ ASofaContext::ASofaContext()
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
-    // create a new sofa context through sofaAdvancePhysicsAPI
-    if (m_sofaAPI == NULL)
-        m_sofaAPI = new SofaAdvancePhysicsAPI();
+   
 }
 
 // Called when the game starts or when spawned
 void ASofaContext::BeginPlay()
 {
     Super::BeginPlay();
-    m_apiName = "test1";
-    UE_LOG(YourLog, Warning, TEXT("BeginPlay!!!!!!!!!!!!!!!!, %s"), *m_apiName);
-
     
+    // create a new sofa context through sofaAdvancePhysicsAPI
+    if (m_sofaAPI == NULL) {
+        m_sofaAPI = new SofaAdvancePhysicsAPI();
+        UE_LOG(YourLog, Warning, TEXT("Create SofaAdvancePhysicsAPI"));
+    }
+
     if (m_sofaAPI == NULL)
         return;
 
@@ -112,11 +78,12 @@ void ASofaContext::BeginPlay()
     this->setGravity(Gravity);
 
     m_sofaAPI->start();
+    UE_LOG(YourLog, Warning, TEXT("Start SofaAdvancePhysicsAPI"));
 
     // Create the actor of the scene:
     int nbr = m_sofaAPI->getNumberObjects();
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::FromInt(nbr));
-    */
+    UE_LOG(YourLog, Warning, TEXT("Nbr objects: %d"), nbr);
+    
     /*if (nbr > 0)
         FString type = m_sofaAPI->get3DObjectType(0).c_str();*/
 
@@ -166,19 +133,19 @@ void ASofaContext::BeginPlay()
 
 void ASofaContext::setDT(float value)
 {
-    //if (m_sofaAPI)
-    //    m_sofaAPI->setTimeStep(value);
+    if (m_sofaAPI)
+        m_sofaAPI->setTimeStep(value);
 }
 
 void ASofaContext::setGravity(FVector value)
 {
-    //if (m_sofaAPI) {
-    //    double* grav = new double[3];
-    //    grav[0] = value.X;
-    //    grav[1] = value.Y;
-    //    grav[2] = value.Z;
-    //    m_sofaAPI->setGravity(grav);
-    //}
+    if (m_sofaAPI) {
+        double* grav = new double[3];
+        grav[0] = value.X;
+        grav[1] = value.Y;
+        grav[2] = value.Z;
+        m_sofaAPI->setGravity(grav);
+    }
 }
 
 void ASofaContext::BeginDestroy()
@@ -186,7 +153,8 @@ void ASofaContext::BeginDestroy()
     if (m_sofaAPI)
     {
         m_sofaAPI->stop();
-        //delete &m_sofaAPI;
+        UE_LOG(YourLog, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
+        delete m_sofaAPI;
         m_sofaAPI = NULL;
     }
 
@@ -197,6 +165,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     if (m_sofaAPI)
     {
+        UE_LOG(YourLog, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
         m_sofaAPI->stop();
     }
     Super::EndPlay(EndPlayReason);
