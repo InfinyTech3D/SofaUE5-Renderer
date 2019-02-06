@@ -26,6 +26,10 @@ ASofaContext::ASofaContext()
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaContext"));
+    SetActorScale3D(FVector(-10.0, 10.0, 10.0));
+    SetActorRotation(FRotator(0.0, 0.0, 270.0));
+    UE_LOG(YourLog, Warning, TEXT("Create ASofaContext 1"));
    
 }
 
