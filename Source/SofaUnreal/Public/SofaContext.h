@@ -7,7 +7,7 @@
 #include "SofaContext.generated.h"
 
 
-DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
+
 
 UCLASS()
 class SOFAUNREAL_API ASofaContext : public AActor
