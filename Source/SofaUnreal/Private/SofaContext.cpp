@@ -43,91 +43,97 @@ void ASofaContext::BeginPlay()
     if (m_sofaAPI == NULL)
         return;
 
-    m_apiName = "test4";
-    UE_LOG(YourLog, Warning, TEXT("BeginPlay!!!!!!!!!!!!!!!!, %s"), *m_apiName);
-
+    m_apiName = "NoAPI";
     m_apiName = m_sofaAPI->APIName();
-    UE_LOG(YourLog, Warning, TEXT("BeginPlay 2 !!!!!!!!!!!!!!!!, %s"), *m_apiName);
-
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, m_apiName);
-   /*
+    UE_LOG(YourLog, Warning, TEXT("BeginPlay 6 !!!!!!!!!!!!!!!!, %s"), *m_apiName);
+     
+    
 
     if (!m_isInit)
     {
         // Create the scene.
         m_sofaAPI->createScene();
+        //std::string sharedPath = m_sofaAPI->loadSofaIni("C:/projects/sofa-build/etc/sofa.ini");
 
+        //UE_LOG(YourLog, Warning, TEXT("sharedPath, %s"), *sharedPath.c_str());
+        
+        const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
+        std::string sfilename = std::string(filename);
+        FString fsFilename = FString(sfilename.c_str());
         // load scene
-        if (!filePath.FilePath.IsEmpty())
+        //if (!filePath.FilePath.IsEmpty())
         {
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, filePath.FilePath);
+            UE_LOG(YourLog, Warning, TEXT("filePath.FilePath, %s"), *fsFilename);
+            
             //const char* scenePath = "C:/Users/Belcurves/projects/Unreal Projects/SofaUnreal/Content/SofaScenes/TriangleSurfaceCutting.scn"; //TCHAR_TO_ANSI(*filePath.FilePath);
-            const char* scenePath = TCHAR_TO_ANSI(*filePath.FilePath);
+            //const char* scenePath = TCHAR_TO_ANSI(*filePath.FilePath);
 
-            bool resScene = m_sofaAPI->load(scenePath);
+            //int resScene = m_sofaAPI->load(scenePath);
+            int resScene = m_sofaAPI->load(filename);
 
-            if (resScene)
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "scene ok");
-            else
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "scene failed");
+            if (resScene == 0) {
+                UE_LOG(YourLog, Warning, TEXT("Scene ok"));
+            }
+            else {
+                UE_LOG(YourLog, Warning, TEXT("Scene failed return error: %d"), resScene);
+                return;
+            }
         }
 
         m_isInit = true;
     }
+
+    
+
     this->setDT(Dt);
     this->setGravity(Gravity);
 
-    m_sofaAPI->start();
     UE_LOG(YourLog, Warning, TEXT("Start SofaAdvancePhysicsAPI"));
-
+    m_sofaAPI->start();
+           
     // Create the actor of the scene:
     int nbr = m_sofaAPI->getNumberObjects();
     UE_LOG(YourLog, Warning, TEXT("Nbr objects: %d"), nbr);
-    
-    /*if (nbr > 0)
-        FString type = m_sofaAPI->get3DObjectType(0).c_str();*/
+       
+    for (int i = 0; i < nbr; i++)
+    {
+        std::string name = m_sofaAPI->get3DObjectName(i);
+        std::string type = m_sofaAPI->get3DObjectType(i);
+        
+        if (name.empty() || type.empty())
+            UE_LOG(YourLog, Warning, TEXT("name empty"));
 
-    /*std::vector<std::string> names = m_sofaAPI->get3DObjectList();
+        FString FType(type.c_str());
+        FString FName(name.c_str());
+        
+        UE_LOG(YourLog, Warning, TEXT("FType, %s"), *FType);
+        UE_LOG(YourLog, Warning, TEXT("FName, %s"), *FName);
 
-    int nbr2 = names.size();
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::FromInt(nbr2));*/
+        if (FType.Compare("SofaVisual3DObject") == 0)
+        {
+            UE_LOG(YourLog, Warning, TEXT("SofaVisual3DObject"));
 
+            UWorld* const World = GetWorld();
+            if (World == NULL)
+                continue;
+                
+            ASofaVisualMesh* visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
+            visuMesh->SetActorLabel(FName);
+            
+            FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
+            visuMesh->AttachToActor(this, att);
+            int res = SAPAPI_SUCCESS;
+            Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name.c_str(), &res);
+            if (res == SAPAPI_SUCCESS)
+                visuMesh->setSofaImpl(impl);        
+        }
+        else
+        {
+            //    //visuMesh->isStatic = true;
+        }
+    }
 
-    //m_sofaAPI->get3DObjectType(0).c_str();
-    //FString type =
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, type);
-
-    //for (int i = 0; i < nbr; i++)
-    //{
-    //    const char* name = sofaPhysicsAPI_get3DObjectName(m_sofaAPI, i);
-    //    const char* type = sofaPhysicsAPI_get3DObjectType(m_sofaAPI, i);
-
-    //    FString FType = FString(type);
-    //    FString FName = FString(name);
-
-
-    //    //Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name);
-    //    //FString type = m_sofaAPI->get3DObjectType(i).c_str();
-    //    //FString name = m_sofaAPI->get3DObjectName(i).c_str();
-
-    //    if (FType.Compare("SofaVisual3DObject") == 0)
-    //    {
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FType);
-    //        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FName);
-
-    //        UWorld* const World = GetWorld();
-    //        if (World == NULL)
-    //            continue;
-
-    //        ASofaVisualMesh* visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
-    //        //visuMesh->SetActorLabel(name);
-
-    //        int res = SAPAPI_SUCCESS;
-    //        Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name, &res);
-    //        //visuMesh->isStatic = true;
-    //        visuMesh->setSofaImpl(impl);
-    //    }
-    //}
+    UE_LOG(YourLog, Warning, TEXT("ASofaContext::BeginPlay out"));
 
 }
 
@@ -153,9 +159,9 @@ void ASofaContext::BeginDestroy()
     if (m_sofaAPI)
     {
         m_sofaAPI->stop();
-        UE_LOG(YourLog, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
-        delete m_sofaAPI;
-        m_sofaAPI = NULL;
+        //UE_LOG(YourLog, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
+        //delete m_sofaAPI;
+        //m_sofaAPI = NULL;
     }
 
     Super::BeginDestroy();
@@ -182,14 +188,15 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )
 {   
-    FVector NewLocation = GetActorLocation();
-    float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
-    NewLocation.Z += DeltaHeight * 20.0f;       //Scale our height by a factor of 20
-    RunningTime += DeltaTime;
-    SetActorLocation(NewLocation);
-    Super::Tick(DeltaTime);
-    //if (m_sofaAPI)
-    //    m_sofaAPI->step();
+    //FVector NewLocation = GetActorLocation();
+    //float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
+    //NewLocation.Z += DeltaHeight * 20.0f;       //Scale our height by a factor of 20
+    //RunningTime += DeltaTime;
+    //SetActorLocation(NewLocation);
+    //Super::Tick(DeltaTime);
+
+    if (m_isInit && m_sofaAPI)
+        m_sofaAPI->step();
     //toto = "Truc2";// FString::SanitizeFloat(resMethod);
    
     Super::Tick(DeltaTime);
