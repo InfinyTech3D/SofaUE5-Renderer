@@ -1,9 +1,3 @@
-Binaries/*
-
-SofaUnreal.VC.VC.opendb
-SofaUnreal.VC.db
-
+Source/ThirdParty/SofaUnrealLibrary/sofa/
 Intermediate/Build/
-Intermediate/AssetRegistryCache/
-
-Intermediate/ReimportCache/
+Binaries/Win64/
