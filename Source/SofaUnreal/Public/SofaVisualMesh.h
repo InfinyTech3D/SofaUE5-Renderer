@@ -30,10 +30,6 @@ public:
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
 
-    //How long, in seconds, the countdown will run
-    UPROPERTY(EditAnywhere)
-        float m_scaleOsci;
-
     void createMesh();
 
     void updateMesh();

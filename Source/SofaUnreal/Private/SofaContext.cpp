@@ -4,13 +4,13 @@
 #include "SofaUnreal.h"
 #include "Engine.h"
 #include "CoreMinimal.h"
-//#include "SofaVisualMesh.h"
+#include "SofaVisualMesh.h"
 #include <vector>
 #include <string>
 #include <SofaAdvancePhysicsAPI/SofaPhysicsBindings.h>
 //#include <SofaAdvancePhysicsAPI/SofaPhysicsDefines.h>
 
-DEFINE_LOG_CATEGORY(YourLog);
+
 
 
 // Sets default values
