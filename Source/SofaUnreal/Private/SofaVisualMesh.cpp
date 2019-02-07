@@ -9,6 +9,8 @@
 ASofaVisualMesh::ASofaVisualMesh()
     : m_impl(NULL)
     , isStatic(false)
+    , m_min(FVector(100000, 100000, 100000))
+    , m_max(FVector(-100000, -100000, -100000))
 {
     UE_LOG(YourLog, Warning, TEXT("Create ASofaVisualMesh"));
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -144,5 +146,137 @@ void ASofaVisualMesh::createMesh()
     UE_LOG(YourLog, Warning, TEXT("ASofaVisualMesh::createMesh() out"));
 }
 
+void ASofaVisualMesh::computeBoundingBox(const TArray<FVector>& vertices)
+{
+    int nbrV = vertices.Num();
 
+    // Get min and max of the mesh
+    for (int i = 0; i < nbrV; i++)
+    {
+        const FVector& vertex = vertices[i];        
+        if (vertex.X > m_max.X)
+            m_max.X = vertex.X;
+        if (vertex.Y > m_max.Y)
+            m_max.Y = vertex.Y;
+        if (vertex.Z > m_max.Z)
+            m_max.Z = vertex.Z;
+
+        if (vertex.X < m_min.X)
+            m_min.X = vertex.X;
+        if (vertex.Y < m_min.Y)
+            m_min.Y = vertex.Y;
+        if (vertex.Z < m_min.Z)
+            m_min.Z = vertex.Z;
+    }
+}
+
+void ASofaVisualMesh::recomputeUV(const TArray<FVector>& vertices, TArray<FVector2D>& UV0)
+{  
+    int nbrV = vertices.Num();
+
+    computeBoundingBox(vertices);
+    FVector center = (m_max + m_min)*0.5f;
+
+    // Map mesh vertices to sphere
+    // transform cart to spherical coordinates (r, theta, phi) and sphere to cart back with radius = 1
+    TArray<FVector> sphereV;
+    sphereV.SetNum(nbrV);
+    UV0.SetNum(nbrV);
+    
+    for (int i = 0; i < nbrV; ++i)
+    {
+        FVector Vcentered = vertices[i] - center;
+        float r = sqrtf(Vcentered.X*Vcentered.X + Vcentered.Y*Vcentered.Y + Vcentered.Z*Vcentered.Z);
+        float theta = acos(Vcentered.Z / r);
+        float phi = atan(Vcentered.Y / Vcentered.X);
+
+        sphereV[i].X = sin(phi)*cos(theta);
+        sphereV[i].Y = sin(phi)*sin(theta);
+        sphereV[i].Z = cos(phi);
+    }
+
+    // transform sphere coordinates to UV map
+    for (int i = 0; i < nbrV; ++i)
+    {
+        FVector pos = (sphereV[i] - center);
+        pos.Normalize();
+        UV0[i].X = 0.5 + atan2(pos.Z, pos.X) / (2 * PI);
+        UV0[i].Y = 0.5 - asin(pos.Y) / PI;
+    }
+
+    //float[] texCoords = new float[nbrV * 2];
+    //Vector2[]  uv = new Vector2[nbrV];
+
+    //int res = sofaPhysics3DObject_getTexCoords(m_simu, m_name, texCoords);
+    //if (displayLog)
+    //Debug.Log("res get Texcoords: " + res);
+
+    //if (res < 0)
+    //{
+    //    // computeStereographicsUV(mesh);
+    //    // return;
+
+    //    this.computeBoundingBox(mesh);
+    //    Vector3[] normals = mesh.normals;
+
+    //    // test the orientation of the mesh
+    //    int test = 40;
+    //    if (test > nbrV)
+    //        test = nbrV;
+
+    //    float dist = 0.0f;
+    //    Vector3 meanNorm = Vector3.zero;
+    //    for (int i = 0; i < test; i++)
+    //    {
+    //        int id = UnityEngine.Random.Range(1, nbrV);
+    //        dist = dist + (verts[id] - verts[id - 1]).magnitude;
+    //        meanNorm += normals[id];
+    //    }
+
+    //    meanNorm /= test;
+    //    dist /= test;
+    //    dist *= 0.25f; //arbitraty scale
+
+    //    int id0, id1, id3;
+    //    if (Mathf.Abs(meanNorm.X) > 0.8)
+    //    {
+    //        id0 = 1; id1 = 2; id3 = 0;
+    //    }
+    //    else if (Mathf.Abs(meanNorm.z) > 0.8)
+    //    {
+    //        id0 = 0; id1 = 1; id3 = 2;
+    //    }
+    //    else
+    //    {
+    //        id0 = 0; id1 = 2; id3 = 1;
+    //    }
+    //    id0 = 0;
+    //    id1 = 1;
+    //    id3 = 2;
+
+    //    float range0 = 1 / (m_max[id0] - m_min[id0]);
+    //    float range1 = 1 / (m_max[id1] - m_min[id1]);
+
+    //    for (int i = 0; i < nbrV; i++)
+    //    {
+    //        Vector3 norm = normals[i].normalized;
+    //        Vector3 vert = verts[i];
+
+    //        if (norm[id3] > 0.8)
+    //            vert = vert - dist * Vector3.one;
+
+    //        uv[i] = new Vector2((vert[id0] - m_min[id0]) * range0,
+    //            (vert[id1] - m_min[id1]) * range1);
+    //    }
+    //}
+    //else
+    //{
+    //    for (int i = 0; i < nbrV; i++)
+    //    {
+    //        uv[i].x = texCoords[i * 2];
+    //        uv[i].y = texCoords[i * 2 + 1];
+    //    }
+    //}
+
+    //mesh.uv = uv;
 }

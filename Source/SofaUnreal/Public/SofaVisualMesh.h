@@ -31,6 +31,8 @@ public:
     virtual void Tick( float DeltaSeconds ) override;
 
     void createMesh();
+    void recomputeUV(const TArray<FVector>& vertices, TArray<FVector2D>& UV0);
+    void computeBoundingBox(const TArray<FVector>& vertices);
 
     void updateMesh();
 
@@ -44,4 +46,6 @@ private:
         UProceduralMeshComponent * mesh;
 
     Sofa3DObject * m_impl;
+    FVector m_min;
+    FVector m_max;
 };
