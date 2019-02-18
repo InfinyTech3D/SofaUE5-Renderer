@@ -123,13 +123,13 @@ void ASofaVisualMesh::createMesh()
     {
         vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
         normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
+        UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
 
-        //UV0.Add(FVector2D(sofaTexCoords[i * 3], sofaTexCoords[i * 3 + 1]));
         tangents.Add(FProcMeshTangent(0, 1, 0));
         vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
     }
 
-    recomputeUV(vertices, UV0);
+    //recomputeUV(vertices, UV0);
 
 
     for (int i = 0; i < nbrTri; i++)
@@ -204,79 +204,4 @@ void ASofaVisualMesh::recomputeUV(const TArray<FVector>& vertices, TArray<FVecto
         UV0[i].Y = 0.5 - asin(pos.Y) / PI;
     }
 
-    //float[] texCoords = new float[nbrV * 2];
-    //Vector2[]  uv = new Vector2[nbrV];
-
-    //int res = sofaPhysics3DObject_getTexCoords(m_simu, m_name, texCoords);
-    //if (displayLog)
-    //Debug.Log("res get Texcoords: " + res);
-
-    //if (res < 0)
-    //{
-    //    // computeStereographicsUV(mesh);
-    //    // return;
-
-    //    this.computeBoundingBox(mesh);
-    //    Vector3[] normals = mesh.normals;
-
-    //    // test the orientation of the mesh
-    //    int test = 40;
-    //    if (test > nbrV)
-    //        test = nbrV;
-
-    //    float dist = 0.0f;
-    //    Vector3 meanNorm = Vector3.zero;
-    //    for (int i = 0; i < test; i++)
-    //    {
-    //        int id = UnityEngine.Random.Range(1, nbrV);
-    //        dist = dist + (verts[id] - verts[id - 1]).magnitude;
-    //        meanNorm += normals[id];
-    //    }
-
-    //    meanNorm /= test;
-    //    dist /= test;
-    //    dist *= 0.25f; //arbitraty scale
-
-    //    int id0, id1, id3;
-    //    if (Mathf.Abs(meanNorm.X) > 0.8)
-    //    {
-    //        id0 = 1; id1 = 2; id3 = 0;
-    //    }
-    //    else if (Mathf.Abs(meanNorm.z) > 0.8)
-    //    {
-    //        id0 = 0; id1 = 1; id3 = 2;
-    //    }
-    //    else
-    //    {
-    //        id0 = 0; id1 = 2; id3 = 1;
-    //    }
-    //    id0 = 0;
-    //    id1 = 1;
-    //    id3 = 2;
-
-    //    float range0 = 1 / (m_max[id0] - m_min[id0]);
-    //    float range1 = 1 / (m_max[id1] - m_min[id1]);
-
-    //    for (int i = 0; i < nbrV; i++)
-    //    {
-    //        Vector3 norm = normals[i].normalized;
-    //        Vector3 vert = verts[i];
-
-    //        if (norm[id3] > 0.8)
-    //            vert = vert - dist * Vector3.one;
-
-    //        uv[i] = new Vector2((vert[id0] - m_min[id0]) * range0,
-    //            (vert[id1] - m_min[id1]) * range1);
-    //    }
-    //}
-    //else
-    //{
-    //    for (int i = 0; i < nbrV; i++)
-    //    {
-    //        uv[i].x = texCoords[i * 2];
-    //        uv[i].y = texCoords[i * 2 + 1];
-    //    }
-    //}
-
-    //mesh.uv = uv;
 }
