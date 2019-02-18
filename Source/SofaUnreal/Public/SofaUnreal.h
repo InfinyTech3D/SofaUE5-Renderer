@@ -3,8 +3,11 @@
 #pragma once
 
 #include "Modules/ModuleManager.h"
-DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
-DEFINE_LOG_CATEGORY(YourLog);
+DECLARE_LOG_CATEGORY_EXTERN(SUnreal_log, Log, All);
+DEFINE_LOG_CATEGORY(SUnreal_log);
+
+DECLARE_LOG_CATEGORY_EXTERN(SofaLog, Log, All);
+DEFINE_LOG_CATEGORY(SofaLog);
 //DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
 
 class FSofaUnrealModule : public IModuleInterface

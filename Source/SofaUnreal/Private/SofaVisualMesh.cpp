@@ -3,7 +3,7 @@
 #include "SofaVisualMesh.h"
 #include "SofaUnreal.h"
 
-//DEFINE_LOG_CATEGORY(YourLog);
+//DEFINE_LOG_CATEGORY(SUnreal_log);
 
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
@@ -12,7 +12,7 @@ ASofaVisualMesh::ASofaVisualMesh()
     , m_min(FVector(100000, 100000, 100000))
     , m_max(FVector(-100000, -100000, -100000))
 {
-    UE_LOG(YourLog, Warning, TEXT("Create ASofaVisualMesh"));
+    UE_LOG(SUnreal_log, Warning, TEXT("##### ASofaVisualMesh::ASofaVisualMesh() ####"));
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
@@ -63,7 +63,7 @@ void ASofaVisualMesh::updateMesh()
         return;
 
     int nbrV = m_impl->getNbVertices();
-    //UE_LOG(YourLog, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
+    //UE_LOG(SUnreal_log, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
     float* sofaVertices = new float[nbrV * 3];
     float* sofaNormals = new float[nbrV * 3];
 
@@ -82,7 +82,7 @@ void ASofaVisualMesh::updateMesh()
     mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
 }
 
-//DEFINE_LOG_CATEGORY(YourLog);
+//DEFINE_LOG_CATEGORY(SUnreal_log);
 void ASofaVisualMesh::createMesh()
 {
     if (m_impl == NULL)
@@ -94,10 +94,7 @@ void ASofaVisualMesh::createMesh()
     // Get topology elements numbers
     int nbrV = m_impl->getNbVertices();
     int nbrTri = m_impl->getNbTriangles();
-    UE_LOG(YourLog, Warning, TEXT("ASofaVisualMesh::createMesh(): %d"), nbrV);
-    UE_LOG(YourLog, Warning, TEXT("ASofaVisualMesh::createMesh(): %d"), nbrTri);
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrTri));
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d"), nbrV, nbrTri);
 
     float* sofaVertices = new float[nbrV*3];
     float* sofaNormals = new float[nbrV*3];
@@ -143,7 +140,6 @@ void ASofaVisualMesh::createMesh()
 
     // Enable collision data
     mesh->ContainsPhysicsTriMeshData(true);
-    UE_LOG(YourLog, Warning, TEXT("ASofaVisualMesh::createMesh() out"));
 }
 
 void ASofaVisualMesh::computeBoundingBox(const TArray<FVector>& vertices)

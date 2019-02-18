@@ -48,6 +48,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
         FVector Gravity;
 
+protected:
+    void catchSofaMessages();
 
 
 private:
@@ -55,6 +57,7 @@ private:
     float RunningTime;
     FString m_apiName;
     bool m_isInit;
+    bool m_isMsgHandlerActivated;
     float m_scaleOsci;
     SofaAdvancePhysicsAPI* m_sofaAPI;
 };

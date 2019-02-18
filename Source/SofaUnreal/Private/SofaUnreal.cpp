@@ -34,7 +34,7 @@ void FSofaUnrealModule::StartupModule()
         //FPlatformProcess::GetDllHandle(*FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SceneCreator.dll")));
 		// Call the test function in the third party library that opens a message box
         float res = FooPluginFunction();
-        UE_LOG(YourLog, Warning, TEXT("BeginPlay!!!!!!!!!!!!!!!!, %f"), res);
+        UE_LOG(SUnreal_log, Warning, TEXT("TEST DLL: FooPluginFunction return res: %f"), res);
 		//ExampleLibraryFunction();
 	}
 	else

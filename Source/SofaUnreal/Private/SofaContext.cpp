@@ -11,8 +11,6 @@
 //#include <SofaAdvancePhysicsAPI/SofaPhysicsDefines.h>
 
 
-
-
 // Sets default values
 ASofaContext::ASofaContext()
     : m_dllLoadStatus(0)
@@ -21,7 +19,7 @@ ASofaContext::ASofaContext()
     , m_apiName("")
     , m_isInit(false)
     , m_sofaAPI(NULL)
-
+    , m_isMsgHandlerActivated(true)
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -29,8 +27,7 @@ ASofaContext::ASofaContext()
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaContext"));
     SetActorScale3D(FVector(-10.0, 10.0, 10.0));
     SetActorRotation(FRotator(0.0, 0.0, 270.0));
-    UE_LOG(YourLog, Warning, TEXT("Create ASofaContext 1"));
-   
+    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::ASofaContext() ##########"));
 }
 
 // Called when the game starts or when spawned
@@ -41,7 +38,8 @@ void ASofaContext::BeginPlay()
     // create a new sofa context through sofaAdvancePhysicsAPI
     if (m_sofaAPI == NULL) {
         m_sofaAPI = new SofaAdvancePhysicsAPI();
-        UE_LOG(YourLog, Warning, TEXT("Create SofaAdvancePhysicsAPI"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
+        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
     }
 
     if (m_sofaAPI == NULL)
@@ -49,9 +47,8 @@ void ASofaContext::BeginPlay()
 
     m_apiName = "NoAPI";
     m_apiName = m_sofaAPI->APIName();
-    UE_LOG(YourLog, Warning, TEXT("BeginPlay 6 !!!!!!!!!!!!!!!!, %s"), *m_apiName);
-     
-    
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
+
 
     if (!m_isInit)
     {
@@ -59,7 +56,7 @@ void ASofaContext::BeginPlay()
         m_sofaAPI->createScene();
         //std::string sharedPath = m_sofaAPI->loadSofaIni("C:/projects/sofa-build/etc/sofa.ini");
 
-        //UE_LOG(YourLog, Warning, TEXT("sharedPath, %s"), *sharedPath.c_str());
+        //UE_LOG(SUnreal_log, Warning, TEXT("sharedPath, %s"), *sharedPath.c_str());
         
         const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
         std::string sfilename = std::string(filename);
@@ -67,7 +64,7 @@ void ASofaContext::BeginPlay()
         // load scene
         //if (!filePath.FilePath.IsEmpty())
         {
-            UE_LOG(YourLog, Warning, TEXT("filePath.FilePath, %s"), *fsFilename);
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *fsFilename);
             
             //const char* scenePath = "C:/Users/Belcurves/projects/Unreal Projects/SofaUnreal/Content/SofaScenes/TriangleSurfaceCutting.scn"; //TCHAR_TO_ANSI(*filePath.FilePath);
             //const char* scenePath = TCHAR_TO_ANSI(*filePath.FilePath);
@@ -76,10 +73,10 @@ void ASofaContext::BeginPlay()
             int resScene = m_sofaAPI->load(filename);
 
             if (resScene == 0) {
-                UE_LOG(YourLog, Warning, TEXT("Scene ok"));
+                UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Scene loading success."));
             }
             else {
-                UE_LOG(YourLog, Warning, TEXT("Scene failed return error: %d"), resScene);
+                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: Scene loading failed return error: %d"), resScene);
                 return;
             }
         }
@@ -92,12 +89,12 @@ void ASofaContext::BeginPlay()
     this->setDT(Dt);
     this->setGravity(Gravity);
 
-    UE_LOG(YourLog, Warning, TEXT("Start SofaAdvancePhysicsAPI"));
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Start SofaAdvancePhysicsAPI"));
     m_sofaAPI->start();
            
     // Create the actor of the scene:
     int nbr = m_sofaAPI->getNumberObjects();
-    UE_LOG(YourLog, Warning, TEXT("Nbr objects: %d"), nbr);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Nbr objects: %d"), nbr);
        
     for (int i = 0; i < nbr; i++)
     {
@@ -105,18 +102,15 @@ void ASofaContext::BeginPlay()
         std::string type = m_sofaAPI->get3DObjectType(i);
         
         if (name.empty() || type.empty())
-            UE_LOG(YourLog, Warning, TEXT("name empty"));
+            UE_LOG(SUnreal_log, Error, TEXT("### name empty"));
 
         FString FType(type.c_str());
         FString FName(name.c_str());
         
-        UE_LOG(YourLog, Warning, TEXT("FType, %s"), *FType);
-        UE_LOG(YourLog, Warning, TEXT("FName, %s"), *FName);
+        UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
 
         if (FType.Compare("SofaVisual3DObject") == 0)
         {
-            UE_LOG(YourLog, Warning, TEXT("SofaVisual3DObject"));
-
             UWorld* const World = GetWorld();
             if (World == NULL)
                 continue;
@@ -136,9 +130,6 @@ void ASofaContext::BeginPlay()
             //    //visuMesh->isStatic = true;
         }
     }
-
-    UE_LOG(YourLog, Warning, TEXT("ASofaContext::BeginPlay out"));
-
 }
 
 void ASofaContext::setDT(float value)
@@ -150,6 +141,8 @@ void ASofaContext::setDT(float value)
 void ASofaContext::setGravity(FVector value)
 {
     if (m_sofaAPI) {
+
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
         double* grav = new double[3];
         grav[0] = value.X;
         grav[1] = value.Y;
@@ -160,10 +153,11 @@ void ASofaContext::setGravity(FVector value)
 
 void ASofaContext::BeginDestroy()
 {
+    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy() ##########"));
     if (m_sofaAPI)
     {
         m_sofaAPI->stop();
-        //UE_LOG(YourLog, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
+        //UE_LOG(SUnreal_log, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
         //delete m_sofaAPI;
         //m_sofaAPI = NULL;
     }
@@ -175,7 +169,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     if (m_sofaAPI)
     {
-        UE_LOG(YourLog, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
+        UE_LOG(SUnreal_log, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
         m_sofaAPI->stop();
     }
     Super::EndPlay(EndPlayReason);
@@ -185,8 +179,8 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
 {
     FName PropertyName = (PropertyChangedEvent.Property != nullptr) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
     FString name = PropertyName.GetPlainNameString();
-    UE_LOG(YourLog, Warning, TEXT("Dt changed?"), Dt);
-    UE_LOG(YourLog, Warning, TEXT("name: "), *name);
+    UE_LOG(SUnreal_log, Warning, TEXT("Dt changed?"), Dt);
+    UE_LOG(SUnreal_log, Warning, TEXT("name: "), *name);
 }
 
 // Called every frame
@@ -200,8 +194,42 @@ void ASofaContext::Tick( float DeltaTime )
     //Super::Tick(DeltaTime);
 
     if (m_isInit && m_sofaAPI)
+    {
         m_sofaAPI->step();
-    //toto = "Truc2";// FString::SanitizeFloat(resMethod);
+        
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
+    }
    
     Super::Tick(DeltaTime);
+}
+
+void ASofaContext::catchSofaMessages()
+{
+    int nbrMsgs = m_sofaAPI->getNbMessages();
+    int* type = new int[1];
+    type[0] = -1;
+    for (int i = 0; i < nbrMsgs; ++i)
+    {
+        std::string message = m_sofaAPI->getMessage(i, *type);
+        FString FMessage(message.c_str());
+
+        if (type[0] == -1) {
+            continue;
+        }
+        else if (type[0] == 3) {
+            UE_LOG(SofaLog, Warning, TEXT("%s"), *FMessage);
+        }
+        else if (type[0] == 4) {
+            UE_LOG(SofaLog, Error, TEXT("%s"), *FMessage);
+        }
+        else if (type[0] == 5) {
+            UE_LOG(SofaLog, Fatal, TEXT("%s"), *FMessage);
+        }
+        else {
+            UE_LOG(SofaLog, Log, TEXT("%s"), *FMessage);
+        }
+        
+        m_sofaAPI->clearMessages();
+    }
 }
