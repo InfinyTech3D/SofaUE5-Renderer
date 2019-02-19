@@ -7,15 +7,6 @@
 #include "SofaContext.generated.h"
 
 
-USTRUCT()
-struct Fmy_data
-{
-    GENERATED_BODY()
-
-    
-        FString m_test2;
-    //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
-};
 
 UCLASS()
 class SOFAUNREAL_API ASofaContext : public AActor
@@ -68,17 +59,15 @@ protected:
 
 private:
     int32 m_dllLoadStatus;
-    float RunningTime;
     FString m_apiName;
     UPROPERTY(SaveGame)
     bool m_isInit;
     
-    float m_scaleOsci;
     //UPROPERTY(SaveGame)
-
+    SofaAdvancePhysicsAPI* m_sofaAPI;
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
-    FString m_test;
+        int m_status;
     UPROPERTY(SaveGame)
-        Fmy_data m_data;
+    FString m_test;
 };

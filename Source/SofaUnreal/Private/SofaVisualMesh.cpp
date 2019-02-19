@@ -24,12 +24,28 @@ void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
 {
     m_impl = impl;
     createMesh();
+    AActor* parent = this->GetParentActor();
+    if (parent != nullptr) {
+        UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh::setSofaImpl() parent name: %s"), *parent->GetName());
+    }
+    else {
+        UE_LOG(SUnreal_log, Warning, TEXT("### no parent"));
+    }
     //SetActorScale3D(FVector(10.0, 10.0, 10.0));
 }
 
 // Called when the game starts or when spawned
 void ASofaVisualMesh::BeginPlay()
 {
+    UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh::BeginPlay()"));
+    AActor* parent = this->GetParentActor();
+    if (parent != nullptr) {
+        UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh::BeginPlay() parent name: %s"), *parent->GetName());
+    }
+    else {
+        UE_LOG(SUnreal_log, Warning, TEXT("### no parent"));
+    }
+
     Super::BeginPlay();
 }
 
