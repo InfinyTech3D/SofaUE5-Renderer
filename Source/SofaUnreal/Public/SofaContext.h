@@ -7,7 +7,15 @@
 #include "SofaContext.generated.h"
 
 
+USTRUCT()
+struct Fmy_data
+{
+    GENERATED_BODY()
 
+    
+        FString m_test2;
+    //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
+};
 
 UCLASS()
 class SOFAUNREAL_API ASofaContext : public AActor
@@ -25,6 +33,7 @@ public:
     ASofaContext();
 
 
+    virtual void PostActorCreated() override;
     
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -48,16 +57,28 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
         FVector Gravity;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        bool m_isMsgHandlerActivated;
+
 protected:
     void catchSofaMessages();
+
+    void createSofaContext();
 
 
 private:
     int32 m_dllLoadStatus;
     float RunningTime;
     FString m_apiName;
+    UPROPERTY(SaveGame)
     bool m_isInit;
-    bool m_isMsgHandlerActivated;
+    
     float m_scaleOsci;
-    SofaAdvancePhysicsAPI* m_sofaAPI;
+    //UPROPERTY(SaveGame)
+
+    //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
+    UPROPERTY(SaveGame)
+    FString m_test;
+    UPROPERTY(SaveGame)
+        Fmy_data m_data;
 };
