@@ -150,6 +150,8 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
+    FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
+
     // create a new sofa context through sofaAdvancePhysicsAPI    
     if (m_sofaAPI == nullptr) {
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
@@ -157,33 +159,58 @@ void ASofaContext::createSofaContext()
         m_sofaAPI = new SofaAdvancePhysicsAPI();
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+
+        if (m_sofaAPI == nullptr)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed."));
+            return;
+        }
+
+        m_apiName = "NoAPI";
+        m_apiName = m_sofaAPI->APIName();
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+
+        // create scene
+        m_sofaAPI->createScene();
+        
+        // load ini file
+        FString iniPath = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/etc/sofa.ini";
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
+        const char* pathchar = TCHAR_TO_ANSI(*iniPath);
+
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
+        std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni.c_str()));
     }
 
     if (m_sofaAPI == nullptr)
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: No SofaAdvancePhysicsAPI Available."));
         return;
-
-    m_apiName = "NoAPI";
-    m_apiName = m_sofaAPI->APIName();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
-
-    m_sofaAPI->createScene();
+    }
+    
     //m_sofaAPI->loadSofaIni();
 
     //if (m_status == -1 || m_status == 2)
     //if(m_status == 88)
     {
+        
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: curPath, %s"), *curPath);
+
         // Create the scene.
         
         //std::string sharedPath = m_sofaAPI->loadSofaIni("C:/projects/sofa-build/etc/sofa.ini");
 
         //UE_LOG(SUnreal_log, Warning, TEXT("sharedPath, %s"), *sharedPath.c_str());
 
+
         const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
         std::string sfilename = std::string(filename);
         FString fsFilename = FString(sfilename.c_str());
+
         // load scene
-        //if (!filePath.FilePath.IsEmpty())
+        if (!filePath.FilePath.IsEmpty())
         {
             UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *fsFilename);
 
