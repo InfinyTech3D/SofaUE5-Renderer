@@ -121,6 +121,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
     if (PropertyChangedEvent.MemberProperty != nullptr)
     {
         FString MemberName = PropertyChangedEvent.MemberProperty->GetName();
+        UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty edited: is %s"), *MemberName);
         if (MemberName.Compare(TEXT("Gravity")) == 0)
         {
             UE_LOG(LogTemp, Warning, TEXT("Gravity is %s"), *Gravity.ToString());
@@ -130,6 +131,10 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
         {
             UE_LOG(LogTemp, Warning, TEXT("Dt is %f"), Dt);
             setDT(Dt);
+        }
+        else if (MemberName.Compare(TEXT("filePath")) == 0)
+        {
+            createSofaContext();
         }
     }
 }
@@ -191,45 +196,33 @@ void ASofaContext::createSofaContext()
         return;
     }
     
-    //m_sofaAPI->loadSofaIni();
 
-    //if (m_status == -1 || m_status == 2)
-    //if(m_status == 88)
-    {
-        
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: curPath, %s"), *curPath);
-
-        // Create the scene.
-        
-        //std::string sharedPath = m_sofaAPI->loadSofaIni("C:/projects/sofa-build/etc/sofa.ini");
-
-        //UE_LOG(SUnreal_log, Warning, TEXT("sharedPath, %s"), *sharedPath.c_str());
-
-
-        const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
-        std::string sfilename = std::string(filename);
-        FString fsFilename = FString(sfilename.c_str());
-
-        // load scene
-        if (!filePath.FilePath.IsEmpty())
-        {
-            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *fsFilename);
-
-            //const char* scenePath = "C:/Users/Belcurves/projects/Unreal Projects/SofaUnreal/Content/SofaScenes/TriangleSurfaceCutting.scn"; //TCHAR_TO_ANSI(*filePath.FilePath);
-            //const char* scenePath = TCHAR_TO_ANSI(*filePath.FilePath);
-
-            //int resScene = m_sofaAPI->load(scenePath);
-            int resScene = m_sofaAPI->load(filename);
-
-            if (resScene == 0) {
-                UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Scene loading success."));
-            }
-            else {
-                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: Scene loading failed return error: %d"), resScene);
-                return;
-            }
-        }        
+    if (filePath.FilePath.IsEmpty()) {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
+        return;
     }
+   
+
+    FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+
+    //const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
+    //std::string sfilename = std::string(filename);
+    //FString fsFilename = FString(sfilename.c_str());
+
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *my_filePath);
+    const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
+    int resScene = m_sofaAPI->load(pathfile);
+
+    if (resScene == 0) {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Scene loading success."));
+    }
+    else {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: Scene loading failed return error: %d"), resScene);
+        return;
+    }
+
+
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
     // Pass default scene parameter
     this->setDT(Dt);
@@ -242,9 +235,25 @@ void ASofaContext::createSofaContext()
 
     for (int i = 0; i < nbr; i++)
     {
+        UE_LOG(SUnreal_log, Warning, TEXT("### begin loop!!"));
         std::string name = m_sofaAPI->get3DObjectName(i);
-        std::string type = m_sofaAPI->get3DObjectType(i);
 
+        Sofa3DObject * impl = nullptr;
+        int res = m_sofaAPI->get3DObject(name, impl);
+
+        //Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name.c_str(), &res);
+
+        if (res != SAPAPI_SUCCESS)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: acces to object: %d return error: %d"), i, res);
+            continue;
+        }
+               
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: acces res: %d"), res);
+        const std::string& type = impl->getObjectType();
+        //
+        //std::string type = m_sofaAPI->get3DObjectType(i);
+        
         if (name.empty() || type.empty())
             UE_LOG(SUnreal_log, Error, TEXT("### name empty"));
 
@@ -293,18 +302,19 @@ void ASofaContext::createSofaContext()
             if (visuMesh != nullptr)
             {
                 UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
-                int res = SAPAPI_SUCCESS;
-                Sofa3DObject * impl = (Sofa3DObject *)sofaPhysicsAPI_get3DObject(m_sofaAPI, name.c_str(), &res);
-                if (res == SAPAPI_SUCCESS)
-                    visuMesh->setSofaImpl(impl);
+
+                visuMesh->setSofaImpl(impl);
             }
         }
         else
         {
             //    //visuMesh->isStatic = true;
         }
-
+        UE_LOG(SUnreal_log, Warning, TEXT("### end loop!!"));
     }
+
+   // if (m_isMsgHandlerActivated == true)
+   //     catchSofaMessages();
 
     //if (m_status == 1)
     m_status++;
