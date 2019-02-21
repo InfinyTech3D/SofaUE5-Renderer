@@ -96,17 +96,20 @@ void ASofaVisualMesh::createMesh()
     // Get topology elements numbers
     int nbrV = m_impl->getNbVertices();
     int nbrTri = m_impl->getNbTriangles();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d"), nbrV, nbrTri);
+    int nbrQuads = m_impl->getNbQuads();
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d | nbrQuads: %d"), nbrV, nbrTri, nbrQuads);
 
     float* sofaVertices = new float[nbrV*3];
     float* sofaNormals = new float[nbrV*3];
     float* sofaTexCoords = new float[nbrV * 2];
     int* sofaTriangles = new int[nbrTri*3];
+    int* sofaQuads = new int[nbrQuads * 3];
 
     // Get the different buffers
     m_impl->getVPositions(sofaVertices);
     m_impl->getVNormals(sofaNormals);
     m_impl->getTriangles(sofaTriangles);
+    m_impl->getQuads(sofaQuads);
     m_impl->getVTexCoords(sofaTexCoords);
 
     // Convert in Unreal structure
@@ -130,13 +133,31 @@ void ASofaVisualMesh::createMesh()
 
     //recomputeUV(vertices, UV0);
 
-
+    // Add triangles
     for (int i = 0; i < nbrTri; i++)
     {
         Triangles.Add(sofaTriangles[i * 3]);
         Triangles.Add(sofaTriangles[i * 3 + 1]);
         Triangles.Add(sofaTriangles[i * 3 + 2]);
     }
+
+    // Add quads
+    for (int i = 0; i < nbrQuads; i++)
+    {
+        Triangles.Add(sofaQuads[i * 4]);
+        Triangles.Add(sofaQuads[i * 4 + 1]);
+        Triangles.Add(sofaQuads[i * 4 + 2]);
+
+        Triangles.Add(sofaQuads[i * 4]);
+        Triangles.Add(sofaQuads[i * 4 + 2]);
+        Triangles.Add(sofaQuads[i * 4 + 3]);
+    }
+    
+    delete[] sofaVertices;
+    delete[] sofaNormals;
+    delete[] sofaTexCoords;
+    delete[] sofaTriangles;
+    delete[] sofaQuads;
     
     mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 
