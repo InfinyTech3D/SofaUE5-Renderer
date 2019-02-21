@@ -334,8 +334,10 @@ void ASofaContext::catchSofaMessages()
         }
         else {
             UE_LOG(SofaLog, Log, TEXT("%s"), *FMessage);
-        }
-        
-        m_sofaAPI->clearMessages();
+        }        
     }
+
+    m_sofaAPI->clearMessages();
+
+    delete[] type;
 }
