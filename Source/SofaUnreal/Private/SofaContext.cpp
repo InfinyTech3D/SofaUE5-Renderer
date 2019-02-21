@@ -115,7 +115,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
     Super::EndPlay(EndPlayReason);
 }
 
-
+#if WITH_EDITOR
 void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChangedEvent)
 {
     if (PropertyChangedEvent.MemberProperty != nullptr)
@@ -138,6 +138,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
         }
     }
 }
+#endif
 
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )

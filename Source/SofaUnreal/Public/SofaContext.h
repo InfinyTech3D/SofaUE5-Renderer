@@ -28,7 +28,9 @@ public:
     
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+#if WITH_EDITOR
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
