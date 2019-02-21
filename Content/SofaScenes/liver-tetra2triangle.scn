@@ -19,8 +19,6 @@
 
         <DiagonalMass massDensity="1.0" />
         <BoxROI template="Vec3d" box="4 -4 -3 10 2 3" drawBoxes="1" position="@Volume.rest_position" name="FixedROI"/>
-        <!--<FixedConstraint indices="@FixedROI.indices" />-->
-        <!--<TetrahedralCorotationalFEMForceField name="FEM" youngModulus="1300" poissonRatio="0.3" method="large" />		-->
 		<TetrahedronFEMForceField name="FEM" youngModulus="1300" poissonRatio="0.3" computeGlobalMatrix="false" method="large" />
 		<PlaneForceField normal="0 1 0" d="-50" stiffness="100000" showPlane="1" showPlaneSize="20"/>
         <Node name="T">
@@ -40,3 +38,5 @@
         </Node>
     </Node>
 </Node>
+        <!--<FixedConstraint indices="@FixedROI.indices" />-->
+        <!--<TetrahedralCorotationalFEMForceField name="FEM" youngModulus="1300" poissonRatio="0.3" method="large" />		-->
