@@ -20,7 +20,7 @@ ASofaContext::ASofaContext()
     , m_isInit(false)
     , m_sofaAPI(NULL)
     , m_status(-1)
-    , m_isMsgHandlerActivated(false)
+    , m_isMsgHandlerActivated(true)
     , m_test("NotInit")
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -110,6 +110,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
     {
         UE_LOG(SUnreal_log, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
         m_sofaAPI->stop();
+        m_sofaAPI->activateMessageHandler(false);
     }
     Super::EndPlay(EndPlayReason);
 }
@@ -158,7 +159,7 @@ void ASofaContext::createSofaContext()
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
-        //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
         if (m_sofaAPI == nullptr)
         {
@@ -317,8 +318,9 @@ void ASofaContext::catchSofaMessages()
     type[0] = -1;
     for (int i = 0; i < nbrMsgs; ++i)
     {
-        std::string message = m_sofaAPI->getMessage(i, *type);
-        FString FMessage(message.c_str());
+        const char* c_msg = sofaPhysicsAPI_getMessage(m_sofaAPI, i, type);
+        //std::string message = m_sofaAPI->getMessage(i, *type);
+        FString FMessage(c_msg);
 
         if (type[0] == -1) {
             continue;
