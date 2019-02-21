@@ -186,8 +186,15 @@ void ASofaContext::createSofaContext()
         const char* pathchar = TCHAR_TO_ANSI(*iniPath);
 
         //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
-        std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni.c_str()));
+        const char* resIni = sofaPhysicsAPI_loadSofaIni(m_sofaAPI, pathchar);
+        //std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni));
+
+        FString plug1 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaMiscCollision.dll";
+        FString plug2 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaSparseSolver.dll";
+        
+        m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug1));
+        m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug2));
     }
 
     if (m_sofaAPI == nullptr)
