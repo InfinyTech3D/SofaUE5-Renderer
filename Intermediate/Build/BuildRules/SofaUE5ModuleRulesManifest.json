@@ -1,0 +1,7 @@
+{
+	"SourceFiles": [
+		"D:\\Unreal Projects\\Sofa_test1\\Plugins\\SofaUE5\\Source\\SofaUE5\\SofaUE5.Build.cs",
+		"D:\\Unreal Projects\\Sofa_test1\\Plugins\\SofaUE5\\Source\\ThirdParty\\SofaUE5Library\\SofaUE5Library.Build.cs"
+	],
+	"EngineVersion": "5.0.3"
+}
