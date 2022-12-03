@@ -7,7 +7,7 @@
 #include "mytestClass.generated.h"
 
 UCLASS()
-class SOFAUNREAL_API AmytestClass : public AActor
+class SOFAUE5_API AmytestClass : public AActor
 {
 	GENERATED_BODY()
 	

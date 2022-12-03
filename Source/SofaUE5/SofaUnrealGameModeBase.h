@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SOFAUNREAL_API ASofaUnrealGameModeBase : public AGameModeBase
+class SOFAUE5_API ASofaUnrealGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	

@@ -4,13 +4,13 @@
 
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
-#include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
+//#include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
 #include "SofaVisualMesh.generated.h"
 
 //DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
 
 UCLASS()
-class SOFAUNREAL_API ASofaVisualMesh : public AActor
+class SOFAUE5_API ASofaVisualMesh : public AActor
 {
     GENERATED_BODY()
 
@@ -25,7 +25,7 @@ public:
     void PostActorCreated() override;
     void PostLoad() override;
 
-    void setSofaImpl(Sofa3DObject * impl);
+    //void setSofaImpl(Sofa3DObject * impl);
 
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
@@ -45,7 +45,7 @@ private:
     UPROPERTY(VisibleAnywhere)
         UProceduralMeshComponent * mesh;
 
-    Sofa3DObject * m_impl;
+    //Sofa3DObject * m_impl;
     FVector m_min;
     FVector m_max;
 };

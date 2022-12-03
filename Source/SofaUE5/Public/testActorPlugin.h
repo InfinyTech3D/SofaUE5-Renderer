@@ -7,7 +7,7 @@
 #include "testActorPlugin.generated.h"
 
 UCLASS()
-class SOFAUNREAL_API AtestActorPlugin : public AActor
+class SOFAUE5_API AtestActorPlugin : public AActor
 {
 	GENERATED_BODY()
 	

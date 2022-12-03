@@ -27,11 +27,10 @@ public class SofaUE5 : ModuleRules
 			{
 				"Core",
 				"SofaUE5Library",
-				"Projects"
-                "CoreUObject",
-                "Engine",
-                "InputCore",
-                "ProceduralMeshComponent"
+				"Projects",
+				"Engine",
+				"CoreUObject",
+				"ProceduralMeshComponent"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

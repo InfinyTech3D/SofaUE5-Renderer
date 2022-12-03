@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SofaVisualMesh.h"
-#include "SofaUnreal.h"
+#include "SofaUE5.h"
 
 //DEFINE_LOG_CATEGORY(SUnreal_log);
 
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
-    : m_impl(NULL)
-    , isStatic(false)
+    : /*m_impl(NULL)
+    ,*/ isStatic(false)
     , m_min(FVector(100000, 100000, 100000))
     , m_max(FVector(-100000, -100000, -100000))
 {
@@ -20,12 +20,12 @@ ASofaVisualMesh::ASofaVisualMesh()
     RootComponent = mesh;
 }
 
-void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
-{
-    m_impl = impl;
-    createMesh();
-    //SetActorScale3D(FVector(10.0, 10.0, 10.0));
-}
+//void ASofaVisualMesh::setSofaImpl(Sofa3DObject * impl)
+//{
+//    m_impl = impl;
+//    createMesh();
+//    //SetActorScale3D(FVector(10.0, 10.0, 10.0));
+//}
 
 // Called when the game starts or when spawned
 void ASofaVisualMesh::BeginPlay()
@@ -59,110 +59,110 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 
 void ASofaVisualMesh::updateMesh()
 {    
-    if (m_impl == NULL)
-        return;
+    //if (m_impl == NULL)
+    //    return;
 
    // UE_LOG(SUnreal_log, Warning, TEXT("### impl prolbem?"));
 
-    int nbrV = m_impl->getNbVertices();
-    //UE_LOG(SUnreal_log, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
-    float* sofaVertices = new float[nbrV * 3];
-    float* sofaNormals = new float[nbrV * 3];
+    //int nbrV = m_impl->getNbVertices();
+    ////UE_LOG(SUnreal_log, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
+    //float* sofaVertices = new float[nbrV * 3];
+    //float* sofaNormals = new float[nbrV * 3];
 
-    // Get the different buffers
-    m_impl->getVPositions(sofaVertices);
-    m_impl->getVNormals(sofaNormals);
+    //// Get the different buffers
+    //m_impl->getVPositions(sofaVertices);
+    //m_impl->getVNormals(sofaNormals);
 
-    TArray<FVector> vertices;
-    TArray<FVector> normals;
-    for (int i = 0; i < nbrV; i++)
-    {
-        vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
-    }
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
-    mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
+    //TArray<FVector> vertices;
+    //TArray<FVector> normals;
+    //for (int i = 0; i < nbrV; i++)
+    //{
+    //    vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+    //    normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+    //}
+    ////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
+    //mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
 }
 
 //DEFINE_LOG_CATEGORY(SUnreal_log);
 void ASofaVisualMesh::createMesh()
 {
-    if (m_impl == NULL)
-        return;
+    //if (m_impl == NULL)
+    //    return;
 
-    FString type2 = m_impl->getObjectType().c_str();
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
-    
-    // Get topology elements numbers
-    int nbrV = m_impl->getNbVertices();
-    int nbrTri = m_impl->getNbTriangles();
-    int nbrQuads = m_impl->getNbQuads();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d | nbrQuads: %d"), nbrV, nbrTri, nbrQuads);
+    //FString type2 = m_impl->getObjectType().c_str();
+    ////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
+    //
+    //// Get topology elements numbers
+    //int nbrV = m_impl->getNbVertices();
+    //int nbrTri = m_impl->getNbTriangles();
+    //int nbrQuads = m_impl->getNbQuads();
+    //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d | nbrQuads: %d"), nbrV, nbrTri, nbrQuads);
 
-    float* sofaVertices = new float[nbrV*3];
-    float* sofaNormals = new float[nbrV*3];
-    float* sofaTexCoords = new float[nbrV * 2];
-    int* sofaTriangles = new int[nbrTri*3];
-    int* sofaQuads = new int[nbrQuads * 3];
+    //float* sofaVertices = new float[nbrV*3];
+    //float* sofaNormals = new float[nbrV*3];
+    //float* sofaTexCoords = new float[nbrV * 2];
+    //int* sofaTriangles = new int[nbrTri*3];
+    //int* sofaQuads = new int[nbrQuads * 3];
 
-    // Get the different buffers
-    m_impl->getVPositions(sofaVertices);
-    m_impl->getVNormals(sofaNormals);
-    m_impl->getTriangles(sofaTriangles);
-    m_impl->getQuads(sofaQuads);
-    m_impl->getVTexCoords(sofaTexCoords);
+    //// Get the different buffers
+    //m_impl->getVPositions(sofaVertices);
+    //m_impl->getVNormals(sofaNormals);
+    //m_impl->getTriangles(sofaTriangles);
+    //m_impl->getQuads(sofaQuads);
+    //m_impl->getVTexCoords(sofaTexCoords);
 
-    // Convert in Unreal structure
+    //// Convert in Unreal structure
 
-    TArray<FVector> vertices;
-    TArray<int32> Triangles;
-    TArray<FVector> normals;
-    TArray<FVector2D> UV0;
-    TArray<FProcMeshTangent> tangents;
-    TArray<FLinearColor> vertexColors;
+    //TArray<FVector> vertices;
+    //TArray<int32> Triangles;
+    //TArray<FVector> normals;
+    //TArray<FVector2D> UV0;
+    //TArray<FProcMeshTangent> tangents;
+    //TArray<FLinearColor> vertexColors;
 
-    for (int i = 0; i < nbrV; i++)
-    {
-        vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
-        UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
+    //for (int i = 0; i < nbrV; i++)
+    //{
+    //    vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+    //    normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+    //    UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
 
-        tangents.Add(FProcMeshTangent(0, 1, 0));
-        vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
-    }
+    //    tangents.Add(FProcMeshTangent(0, 1, 0));
+    //    vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
+    //}
 
-    //recomputeUV(vertices, UV0);
+    ////recomputeUV(vertices, UV0);
 
-    // Add triangles
-    for (int i = 0; i < nbrTri; i++)
-    {
-        Triangles.Add(sofaTriangles[i * 3]);
-        Triangles.Add(sofaTriangles[i * 3 + 1]);
-        Triangles.Add(sofaTriangles[i * 3 + 2]);
-    }
+    //// Add triangles
+    //for (int i = 0; i < nbrTri; i++)
+    //{
+    //    Triangles.Add(sofaTriangles[i * 3]);
+    //    Triangles.Add(sofaTriangles[i * 3 + 1]);
+    //    Triangles.Add(sofaTriangles[i * 3 + 2]);
+    //}
 
-    // Add quads
-    for (int i = 0; i < nbrQuads; i++)
-    {
-        Triangles.Add(sofaQuads[i * 4]);
-        Triangles.Add(sofaQuads[i * 4 + 1]);
-        Triangles.Add(sofaQuads[i * 4 + 2]);
+    //// Add quads
+    //for (int i = 0; i < nbrQuads; i++)
+    //{
+    //    Triangles.Add(sofaQuads[i * 4]);
+    //    Triangles.Add(sofaQuads[i * 4 + 1]);
+    //    Triangles.Add(sofaQuads[i * 4 + 2]);
 
-        Triangles.Add(sofaQuads[i * 4]);
-        Triangles.Add(sofaQuads[i * 4 + 2]);
-        Triangles.Add(sofaQuads[i * 4 + 3]);
-    }
-    
-    delete[] sofaVertices;
-    delete[] sofaNormals;
-    delete[] sofaTexCoords;
-    delete[] sofaTriangles;
-    delete[] sofaQuads;
-    
-    mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
+    //    Triangles.Add(sofaQuads[i * 4]);
+    //    Triangles.Add(sofaQuads[i * 4 + 2]);
+    //    Triangles.Add(sofaQuads[i * 4 + 3]);
+    //}
+    //
+    //delete[] sofaVertices;
+    //delete[] sofaNormals;
+    //delete[] sofaTexCoords;
+    //delete[] sofaTriangles;
+    //delete[] sofaQuads;
+    //
+    //mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 
-    // Enable collision data
-    mesh->ContainsPhysicsTriMeshData(true);
+    //// Enable collision data
+    //mesh->ContainsPhysicsTriMeshData(true);
 }
 
 void ASofaVisualMesh::computeBoundingBox(const TArray<FVector>& vertices)

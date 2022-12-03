@@ -8,6 +8,8 @@
 
 #define LOCTEXT_NAMESPACE "FSofaUE5Module"
 
+//DEFINE_LOG_CATEGORY(YourLog);
+
 void FSofaUE5Module::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
@@ -25,11 +27,13 @@ void FSofaUE5Module::StartupModule()
 	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Linux/x86_64-unknown-linux-gnu/libExampleLibrary.so"));
 #endif // PLATFORM_WINDOWS
 
+	//FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUnrealLibrary/sofa/bin/")));
 	ExampleLibraryHandle = !LibraryPath.IsEmpty() ? FPlatformProcess::GetDllHandle(*LibraryPath) : nullptr;
 
 	if (ExampleLibraryHandle)
 	{
 		// Call the test function in the third party library that opens a message box
+		//float res = FooPluginFunction();
 		ExampleLibraryFunction();
 	}
 	else
