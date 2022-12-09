@@ -18,7 +18,7 @@ ASofaContext::ASofaContext()
     , Gravity(0, -9.8, 0)
     , m_apiName("")
     , m_isInit(false)
-    //, m_sofaAPI(NULL)
+    , m_sofaAPI(nullptr)
     , m_status(-1)
     , m_isMsgHandlerActivated(true)
     , m_test("NotInit")
@@ -160,43 +160,44 @@ void ASofaContext::createSofaContext()
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
     // create a new sofa context through sofaAdvancePhysicsAPI    
-   // if (m_sofaAPI == nullptr) {
-   //     //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
-   //     //m_data.m_sofaAPI = apiRef;
-   //     m_sofaAPI = new SofaAdvancePhysicsAPI();
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
-   //     m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+    if (m_sofaAPI == nullptr) 
+    {
+        ////TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
+        ////m_data.m_sofaAPI = apiRef;
+        //m_sofaAPI = new SofaPhysicsAPI();
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
+        ////m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
-   //     if (m_sofaAPI == nullptr)
-   //     {
-   //         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed."));
-   //         return;
-   //     }
+        //if (m_sofaAPI == nullptr)
+        //{
+        //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed."));
+        //    return;
+        //}
 
-   //     m_apiName = "NoAPI";
-   //     m_apiName = m_sofaAPI->APIName();
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+        //m_apiName = "NoAPI";
+        //m_apiName = m_sofaAPI->APIName();
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
 
-   //     // create scene
-   //     m_sofaAPI->createScene();
-   //     
-   //     // load ini file
-   //     FString iniPath = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/etc/sofa.ini";
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
-   //     const char* pathchar = TCHAR_TO_ANSI(*iniPath);
+        //// create scene
+        //m_sofaAPI->createScene();
+        
+        // load ini file
+        //FString iniPath = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/etc/sofa.ini";
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
+        //const char* pathchar = TCHAR_TO_ANSI(*iniPath);
 
-   //     //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
-   //     const char* resIni = sofaPhysicsAPI_loadSofaIni(m_sofaAPI, pathchar);
-   //     //std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni));
+        ////UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
+        //const char* resIni = sofaPhysicsAPI_loadSofaIni(m_sofaAPI, pathchar);
+        ////std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni));
 
-   //     FString plug1 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaMiscCollision.dll";
-   //     FString plug2 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaSparseSolver.dll";
-   //     
-   //     m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug1));
-   //     m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug2));
-   // }
+        //FString plug1 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaMiscCollision.dll";
+        //FString plug2 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaSparseSolver.dll";
+        //
+        //m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug1));
+        //m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug2));
+    }
 
    // if (m_sofaAPI == nullptr)
    // {

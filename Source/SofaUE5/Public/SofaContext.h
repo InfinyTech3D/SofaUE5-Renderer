@@ -2,11 +2,11 @@
 
 #pragma once
 
-//#include <SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h>
+//#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "GameFramework/Actor.h"
 #include "SofaContext.generated.h"
 
-
+class SofaPhysicsAPI;
 
 UCLASS()
 class SOFAUE5_API ASofaContext : public AActor
@@ -66,7 +66,7 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    //SofaAdvancePhysicsAPI* m_sofaAPI;
+    SofaPhysicsAPI* m_sofaAPI;
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;
