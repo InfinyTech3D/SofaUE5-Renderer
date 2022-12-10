@@ -2,7 +2,6 @@
 
 #pragma once
 
-//#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "GameFramework/Actor.h"
 #include "SofaContext.generated.h"
 
@@ -66,7 +65,7 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    SofaPhysicsAPI* m_sofaAPI;
+    SofaPhysicsAPI* m_sofaAPI = nullptr;
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;

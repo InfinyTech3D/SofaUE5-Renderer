@@ -8,8 +8,7 @@
 #include <vector>
 #include <string>
 
-//#include <SofaAdvancePhysicsAPI/SofaPhysicsBindings.h>
-//#include <SofaAdvancePhysicsAPI/SofaPhysicsDefines.h>
+#include "SofaUE5Library/SofaPhysicsAPI.h"
 
 // Sets default values
 ASofaContext::ASofaContext()
@@ -37,7 +36,7 @@ void ASofaContext::PostActorCreated()
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
     
     if (this->GetFlags() == RF_Transactional) {
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated FINAL() ##########"));
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated FINAL() NEW ##########"));
         createSofaContext();
         m_test = "Init";
     }
@@ -54,35 +53,35 @@ void ASofaContext::BeginPlay()
     
     createSofaContext();
 
-    //if (m_sofaAPI)
-    //{
-    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Start SofaAdvancePhysicsAPI"));
-    //    m_sofaAPI->start();
-    //}
-    //else
-    //{
-    //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginPlay: m_sofaAPI is null"));
-    //}
+    if (m_sofaAPI)
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Start SofaAdvancePhysicsAPI"));
+        m_sofaAPI->start();
+    }
+    else
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginPlay: m_sofaAPI is null"));
+    }
     Super::BeginPlay();
 }
 
 void ASofaContext::setDT(float value)
 {
-    //if (m_sofaAPI)
-    //    m_sofaAPI->setTimeStep(value);
+    if (m_sofaAPI)
+        m_sofaAPI->setTimeStep(value);
 }
 
 void ASofaContext::setGravity(FVector value)
 {
-    //if (m_sofaAPI) {
-
-    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
-    //    double* grav = new double[3];
-    //    grav[0] = value.X;
-    //    grav[1] = value.Y;
-    //    grav[2] = value.Z;
-    //    m_sofaAPI->setGravity(grav);
-    //}
+    if (m_sofaAPI) 
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
+        double* grav = new double[3];
+        grav[0] = value.X;
+        grav[1] = value.Y;
+        grav[2] = value.Z;
+        m_sofaAPI->setGravity(grav);
+    }
 }
 
 void ASofaContext::BeginDestroy()
@@ -90,14 +89,14 @@ void ASofaContext::BeginDestroy()
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): %s ##########"), *m_test);
 
-    //if (m_sofaAPI)
-    //{
-    //    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
-    //    //m_sofaAPI->stop();
-    //    //UE_LOG(SUnreal_log, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
-    //    delete m_sofaAPI;
-    //    m_sofaAPI = NULL;
-    //}
+    if (m_sofaAPI)
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
+        m_sofaAPI->stop();
+        UE_LOG(SUnreal_log, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
+        delete m_sofaAPI;
+        m_sofaAPI = NULL;
+    }
 
     Super::BeginDestroy();
 }
@@ -106,12 +105,12 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::EndPlay(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::EndPlay(): %s ##########"), *m_test);
-    //if (m_sofaAPI)
-    //{
-    //    UE_LOG(SUnreal_log, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
-    //    m_sofaAPI->stop();
-    //    m_sofaAPI->activateMessageHandler(false);
-    //}
+    if (m_sofaAPI)
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
+        m_sofaAPI->stop();
+        //m_sofaAPI->activateMessageHandler(false);
+    }
     Super::EndPlay(EndPlayReason);
 }
 
@@ -143,13 +142,13 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )
 {   
-    //if (m_status != -1 && m_sofaAPI)
-    //{
-    //    m_sofaAPI->step();
-    //    
+    if (m_status != -1 && m_sofaAPI)
+    {
+        m_sofaAPI->step();
+        
     //    if (m_isMsgHandlerActivated == true)
     //        catchSofaMessages();
-    //}
+    }
    
     Super::Tick(DeltaTime);
 }
@@ -162,34 +161,34 @@ void ASofaContext::createSofaContext()
     // create a new sofa context through sofaAdvancePhysicsAPI    
     if (m_sofaAPI == nullptr) 
     {
-        ////TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
-        ////m_data.m_sofaAPI = apiRef;
-        //m_sofaAPI = new SofaPhysicsAPI();
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI"));
-        ////m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
-
-        //if (m_sofaAPI == nullptr)
-        //{
-        //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed."));
-        //    return;
-        //}
+        //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
+        //m_data.m_sofaAPI = apiRef;
+        m_sofaAPI = new SofaPhysicsAPI(false);
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI NEW"));
+        //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        
+        if (m_sofaAPI == nullptr)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed........"));
+            return;
+        }
 
         //m_apiName = "NoAPI";
-        //m_apiName = m_sofaAPI->APIName();
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+        m_apiName = m_sofaAPI->APIName();
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
 
-        //// create scene
-        //m_sofaAPI->createScene();
+        // create scene
+        m_sofaAPI->createScene();
         
-        // load ini file
+        //load ini file
         //FString iniPath = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/etc/sofa.ini";
         //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
         //const char* pathchar = TCHAR_TO_ANSI(*iniPath);
 
-        ////UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
         //const char* resIni = sofaPhysicsAPI_loadSofaIni(m_sofaAPI, pathchar);
-        ////std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
+        //std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
         //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni));
 
         //FString plug1 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaMiscCollision.dll";
@@ -199,27 +198,27 @@ void ASofaContext::createSofaContext()
         //m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug2));
     }
 
-   // if (m_sofaAPI == nullptr)
-   // {
-   //     UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: No SofaAdvancePhysicsAPI Available."));
-   //     return;
-   // }
-   // 
+    if (m_sofaAPI == nullptr)
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: No SofaAdvancePhysicsAPI Available."));
+        return;
+    }
+    
 
-   // if (filePath.FilePath.IsEmpty()) {
-   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
-   //     return;
-   // }
-   //
+    if (filePath.FilePath.IsEmpty()) {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
+        return;
+    }
+   
 
-   // FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+    FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
 
-   // //const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
-   // //std::string sfilename = std::string(filename);
-   // //FString fsFilename = FString(sfilename.c_str());
+    //const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
+    //std::string sfilename = std::string(filename);
+    //FString fsFilename = FString(sfilename.c_str());
 
 
-   // UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *my_filePath);
+    //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *my_filePath);
    // const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
    // int resScene = m_sofaAPI->load(pathfile);
 
@@ -232,10 +231,10 @@ void ASofaContext::createSofaContext()
    // }
 
 
-   // UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
-   // // Pass default scene parameter
-   // this->setDT(Dt);
-   // this->setGravity(Gravity);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+    // Pass default scene parameter
+    this->setDT(Dt);
+    this->setGravity(Gravity);
 
 
    // // Create the actor of the scene:
