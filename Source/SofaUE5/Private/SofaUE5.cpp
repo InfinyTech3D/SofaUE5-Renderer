@@ -5,7 +5,6 @@
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
 #include "SofaUE5Library/ExampleLibrary.h"
-//#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "SofaUE5Library/SofaPhysicsBindings.h"
 
 #define LOCTEXT_NAMESPACE "FSofaUE5Module"
@@ -22,7 +21,6 @@ void FSofaUE5Module::StartupModule()
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
 #if PLATFORM_WINDOWS
-	//LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/ExampleLibrary.dll"));
 	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/SofaPhysicsAPI.dll"));
 #elif PLATFORM_MAC
     LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUE5Library/Mac/Release/libSofaPhysicsAPI.dylib"));
@@ -30,9 +28,23 @@ void FSofaUE5Module::StartupModule()
 	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Linux/x86_64-unknown-linux-gnu/libSofaPhysicsAPI.so"));
 #endif // PLATFORM_WINDOWS
 
+
+
 	//FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUnrealLibrary/sofa/bin/")));
-	ExampleLibraryHandle = !LibraryPath.IsEmpty() ? FPlatformProcess::GetDllHandle(*LibraryPath) : nullptr;
-	UE_LOG(SUnreal_log, Warning, TEXT("######### FSofaUE5Module::StartupModule() ##########"));
+	if (LibraryPath.IsEmpty())
+	{
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI.dll, library path is empty!"));
+		return;
+	}
+	else if (!FPaths::FileExists(LibraryPath))
+	{
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI.dll, File not found at given path"));
+		return;
+	}
+
+	FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/")));
+	ExampleLibraryHandle = FPlatformProcess::GetDllHandle(*LibraryPath);
+	
 	if (ExampleLibraryHandle)
 	{
 		// Call the test function in the third party library that opens a message box
@@ -40,14 +52,11 @@ void FSofaUE5Module::StartupModule()
 		//ExampleLibraryFunction();
 		//int test = test_getAPI_ID();
 		UE_LOG(SUnreal_log, Warning, TEXT("######### FSofaUE5Module::StartupModule() start: ##########"));
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaPhysicsAPI library"));
+		//FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaPhysicsAPI library"));
 	}
 	else
 	{
-		if (LibraryPath.IsEmpty())
-			FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI library path empty"));
-		else
-			FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI GetDllHandle error"));
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI GetDllHandle error"));
 	}
 }
 
