@@ -69,6 +69,4 @@ private:
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;
-    UPROPERTY(SaveGame)
-    FString m_test;
 };
