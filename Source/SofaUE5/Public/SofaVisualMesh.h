@@ -4,10 +4,11 @@
 
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
-//#include "SofaAdvancePhysicsAPI/SofaAdvancePhysicsAPI.h"
 #include "SofaVisualMesh.generated.h"
 
 //DECLARE_LOG_CATEGORY_EXTERN(YourLog, Log, All);
+
+class SofaPhysicsOutputMesh;
 
 UCLASS()
 class SOFAUE5_API ASofaVisualMesh : public AActor
@@ -17,6 +18,8 @@ class SOFAUE5_API ASofaVisualMesh : public AActor
 public:
     // Sets default values for this actor's properties
     ASofaVisualMesh();
+
+    void setSofaMesh(SofaPhysicsOutputMesh* sofaMesh);
 
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
@@ -45,7 +48,7 @@ private:
     UPROPERTY(VisibleAnywhere)
         UProceduralMeshComponent * mesh;
 
-    //Sofa3DObject * m_impl;
+    SofaPhysicsOutputMesh* m_sofaMesh;
     FVector m_min;
     FVector m_max;
 };
