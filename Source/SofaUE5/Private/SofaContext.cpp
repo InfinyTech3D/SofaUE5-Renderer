@@ -257,7 +257,7 @@ void ASofaContext::createSofaContext()
         const std::string& name = mesh->getNameStr();
     //    
     //    //FString FType(type.c_str());
-        FString FName("test");
+        FString FName("testLiver");
         UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
     //    //UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
 
@@ -269,6 +269,7 @@ void ASofaContext::createSofaContext()
         if (m_status == -1) // create actors
         {
             visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
+            
             visuMesh->SetActorLabel(FName);
                 
             FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
@@ -287,7 +288,7 @@ void ASofaContext::createSofaContext()
             for (auto actor : ChildActors)
             {
                 UE_LOG(SUnreal_log, Warning, TEXT("### child name: %s"), *actor->GetName());
-                if (FName.Compare(actor->GetName()) == 0)
+                if (FName.Compare(actor->GetActorLabel()) == 0)
                 {
                     UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
                     visuMesh = dynamic_cast<ASofaVisualMesh*>(actor);

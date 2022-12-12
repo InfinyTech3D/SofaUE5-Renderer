@@ -58,11 +58,11 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 
 
 void ASofaVisualMesh::updateMesh()
-{    
+{   
+
     if (m_sofaMesh == NULL)
         return;
 
-    UE_LOG(SUnreal_log, Warning, TEXT("### impl prolbem?"));
 
     int nbrV = m_sofaMesh->getNbVertices();
     //UE_LOG(SUnreal_log, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
@@ -87,6 +87,8 @@ void ASofaVisualMesh::updateMesh()
 //DEFINE_LOG_CATEGORY(SUnreal_log);
 void ASofaVisualMesh::createMesh()
 {
+    UE_LOG(SUnreal_log, Warning, TEXT("### createMesh"));
+
     if (m_sofaMesh == NULL)
         return;
 
