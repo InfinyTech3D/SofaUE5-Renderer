@@ -57,6 +57,8 @@ protected:
 
     void createSofaContext();
 
+    void loadDefaultPlugin();
+
 
 private:
     int32 m_dllLoadStatus;

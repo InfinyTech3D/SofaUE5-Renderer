@@ -181,18 +181,7 @@ void ASofaContext::createSofaContext()
         FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
         const char* pathchar = TCHAR_TO_ANSI(*iniPath);
-        //m_sofaAPI->loadSofaIni(pathchar);
-
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: pathcchar, %s"), pathcchar);
-        //const char* resIni = sofaPhysicsAPI_loadSofaIni(m_sofaAPI, pathchar);
-        //std::string resIni = m_sofaAPI->loadSofaIni(pathchar);
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath res: %s"), ANSI_TO_TCHAR(resIni));
-
-        //FString plug1 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaMiscCollision.dll";
-        //FString plug2 = curPath + "Plugins/SofaUnreal/Source/ThirdParty/SofaUnrealLibrary/sofa/bin/SofaSparseSolver.dll";
-        //
-        //m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug1));
-        //m_sofaAPI->loadPlugin(TCHAR_TO_ANSI(*plug2));
+        m_sofaAPI->loadSofaIni(pathchar);
     }
 
     if (m_sofaAPI == nullptr)
@@ -201,6 +190,9 @@ void ASofaContext::createSofaContext()
         return;
     }
     
+    // Load default plugins
+    loadDefaultPlugin();
+
 
     const char* pathfile = "C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Content/SofaScenes/liver.scn";
 
@@ -208,14 +200,9 @@ void ASofaContext::createSofaContext()
     //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
     //    return;
     //}
-    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.Component.dll");
-    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GL.Component.dll");
-    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GUI.Component.dll");
-
+   
     //FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
 
-    //const char* filename = "C:/Users/Belcurves/Documents/Unreal Projects/testThird/Plugins/SofaUnreal/Content/SofaScenes/liver-tetra2triangle.scn";
-    //std::string sfilename = std::string(filename);
     FString fsFilename = FString(pathfile);
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: scene path: %s"), *fsFilename);
 
@@ -223,7 +210,7 @@ void ASofaContext::createSofaContext()
    // const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
     int resScene = m_sofaAPI->load(pathfile);
 
-    if (resScene == 0) {
+    if (resScene > 0) {
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Scene loading success."));
     }
     else {
@@ -242,24 +229,15 @@ void ASofaContext::createSofaContext()
     unsigned int nbr = m_sofaAPI->getNbOutputMeshes();
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Nbr objects: %d"), nbr);
 
-
-    //SofaPhysicsOutputMesh* testMesh = meshes[0];
-    //unsigned int nbrV = testMesh->getNbVertices();
-    //FString FName(name);
-    //UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %d"), nbrV);
-    //SofaPhysicsOutputMesh* testMesh = m_sofaAPI->getOutputMeshPtr("test");
-
     for (unsigned int meshID = 0; meshID < nbr; meshID++)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("### begin loop!!"));
         SofaPhysicsOutputMesh* mesh = m_sofaAPI->getOutputMeshPtr(meshID);
-
-        const std::string& name = mesh->getNameStr();
-    //    
-    //    //FString FType(type.c_str());
-        FString FName("testLiver");
+        
+        const char* name = mesh->getName();
+        FString FName(name);
         UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
-    //    //UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
+        //FString FType(type);
+        //UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
 
         UWorld* const World = GetWorld();
         if (World == NULL)
@@ -269,7 +247,6 @@ void ASofaContext::createSofaContext()
         if (m_status == -1) // create actors
         {
             visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
-            
             visuMesh->SetActorLabel(FName);
                 
             FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
@@ -278,9 +255,6 @@ void ASofaContext::createSofaContext()
         }
         else
         {
-            //TArray<AActor*> ChildActors;
-            //this->GetAllChildActors(ChildActors);
-
             TArray<AActor*> ChildActors;
             UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASofaVisualMesh::StaticClass(), ChildActors);
                                 
@@ -294,17 +268,14 @@ void ASofaContext::createSofaContext()
                     visuMesh = dynamic_cast<ASofaVisualMesh*>(actor);
                     break;
                 }
-            }                
+            }
         }
             
         if (visuMesh != nullptr)
         {
             UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
-
             visuMesh->setSofaMesh(mesh);
         }
-
-        UE_LOG(SUnreal_log, Warning, TEXT("### end loop!!"));
     }
 
     if (m_isMsgHandlerActivated == true)
@@ -315,6 +286,20 @@ void ASofaContext::createSofaContext()
     UE_LOG(SUnreal_log, Warning, TEXT("### out creation!!"));
 }
 
+void ASofaContext::loadDefaultPlugin()
+{
+    if (m_sofaAPI == nullptr)
+        return;
+
+    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.Component.dll");
+    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GL.Component.dll");
+    m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GUI.Component.dll");
+
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
+}
+
+
 void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
@@ -324,11 +309,10 @@ void ASofaContext::catchSofaMessages()
     type[0] = -1;
     for (int i = 0; i < nbrMsgs; ++i)
     {
-        //std::string message = m_sofaAPI->getMessage(i, *type);
-        //const char* mm = message.c_str();
-        //FString FMessage(message.c_str());
+        const char* rawMsg = m_sofaAPI->getMessage(i, *type);
+        FString FMessage(rawMsg);
 
-       /* if (type[0] == -1) {
+        if (type[0] == -1) {
             continue;
         }
         else if (type[0] == 3) {
@@ -342,7 +326,7 @@ void ASofaContext::catchSofaMessages()
         }
         else {
             UE_LOG(SofaLog, Log, TEXT("%s"), *FMessage);
-        }*/        
+        }
     }
 
     m_sofaAPI->clearMessages();
