@@ -144,8 +144,12 @@ void ASofaContext::Tick( float DeltaTime )
         
     //    if (m_isMsgHandlerActivated == true)
     //        catchSofaMessages();
+        //float value = this->GetGameTimeSinceCreation();
+        //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: init: %f %f"), DeltaTime, value);
     }
-   
+    
+
+    
     Super::Tick(DeltaTime);
 }
 

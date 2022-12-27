@@ -69,12 +69,23 @@ void ASofaVisualMesh::updateMesh()
     // Copy data into UE structure
     TArray<FVector> vertices;
     TArray<FVector> normals;
-    for (int i = 0; i < nbrV; i++)
-    {
-        vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
-    }
 
+    if (m_inverseNormal)
+    {
+        for (int i = 0; i < nbrV; i++)
+        {
+            vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+            normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+        }
+    }
+    else
+    {
+        for (int i = 0; i < nbrV; i++)
+        {
+            vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
+            normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
+        }
+    }
     mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
 }
 
@@ -116,8 +127,13 @@ void ASofaVisualMesh::createMesh()
     for (int i = 0; i < nbrV; i++)
     {
         vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
         UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
+
+        if (m_inverseNormal)
+            normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+        else
+            normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
+
 
         tangents.Add(FProcMeshTangent(0, 1, 0));
         vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));

@@ -36,6 +36,9 @@ public:
 
     bool m_isStatic;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        bool m_inverseNormal;
+
 protected:
     void createMesh();
 
