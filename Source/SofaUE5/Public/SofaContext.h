@@ -50,7 +50,10 @@ public:
         FVector Gravity;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_isMsgHandlerActivated;
+        bool m_isMsgHandlerActivated = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+        bool m_log = false;
 
 protected:
     void catchSofaMessages();

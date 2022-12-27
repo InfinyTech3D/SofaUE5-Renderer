@@ -27,15 +27,21 @@ ASofaContext::ASofaContext()
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaContext"));
     SetActorScale3D(FVector(-10.0, 10.0, 10.0));
     SetActorRotation(FRotator(0.0, 0.0, 270.0));
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::ASofaContext(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+    
+    if (m_log)
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::ASofaContext(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
 }
 
 void ASofaContext::PostActorCreated()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+    if (m_log)
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
     
-    if (this->GetFlags() == RF_Transactional) {
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated FINAL() NEW ##########"));
+    if (this->GetFlags() == RF_Transactional) 
+    {
+        if (m_log)
+            UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::PostActorCreated FINAL() NEW ##########"));
+
         createSofaContext();
     }
 }
@@ -43,14 +49,16 @@ void ASofaContext::PostActorCreated()
 // Called when the game starts or when spawned
 void ASofaContext::BeginPlay()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));    
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
-    
+    if (m_log)
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
+    }
+
     createSofaContext();
 
     if (m_sofaAPI)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Start SofaAdvancePhysicsAPI"));
         m_sofaAPI->start();
     }
     else
@@ -81,13 +89,15 @@ void ASofaContext::setGravity(FVector value)
 
 void ASofaContext::BeginDestroy()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+    if (m_log)
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
     
     if (m_sofaAPI)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
+        if (m_log)
+            UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
+        
         m_sofaAPI->stop();
-        UE_LOG(SUnreal_log, Warning, TEXT("Delete SofaAdvancePhysicsAPI"));
         delete m_sofaAPI;
         m_sofaAPI = NULL;
     }
@@ -97,10 +107,11 @@ void ASofaContext::BeginDestroy()
 
 void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::EndPlay(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+    if (m_log)
+        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::EndPlay(): %s | %s ##########"), *this->GetName(), *intToHexa(this->GetFlags()));
+    
     if (m_sofaAPI)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("Stop SofaAdvancePhysicsAPI"));
         m_sofaAPI->stop();
         m_sofaAPI->activateMessageHandler(false);
     }
@@ -115,7 +126,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
     if (PropertyChangedEvent.MemberProperty != nullptr)
     {
         FString MemberName = PropertyChangedEvent.MemberProperty->GetName();
-        UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty edited: is %s"), *MemberName);
+        
         if (MemberName.Compare(TEXT("Gravity")) == 0)
         {
             UE_LOG(LogTemp, Warning, TEXT("Gravity is %s"), *Gravity.ToString());
@@ -164,26 +175,31 @@ void ASofaContext::createSofaContext()
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaPhysicsAPI(false);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI NEW"));
+        
+        if (m_log)
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Create SofaAdvancePhysicsAPI NEW"));
+        
         m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
         if (m_sofaAPI == nullptr)
         {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed........"));
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext: SofaAdvancePhysicsAPI creation failed."));
             return;
         }
 
-        //m_apiName = "NoAPI";
         m_apiName = m_sofaAPI->APIName();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+
+        if (m_log)
+        {
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: init: %d"), m_status);
+        }
 
         // create scene
         m_sofaAPI->createScene();
         
         //load ini file
         FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: iniPath: %s"), *iniPath);
         const char* pathchar = TCHAR_TO_ANSI(*iniPath);
         m_sofaAPI->loadSofaIni(pathchar);
     }
@@ -231,7 +247,9 @@ void ASofaContext::createSofaContext()
 
     // Create the actor of the scene:
     unsigned int nbr = m_sofaAPI->getNbOutputMeshes();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Nbr objects: %d"), nbr);
+
+    if (m_log)
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Nbr objects: %d"), nbr);
 
     for (unsigned int meshID = 0; meshID < nbr; meshID++)
     {
@@ -239,7 +257,8 @@ void ASofaContext::createSofaContext()
         
         const char* name = mesh->getName();
         FString FName(name);
-        UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
+        if (m_log)
+            UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
         //FString FType(type);
         //UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
 
@@ -255,20 +274,21 @@ void ASofaContext::createSofaContext()
                 
             FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
             visuMesh->AttachToActor(this, att);
-            UE_LOG(SUnreal_log, Warning, TEXT("### ACtor Created!!"));
+            if (m_log)
+                UE_LOG(SUnreal_log, Warning, TEXT("### ACtor Created!!"));
         }
         else
         {
             TArray<AActor*> ChildActors;
             UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASofaVisualMesh::StaticClass(), ChildActors);
                                 
-            UE_LOG(SUnreal_log, Warning, TEXT("### nbr child: %d"), ChildActors.Num());
             for (auto actor : ChildActors)
             {
-                UE_LOG(SUnreal_log, Warning, TEXT("### child name: %s"), *actor->GetName());
                 if (FName.Compare(actor->GetActorLabel()) == 0)
                 {
-                    UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+                    if (m_log)
+                        UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+                    
                     visuMesh = dynamic_cast<ASofaVisualMesh*>(actor);
                     break;
                 }
@@ -277,7 +297,9 @@ void ASofaContext::createSofaContext()
             
         if (visuMesh != nullptr)
         {
-            UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
+            if (m_log)
+                UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
+            
             visuMesh->setSofaMesh(mesh);
         }
     }
@@ -287,7 +309,6 @@ void ASofaContext::createSofaContext()
 
     //if (m_status == 1)
     m_status++;
-    UE_LOG(SUnreal_log, Warning, TEXT("### out creation!!"));
 }
 
 void ASofaContext::loadDefaultPlugin()
@@ -307,8 +328,6 @@ void ASofaContext::loadDefaultPlugin()
 void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: nbrMsgs: %d"), nbrMsgs);
-    
     int* type = new int[1];
     type[0] = -1;
     for (int i = 0; i < nbrMsgs; ++i)
