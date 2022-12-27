@@ -27,28 +27,25 @@ public:
     //virtual void EndPlay() override;
     void PostActorCreated() override;
     void PostLoad() override;
-
-    //void setSofaImpl(Sofa3DObject * impl);
-
+    
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
 
-    void createMesh();
     void recomputeUV(const TArray<FVector>& vertices, TArray<FVector2D>& UV0);
     void computeBoundingBox(const TArray<FVector>& vertices);
 
+    bool m_isStatic;
+
+protected:
+    void createMesh();
+
     void updateMesh();
-
-    float RunningTime;
-
-    bool isStatic;
-
 
 private:
     UPROPERTY(VisibleAnywhere)
         UProceduralMeshComponent * mesh;
 
-    SofaPhysicsOutputMesh* m_sofaMesh;
+    SofaPhysicsOutputMesh* m_sofaMesh = nullptr;
     FVector m_min;
     FVector m_max;
 };

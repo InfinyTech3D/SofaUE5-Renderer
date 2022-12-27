@@ -4,12 +4,9 @@
 #include "SofaUE5.h"
 #include "SofaUE5Library/SofaPhysicsAPI.h"
 
-//DEFINE_LOG_CATEGORY(SUnreal_log);
-
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
-    : m_sofaMesh(nullptr)
-    , isStatic(false)
+    : m_isStatic(false)
     , m_min(FVector(100000, 100000, 100000))
     , m_max(FVector(-100000, -100000, -100000))
 {
@@ -37,14 +34,12 @@ void ASofaVisualMesh::BeginPlay()
 void ASofaVisualMesh::PostActorCreated()
 {
     Super::PostActorCreated();
-    //createMesh();
 }
 
 // This is called when actor is already in level and map is opened
 void ASofaVisualMesh::PostLoad()
 {
     Super::PostLoad();
-    //createMesh();
 }
 
 // Called every frame
@@ -52,49 +47,45 @@ void ASofaVisualMesh::Tick( float DeltaTime )
 {
     Super::Tick( DeltaTime );
 
-    if (!isStatic)
+    if (!m_isStatic)
         updateMesh();
 }
 
 
 void ASofaVisualMesh::updateMesh()
 {   
-
-    if (m_sofaMesh == NULL)
+    if (m_sofaMesh == nullptr)
         return;
 
-
+    // Get number of vertices
     int nbrV = m_sofaMesh->getNbVertices();
-    //UE_LOG(SUnreal_log, Warning, TEXT("ASofaVisualMesh::updateMesh(): %d"), nbrV);
-    float* sofaVertices = new float[nbrV * 3];
-    float* sofaNormals = new float[nbrV * 3];
 
     // Get the different buffers
+    float* sofaVertices = new float[nbrV * 3];
+    float* sofaNormals = new float[nbrV * 3];
     m_sofaMesh->getVPositions(sofaVertices);
     m_sofaMesh->getVNormals(sofaNormals);
 
+    // Copy data into UE structure
     TArray<FVector> vertices;
     TArray<FVector> normals;
     for (int i = 0; i < nbrV; i++)
     {
         vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+        normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
     }
-    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::FromInt(nbrV));
+
     mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
 }
 
-//DEFINE_LOG_CATEGORY(SUnreal_log);
+
 void ASofaVisualMesh::createMesh()
 {
     UE_LOG(SUnreal_log, Warning, TEXT("### createMesh"));
 
-    if (m_sofaMesh == NULL)
+    if (m_sofaMesh == nullptr)
         return;
 
-    //FString type2 = m_sofaMesh->getObjectType().c_str();
-    ////GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, type2);
-    //
     // Get topology elements numbers
     int nbrV = m_sofaMesh->getNbVertices();
     int nbrTri = m_sofaMesh->getNbTriangles();
@@ -115,7 +106,6 @@ void ASofaVisualMesh::createMesh()
     m_sofaMesh->getVTexCoords(sofaTexCoords);
 
     // Convert in Unreal structure
-
     TArray<FVector> vertices;
     TArray<int32> Triangles;
     TArray<FVector> normals;
@@ -126,14 +116,12 @@ void ASofaVisualMesh::createMesh()
     for (int i = 0; i < nbrV; i++)
     {
         vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
+        normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
         UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
 
         tangents.Add(FProcMeshTangent(0, 1, 0));
         vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
     }
-
-    //recomputeUV(vertices, UV0);
 
     // Add triangles
     for (int i = 0; i < nbrTri; i++)
