@@ -214,20 +214,20 @@ void ASofaContext::createSofaContext()
     loadDefaultPlugin();
 
 
-    const char* pathfile = "C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Content/SofaScenes/liver.scn";
+    //const char* pathfile = "C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Content/SofaScenes/liver.scn";
 
-    //if (filePath.FilePath.IsEmpty()) {
-    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
-    //    return;
-    //}
+    if (filePath.FilePath.IsEmpty()) {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: No filePath set."));
+        return;
+    }
    
-    //FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+    FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+    
+    //FString fsFilename = FString(pathfile);
+    //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: scene path: %s"), *fsFilename);
 
-    FString fsFilename = FString(pathfile);
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: scene path: %s"), *fsFilename);
-
-    //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *my_filePath);
-   // const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: filePath.FilePath, %s"), *my_filePath);
+    const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
     int resScene = m_sofaAPI->load(pathfile);
 
     if (resScene > 0) {
