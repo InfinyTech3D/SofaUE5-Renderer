@@ -103,6 +103,12 @@ void ASofaVisualMesh::createMesh()
     int nbrQuads = m_sofaMesh->getNbQuads();
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d | nbrQuads: %d"), nbrV, nbrTri, nbrQuads);
 
+    if (nbrV <= 0 || nbrV > 100000)
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaVisualMesh::createMesh(): Error on the nbrV returned: %d"), nbrV);
+        return;
+    }
+
     float* sofaVertices = new float[nbrV*3];
     float* sofaNormals = new float[nbrV*3];
     float* sofaTexCoords = new float[nbrV * 2];
@@ -133,7 +139,6 @@ void ASofaVisualMesh::createMesh()
             normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
         else
             normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
-
 
         tangents.Add(FProcMeshTangent(0, 1, 0));
         vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
@@ -168,7 +173,7 @@ void ASofaVisualMesh::createMesh()
     mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 
     // Enable collision data
-    mesh->ContainsPhysicsTriMeshData(true);
+    //mesh->ContainsPhysicsTriMeshData(true);
 }
 
 void ASofaVisualMesh::computeBoundingBox(const TArray<FVector>& vertices)

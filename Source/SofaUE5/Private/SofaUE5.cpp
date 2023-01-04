@@ -4,7 +4,6 @@
 #include "Core.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-#include "SofaUE5Library/ExampleLibrary.h"
 #include "SofaUE5Library/SofaPhysicsBindings.h"
 
 #define LOCTEXT_NAMESPACE "FSofaUE5Module"
