@@ -49,7 +49,12 @@ They are available in the folder [/Scenes/Demos/](https://github.com/InfinyTech3
 - Demo_03_Tissue.umap -> Integration of  [Content/SofaScenes/tissue.scn](https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Content/SofaScenes/tissue.scn)
 
 Here are a some results of the integration:
-TODO: IMAGES
+<p align="center">
+	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/liver.jpg" style="width:1000px;"/>
+</p>
+<p align="center">
+	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/SofaUnreal.jpg" style="width:1000px;"/>
+</p>
 
 ## License
 This Unity asset is under GPL-3 license. 
