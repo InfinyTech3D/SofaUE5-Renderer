@@ -24,7 +24,7 @@
         <FixedConstraint  name="FixedConstraint" indices="3 39 64" />
         
 		<Node name="VisuLiver" tags="Visual" gravity="0 -9.81 0">
-            <MeshObjLoader name="meshLoaderVisu" filename="./mesh/liver-smooth.obj" handleSeams="1" />
+            <MeshOBJLoader name="meshLoaderVisu" filename="./mesh/liver-smooth.obj" handleSeams="1" />
             <OglModel  name="VisualModel" src="@meshLoaderVisu"/>
             <BarycentricMapping name="visual mapping" input="@../dofs" output="@VisualModel" />
         </Node>
