@@ -29,7 +29,7 @@ All SOFA `VisualModel` components present in the loaded simulation will be rende
 Once the plugin has been loaded you should have this folders structure under Plugins/
 
 <p align="center">
-	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_plugin_folder.jpg" style="width:400px;"/>
+	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_plugin_folder.jpg"/>
 </p>
 
 - SofaUE5 Content contains several examples listed below with their corresponding SOFA scene as well as textures and Materials.
@@ -39,14 +39,14 @@ Once the plugin has been loaded you should have this folders structure under Plu
 This component will be added to the scene and can be access inside the Outliner. This compoment will create a SOFA simulation physically represented by this Actor in the Level.
 
 <p align="center">
-	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_SofaContext_creation.jpg" style="width:400px;"/>
+	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_SofaContext_creation.jpg" >
 </p>
 
 You can access the SofaContext parameters by clicking on it and change its parameters. You can scale or move the SOFA frame to match your current scene.
 Other parameters linked to SOFA can also be changed like the gravity vector as well as the time steepping and activating the logs.
 
 <p align="center">
-	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_SofaContext_parameters.jpg" style="width:400px;"/>
+	<img src="https://github.com/InfinyTech3D/SofaUE5-Renderer/blob/master/Doc/img/menu_SofaContext_parameters.jpg" />
 </p>
 
 2. **Click on the button** next to the ```File Path```  to load a SOFA scene. This will create an `Actor` SofaVisualMesh with a `GeneratedMesh` for each SOFA ```VisualModel```
