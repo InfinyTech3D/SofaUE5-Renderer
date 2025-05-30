@@ -23,14 +23,17 @@
  ****************************************************************************/
 
 #include "SofaUE5.h"
-#include "Core.h"
+#include "Misc/MessageDialog.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-#include "SofaUE5Library/SofaPhysicsBindings.h"
+//#include "SofaUE5Library/SofaPhysicsBindings.h"
+#include "Misc/Paths.h"
+#include "HAL/PlatformProcess.h"
 
 #define LOCTEXT_NAMESPACE "FSofaUE5Module"
+DEFINE_LOG_CATEGORY(SUnreal_log);
+DEFINE_LOG_CATEGORY(SofaLog);
 
-//DEFINE_LOG_CATEGORY(YourLog);
 
 void FSofaUE5Module::StartupModule()
 {
@@ -72,8 +75,8 @@ void FSofaUE5Module::StartupModule()
 		//float res = FooPluginFunction();
 		//ExampleLibraryFunction();
 		//int test = test_getAPI_ID();
-		UE_LOG(SUnreal_log, Warning, TEXT("######### FSofaUE5Module::StartupModule() start: ##########"));
-		//FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaPhysicsAPI library"));
+		//UE_LOG(SUnreal_log, Warning, TEXT("######### FSofaUE5Module::StartupModule() start: ##########"));
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaPhysicsAPI library"));
 	}
 	else
 	{
