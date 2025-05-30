@@ -11,8 +11,10 @@ public class SofaUE5Library : ModuleRules
 
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{
-			// Add the import library
-			PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "x64", "Release", "SofaPhysicsAPI.lib"));
+            PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
+
+            // Add the import library
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "x64", "Release", "SofaPhysicsAPI.lib"));
 
 			// Delay-load the DLL, so we can load it from the right place first
 			PublicDelayLoadDLLs.Add("SofaPhysicsAPI.dll");

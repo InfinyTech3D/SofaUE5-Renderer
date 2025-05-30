@@ -26,7 +26,7 @@
 #include "Misc/MessageDialog.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-//#include "SofaUE5Library/SofaPhysicsBindings.h"
+#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "Misc/Paths.h"
 #include "HAL/PlatformProcess.h"
 
