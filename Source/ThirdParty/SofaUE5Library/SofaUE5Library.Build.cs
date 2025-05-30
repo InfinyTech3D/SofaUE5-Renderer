@@ -22,15 +22,15 @@ public class SofaUE5Library : ModuleRules
 		}
         else if (Target.Platform == UnrealTargetPlatform.Mac)
         {
-            PublicDelayLoadDLLs.Add(Path.Combine(ModuleDirectory, "Mac", "Release", "libExampleLibrary.dylib"));
-            RuntimeDependencies.Add("$(PluginDir)/Source/ThirdParty/SofaUE5Library/Mac/Release/libExampleLibrary.dylib");
+            //PublicDelayLoadDLLs.Add(Path.Combine(ModuleDirectory, "Mac", "Release", "libExampleLibrary.dylib"));
+            //RuntimeDependencies.Add("$(PluginDir)/Source/ThirdParty/SofaUE5Library/Mac/Release/libExampleLibrary.dylib");
         }
         else if (Target.Platform == UnrealTargetPlatform.Linux)
 		{
-			string ExampleSoPath = Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "SofaUE5Library", "Linux", "x86_64-unknown-linux-gnu", "libExampleLibrary.so");
-			PublicAdditionalLibraries.Add(ExampleSoPath);
-			PublicDelayLoadDLLs.Add(ExampleSoPath);
-			RuntimeDependencies.Add(ExampleSoPath);
+			//string ExampleSoPath = Path.Combine("$(PluginDir)", "Binaries", "ThirdParty", "SofaUE5Library", "Linux", "x86_64-unknown-linux-gnu", "libExampleLibrary.so");
+			//PublicAdditionalLibraries.Add(ExampleSoPath);
+			//PublicDelayLoadDLLs.Add(ExampleSoPath);
+			//RuntimeDependencies.Add(ExampleSoPath);
 		}
 	}
 }
