@@ -26,7 +26,7 @@
 #include "GameFramework/Actor.h"
 #include "SofaContext.generated.h"
 
-class SofaPhysicsAPI;
+class SofaAdvancePhysicsAPI;
 
 UCLASS()
 class SOFAUE5_API ASofaContext : public AActor
@@ -74,7 +74,7 @@ public:
         bool m_isMsgHandlerActivated = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_log = false;
+        bool m_log = true;
 
 protected:
     void catchSofaMessages();
@@ -91,7 +91,7 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    SofaPhysicsAPI* m_sofaAPI = nullptr;
+    SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;
