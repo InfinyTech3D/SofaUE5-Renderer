@@ -26,11 +26,9 @@ public class SofaUE5 : ModuleRules
 			new string[]
 			{
 				"Core",
-				"SofaUE5Library",
-				"Projects",
-				"Engine",
-				"CoreUObject",
-				"ProceduralMeshComponent"
+                "SofaUE5Library",
+                "ProceduralMeshComponent",
+                "Projects"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -39,6 +37,8 @@ public class SofaUE5 : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
+                "CoreUObject",
+                "Engine"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -25,16 +25,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "mytestClass.generated.h"
+#include "MyPluginActor.generated.h"
 
 UCLASS()
-class SOFAUE5_API AmytestClass : public AActor
+class SOFAUE5_API AMyPluginActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AmytestClass();
+	AMyPluginActor();
 
 protected:
 	// Called when the game starts or when spawned

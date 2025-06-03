@@ -22,10 +22,10 @@
  * Further information: https://infinytech3d.com                             *
  ****************************************************************************/
 
-#include "mytestClass.h"
+#include "MyPluginActor.h"
 
 // Sets default values
-AmytestClass::AmytestClass()
+AMyPluginActor::AMyPluginActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,14 +33,14 @@ AmytestClass::AmytestClass()
 }
 
 // Called when the game starts or when spawned
-void AmytestClass::BeginPlay()
+void AMyPluginActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AmytestClass::Tick(float DeltaTime)
+void AMyPluginActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

@@ -1,5 +1,4 @@
-Source/ThirdParty/SofaUnrealLibrary/sofa/
 Intermediate/Build/
 Binaries/Win64/
+Binaries/ThirdParty/
 Source/ThirdParty/SofaUE5Library/x64/
-Binaries/ThirdParty/SofaUE5Library/Win64/

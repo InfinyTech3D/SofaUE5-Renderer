@@ -174,8 +174,8 @@ void ASofaContext::Tick( float DeltaTime )
     {
         m_sofaAPI->step();
         
-    //    if (m_isMsgHandlerActivated == true)
-    //        catchSofaMessages();
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
         //float value = this->GetGameTimeSinceCreation();
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: init: %f %f"), DeltaTime, value);
     }
@@ -280,19 +280,19 @@ void ASofaContext::createSofaContext()
         FString FName(name);
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
-        //FString FType(type);
-        //UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
+//        FString FType(type);
+//        UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
 
         UWorld* const World = GetWorld();
         if (World == NULL)
             continue;
-            
+        
         ASofaVisualMesh* visuMesh = nullptr;
         if (m_status == -1) // create actors
         {
             visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
-            visuMesh->SetActorLabel(FName);
-                
+            visuMesh->Tags.Add("SofaVisual");
+            
             FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
             visuMesh->AttachToActor(this, att);
             if (m_log)
@@ -305,7 +305,7 @@ void ASofaContext::createSofaContext()
                                 
             for (auto actor : ChildActors)
             {
-                if (FName.Compare(actor->GetActorLabel()) == 0)
+                if (visuMesh->ActorHasTag("SofaVisual"))
                 {
                     if (m_log)
                         UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
