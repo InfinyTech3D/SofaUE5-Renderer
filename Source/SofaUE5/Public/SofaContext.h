@@ -83,6 +83,8 @@ protected:
 
     void loadDefaultPlugin();
 
+    void loadNodeGraph();
+
 
 private:
     int32 m_dllLoadStatus;
