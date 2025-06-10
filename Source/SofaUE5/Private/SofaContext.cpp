@@ -84,7 +84,7 @@ void ASofaContext::BeginPlay()
         UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
     }
 
-    createSofaContext();
+    //createSofaContext();
 
     if (m_sofaAPI)
     {
@@ -170,7 +170,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
         }
         else if (MemberName.Compare(TEXT("filePath")) == 0)
         {
-            createSofaContext();
+            //createSofaContext();
         }
     }
 }
@@ -478,7 +478,7 @@ void ASofaContext::loadComponentsInNode(ASofaDAGNode* my_DAGNode)
 
     FString fs_componentList(componentList.c_str());
     UE_LOG(SUnreal_log, Log, TEXT("## Process Node: %s | found component List: %s"), *my_DAGNode->getUniqNameID(), *fs_componentList);
-    return;
+    
     std::vector<std::string> components;
     std::istringstream f; f.str(componentList);
     std::string s;
@@ -493,25 +493,27 @@ void ASofaContext::loadComponentsInNode(ASofaDAGNode* my_DAGNode)
         return;
     }
 
-    return;
 
-    for (auto compoName : components)
+    for (int i=0; i< components.size(); ++i)
     {
+        std::string compoName = components[i];
+        FString fs_compoName(compoName.c_str());
+        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d"), i);
+        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
+
         ASofaBaseComponent* component = nullptr;
-        std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
-        //std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
+        //std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
+        ////std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
 
         if (m_status == -1) // create actors
         {
             FActorSpawnParameters SpawnParams;
-            FString fs_compoName(compoName.c_str());
-            FString fs_displayName(displayName.c_str());
-          //  FString fs_baseType(baseType.c_str());
-            UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
+        //    FString fs_compoName(compoName.c_str());
+            //FString fs_displayName(displayName.c_str());
+        //  //  FString fs_baseType(baseType.c_str());
+        //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
 
-            continue;
-            SpawnParams.Name = FName(*fs_displayName);
-            SpawnParams.Owner = this;
+            SpawnParams.Name = FName("SofaComponent");
 
             component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
             if (component != nullptr)
