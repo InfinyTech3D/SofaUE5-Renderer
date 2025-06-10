@@ -25,5 +25,20 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	
+	void setUniqueNameID(const FString& uniqueNameID) { m_uniqueNameID = uniqueNameID; }
+	void setComponentType(const FString& type) { m_baseType = type; }
 
+	const FString& getComponentType() {
+		return m_baseType;
+	}
+
+	const FString& getUniqNameID() {
+		return m_uniqueNameID;
+	}
+
+private:
+	FString m_uniqueNameID;
+	FString m_baseType;
 };

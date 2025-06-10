@@ -27,6 +27,7 @@
 #include "CoreMinimal.h"
 //#include "SofaVisualMesh.h"
 #include "DAGNode/SofaDAGNode.h"
+#include "Base/SofaBaseComponent.h"
 #include <vector>
 #include <string>
 
@@ -143,7 +144,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
     if (m_sofaAPI)
     {
         m_sofaAPI->stop();
-        m_sofaAPI->activateMessageHandler(false);
+        //m_sofaAPI->activateMessageHandler(false);
     }
     Super::EndPlay(EndPlayReason);
 }
@@ -198,7 +199,9 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: createSofaContext"));
+    if (m_log)
+        UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
     // create a new sofa context through sofaAdvancePhysicsAPI    
@@ -208,10 +211,8 @@ void ASofaContext::createSofaContext()
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
         
-        if (m_log)
-            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext Create SofaAdvancePhysicsAPI NEW"));
-        
-        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        // TODO restore that
+        //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
         if (m_sofaAPI == nullptr)
         {
@@ -223,12 +224,12 @@ void ASofaContext::createSofaContext()
 
         if (m_log)
         {
-            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: SofaAdvancePhysicsAPI Name: %s"), *m_apiName);
-            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: init: %d"), m_status);
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Status: %d"), m_status);
         }
 
         // create scene
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI creating Scene"));
+        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Creating Scene..."));
         int resCreate = m_sofaAPI->createScene();
         
 
@@ -237,13 +238,13 @@ void ASofaContext::createSofaContext()
             return;
         }
         else
-            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
 
         
         //load ini file
-        FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
-        const char* pathchar = TCHAR_TO_ANSI(*iniPath);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI load ini file: %s"), *iniPath);
+        //FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
+        //const char* pathchar = TCHAR_TO_ANSI(*iniPath);
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI load ini file: %s"), *iniPath);
         //m_sofaAPI->loadSofaIni(pathchar);
     }
 
@@ -258,10 +259,10 @@ void ASofaContext::createSofaContext()
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
     if (resPlug == 0) {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI loadDefaultPlugin result: %d"), resPlug);
+        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin success, returns: %d"), resPlug);
     }
     else {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI loadDefaultPlugin result: %d"), resPlug);
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
 
     
@@ -278,7 +279,7 @@ void ASofaContext::createSofaContext()
     //FString fsFilename = FString(pathfile);
     //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: scene path: %s"), *fsFilename);
 
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: filePath.FilePath, %s"), *my_filePath);
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Loading file: %s"), *my_filePath);
     const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
     int resScene = m_sofaAPI->load(pathfile);
 
@@ -287,87 +288,21 @@ void ASofaContext::createSofaContext()
         return;
     }
     else {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: Scene loading success."));
+        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Scene loading success."));
     }
 
-
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: init: %d"), m_status);
-    
+   
     // Pass default scene parameter
    // this->setDT(Dt);
    // this->setGravity(Gravity);
 
 
-    int nbrMesh = m_sofaAPI->getNumberOfMeshIO();
-    
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: m_sofaAPI load meshes nbr: %d"), nbrMesh);
-    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: Scene loading failed return error: %d"), resScene);
+    int nbrMesh = m_sofaAPI->getNumberOfMeshIO();    
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: Info: Loaded meshes nbr: %d"), nbrMesh);
     
     // Create the actor of the scene:
 
     this->loadNodeGraph();
-
-    //unsigned int nbr = 0;//m_sofaAPI->getNbOutputMeshes();
-
-    //if (m_log)
-    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext: Nbr objects: %d"), nbr);
-
-
-
-
-
-//    for (unsigned int meshID = 0; meshID < nbr; meshID++)
-//    {
-//        SofaPhysicsOutputMesh* mesh = m_sofaAPI->getOutputMeshPtr(meshID);
-//        
-//        const char* name = mesh->getName();
-//        FString FName(name);
-//        if (m_log)
-//            UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
-////        FString FType(type);
-////        UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
-//
-//        UWorld* const World = GetWorld();
-//        if (World == NULL)
-//            continue;
-//        
-//        ASofaVisualMesh* visuMesh = nullptr;
-//        if (m_status == -1) // create actors
-//        {
-//            visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
-//            visuMesh->Tags.Add("SofaVisual");
-//            
-//            FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-//            visuMesh->AttachToActor(this, att);
-//            if (m_log)
-//                UE_LOG(SUnreal_log, Warning, TEXT("### ACtor Created!!"));
-//        }
-//        else
-//        {
-//            TArray<AActor*> ChildActors;
-//            UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASofaVisualMesh::StaticClass(), ChildActors);
-//                                
-//            for (auto actor : ChildActors)
-//            {
-//                if (visuMesh->ActorHasTag("SofaVisual"))
-//                {
-//                    if (m_log)
-//                        UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
-//                    
-//                    visuMesh = dynamic_cast<ASofaVisualMesh*>(actor);
-//                    break;
-//                }
-//            }
-//        }
-//            
-//        if (visuMesh != nullptr)
-//        {
-//            if (m_log)
-//                UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
-//            
-//            visuMesh->setSofaMesh(mesh);
-//        }
-//    }
 
     //if (m_isMsgHandlerActivated == true)
     //    catchSofaMessages();
@@ -385,8 +320,8 @@ void ASofaContext::loadDefaultPlugin()
     //m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GL.Component.dll");
     //m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GUI.Component.dll");
 
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 }
 
 
@@ -396,7 +331,7 @@ void ASofaContext::loadNodeGraph()
         return;
     
     int nbrNode = m_sofaAPI->getNbrDAGNode();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: m_sofaAPI load Node nbr: %d"), nbrNode);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load Node nbr: %d"), nbrNode);
 
     UWorld* const World = GetWorld();
     if (World == nullptr)
@@ -405,6 +340,8 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
+    m_dagNodes.clear();
+    // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
         std::string nodeUniqID = m_sofaAPI->getDAGNodeAPIName(nodeId);
@@ -413,27 +350,182 @@ void ASofaContext::loadNodeGraph()
         FString fs_nodeUniqID(nodeUniqID.c_str());
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
-
-
         ASofaDAGNode* dagNode = nullptr;
         if (m_status == -1) // create actors
         {
-            dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass());
-            if (dagNode != nullptr)
-            {
-                
-                FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-                dagNode->AttachToActor(this, att);
-                if (m_log)
-                    UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode Created: %s"), *fs_nodeDisplayName);
+            FActorSpawnParameters SpawnParams;
+            SpawnParams.Name = FName(*fs_nodeDisplayName);
+            SpawnParams.Owner = this;
 
-                dagNode->Rename(*fs_nodeDisplayName);
+            dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
+            if (dagNode != nullptr)
+            {                
+                //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
+                bool resAttach = dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+                if (m_log)
+                    UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode Created: %s | attach: %d"), *fs_nodeDisplayName, resAttach);
+
+                std::string parentName = m_sofaAPI->getDAGNodeParentAPIName(nodeUniqID);
+                FString fs_parentName(parentName.c_str());
+                dagNode->setUniqueNameID(fs_nodeUniqID);
+                dagNode->setParentName(fs_parentName);
+                dagNode->SetActorLabel(fs_nodeDisplayName);
+                UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode info: %s | parent: %s"), *fs_nodeUniqID, *fs_parentName);
             }
             else
             {
                 UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
             }
-            
+            m_dagNodes.push_back(dagNode);
+        }
+    }
+
+
+    // Reorder Node using Parent
+    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    {
+        ASofaDAGNode* dagNode = m_dagNodes[i];
+        const FString& parentName = dagNode->getParentName();        
+        UE_LOG(SUnreal_log, Log, TEXT("## Process: %s | %s"), *dagNode->getUniqNameID(), *parentName);
+
+        auto res = parentName.Compare("None");
+        if (res == 0)
+            continue;
+
+        for (unsigned int j = 0; j < m_dagNodes.size(); ++j)
+        {
+            ASofaDAGNode* otherDagNode = m_dagNodes[j];
+            if (otherDagNode->getUniqNameID().Compare(parentName) == 0)
+            {
+                dagNode->AttachToActor(otherDagNode, FAttachmentTransformRules::KeepRelativeTransform);                
+            }
+        }
+    }
+
+    // Load Components Graph
+    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    {
+        loadComponentsInNode(m_dagNodes[i]);
+    }
+
+
+    //    for (unsigned int meshID = 0; meshID < nbr; meshID++)
+    //    {
+    //        SofaPhysicsOutputMesh* mesh = m_sofaAPI->getOutputMeshPtr(meshID);
+    //        
+    //        const char* name = mesh->getName();
+    //        FString FName(name);
+    //        if (m_log)
+    //            UE_LOG(SUnreal_log, Warning, TEXT("## SofaPhysicsOutputMesh: name: %s"), *FName);
+    ////        FString FType(type);
+    ////        UE_LOG(SUnreal_log, Warning, TEXT("### FName: %s | FType: %s"), *FName, *FType);
+    //
+    //        UWorld* const World = GetWorld();
+    //        if (World == NULL)
+    //            continue;
+    //        
+    //        ASofaVisualMesh* visuMesh = nullptr;
+    //        if (m_status == -1) // create actors
+    //        {
+    //            visuMesh = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass());
+    //            visuMesh->Tags.Add("SofaVisual");
+    //            
+    //            FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
+    //            visuMesh->AttachToActor(this, att);
+    //            if (m_log)
+    //                UE_LOG(SUnreal_log, Warning, TEXT("### ACtor Created!!"));
+    //        }
+    //        else
+    //        {
+    //            TArray<AActor*> ChildActors;
+    //            UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASofaVisualMesh::StaticClass(), ChildActors);
+    //                                
+    //            for (auto actor : ChildActors)
+    //            {
+    //                if (visuMesh->ActorHasTag("SofaVisual"))
+    //                {
+    //                    if (m_log)
+    //                        UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+    //                    
+    //                    visuMesh = dynamic_cast<ASofaVisualMesh*>(actor);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //            
+    //        if (visuMesh != nullptr)
+    //        {
+    //            if (m_log)
+    //                UE_LOG(SUnreal_log, Warning, TEXT("### Set model to Actor!!"));
+    //            
+    //            visuMesh->setSofaMesh(mesh);
+    //        }
+    //    }
+
+
+}
+
+
+void ASofaContext::loadComponentsInNode(ASofaDAGNode* my_DAGNode)
+{
+    if (m_sofaAPI == nullptr)
+        return;
+
+    UE_LOG(SUnreal_log, Log, TEXT("## loadComponentsInNode: %s"), *my_DAGNode->getUniqNameID());
+
+    std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*my_DAGNode->getUniqNameID()));
+    std::string componentList = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID);
+
+    FString fs_componentList(componentList.c_str());
+    UE_LOG(SUnreal_log, Log, TEXT("## Process Node: %s | found component List: %s"), *my_DAGNode->getUniqNameID(), *fs_componentList);
+    return;
+    std::vector<std::string> components;
+    std::istringstream f; f.str(componentList);
+    std::string s;
+    while (getline(f, s, ',')) {
+        components.push_back(s);
+    }
+
+    UWorld* const World = GetWorld();
+    if (World == nullptr)
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponentsInNode: GetWorld return a null pointer"));
+        return;
+    }
+
+    return;
+
+    for (auto compoName : components)
+    {
+        ASofaBaseComponent* component = nullptr;
+        std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
+        //std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
+
+        if (m_status == -1) // create actors
+        {
+            FActorSpawnParameters SpawnParams;
+            FString fs_compoName(compoName.c_str());
+            FString fs_displayName(displayName.c_str());
+          //  FString fs_baseType(baseType.c_str());
+            UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
+
+            continue;
+            SpawnParams.Name = FName(*fs_displayName);
+            SpawnParams.Owner = this;
+
+            component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
+            if (component != nullptr)
+            {
+                bool resAttach = component->AttachToActor(my_DAGNode, FAttachmentTransformRules::KeepRelativeTransform);
+                //if (m_log)
+                //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+
+                //component->setUniqueNameID(FString(compoName.c_str()));
+                //component->setComponentType(FString(baseType.c_str()));
+            }
+            else
+            {
+            }
         }
     }
 }

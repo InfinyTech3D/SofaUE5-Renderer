@@ -24,9 +24,11 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include <vector>
 #include "SofaContext.generated.h"
 
 class SofaAdvancePhysicsAPI;
+class ASofaDAGNode;
 
 UCLASS()
 class SOFAUE5_API ASofaContext : public AActor
@@ -85,6 +87,8 @@ protected:
 
     void loadNodeGraph();
 
+    void loadComponentsInNode(ASofaDAGNode* my_DAGNode);
+
 
 private:
     int32 m_dllLoadStatus;
@@ -97,4 +101,6 @@ private:
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;
+
+    std::vector <ASofaDAGNode*> m_dagNodes;
 };
