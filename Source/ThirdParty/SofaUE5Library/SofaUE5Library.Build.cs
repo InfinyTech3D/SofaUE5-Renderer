@@ -14,13 +14,13 @@ public class SofaUE5Library : ModuleRules
             PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
 
             // Add the import library
-            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "x64", "Release", "SofaPhysicsAPI.lib"));
+            PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "x64", "Release", "SofaVerseAPI.lib"));
 
 			// Delay-load the DLL, so we can load it from the right place first
-			PublicDelayLoadDLLs.Add("SofaPhysicsAPI.dll");
+			PublicDelayLoadDLLs.Add("SofaVerseAPI.dll");
 
 			// Ensure that the DLL is staged along with the executable
-			RuntimeDependencies.Add("$(PluginDir)/Binaries/ThirdParty/SofaUE5Library/Win64/SofaPhysicsAPI.dll");
+			RuntimeDependencies.Add("$(PluginDir)/Binaries/ThirdParty/SofaUE5Library/Win64/SofaVerseAPI.dll");
 		}
         else if (Target.Platform == UnrealTargetPlatform.Mac)
         {

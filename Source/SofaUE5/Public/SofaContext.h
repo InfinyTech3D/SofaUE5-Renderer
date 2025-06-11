@@ -24,9 +24,11 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include <vector>
 #include "SofaContext.generated.h"
 
-class SofaPhysicsAPI;
+class SofaAdvancePhysicsAPI;
+class ASofaDAGNode;
 
 UCLASS()
 class SOFAUE5_API ASofaContext : public AActor
@@ -74,7 +76,7 @@ public:
         bool m_isMsgHandlerActivated = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_log = false;
+        bool m_log = true;
 
 protected:
     void catchSofaMessages();
@@ -82,6 +84,10 @@ protected:
     void createSofaContext();
 
     void loadDefaultPlugin();
+
+    void loadNodeGraph();
+
+    void loadComponentsInNode(ASofaDAGNode* my_DAGNode);
 
 
 private:
@@ -91,8 +97,10 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    SofaPhysicsAPI* m_sofaAPI = nullptr;
+    SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
     //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
     UPROPERTY(SaveGame)
         int m_status;
+
+    std::vector <ASofaDAGNode*> m_dagNodes;
 };

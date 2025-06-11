@@ -45,11 +45,11 @@ void FSofaUE5Module::StartupModule()
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
 #if PLATFORM_WINDOWS
-	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/SofaPhysicsAPI.dll"));
+	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/SofaVerseAPI.dll"));
 #elif PLATFORM_MAC
-    LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUE5Library/Mac/Release/libSofaPhysicsAPI.dylib"));
+    LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUE5Library/Mac/Release/libSofaVerseAPI.dylib"));
 #elif PLATFORM_LINUX
-	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Linux/x86_64-unknown-linux-gnu/libSofaPhysicsAPI.so"));
+	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Linux/x86_64-unknown-linux-gnu/libSofaVerseAPI.so"));
 #endif // PLATFORM_WINDOWS
 
 
@@ -57,12 +57,12 @@ void FSofaUE5Module::StartupModule()
 	//FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUnrealLibrary/sofa/bin/")));
 	if (LibraryPath.IsEmpty())
 	{
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI.dll, library path is empty!"));
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaVerseAPI.dll, library path is empty!"));
 		return;
 	}
 	else if (!FPaths::FileExists(LibraryPath))
 	{
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI.dll, File not found at given path"));
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaVerseAPI.dll, File not found at given path"));
 		return;
 	}
 
@@ -76,11 +76,11 @@ void FSofaUE5Module::StartupModule()
 		//ExampleLibraryFunction();
 		//int test = test_getAPI_ID();
 		//UE_LOG(SUnreal_log, Warning, TEXT("######### FSofaUE5Module::StartupModule() start: ##########"));
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaPhysicsAPI library"));
+		//FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "SUCCESS to load SofaVerseAPI library"));
 	}
 	else
 	{
-		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaPhysicsAPI GetDllHandle error"));
+		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaVerseAPI GetDllHandle error"));
 	}
 }
 
