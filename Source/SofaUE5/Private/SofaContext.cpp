@@ -31,7 +31,7 @@
 #include <vector>
 #include <string>
 
-#include "SofaUE5Library/SofaPhysicsAPI.h"
+//#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 
@@ -84,7 +84,7 @@ void ASofaContext::BeginPlay()
         UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
     }
 
-    //createSofaContext();
+    createSofaContext();
 
     if (m_sofaAPI)
     {
@@ -302,12 +302,16 @@ void ASofaContext::createSofaContext()
     
     // Create the actor of the scene:
 
-    this->loadNodeGraph();
-
+    if (m_status == -1) {
+        this->loadNodeGraph();
+    }
+    else
+    {
+        // reconnect NodeGraph
+    }
     //if (m_isMsgHandlerActivated == true)
     //    catchSofaMessages();
 
-    //if (m_status == 1)
     m_status++;
 }
 
@@ -405,7 +409,8 @@ void ASofaContext::loadNodeGraph()
     // Load Components Graph
     for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
     {
-        loadComponentsInNode(m_dagNodes[i]);
+        m_dagNodes[i]->loadComponents(this->m_sofaAPI);
+        //loadComponentsInNode(m_dagNodes[i]);
     }
 
 
@@ -494,42 +499,44 @@ void ASofaContext::loadComponentsInNode(ASofaDAGNode* my_DAGNode)
     }
 
 
-    for (int i=0; i< components.size(); ++i)
-    {
-        std::string compoName = components[i];
-        FString fs_compoName(compoName.c_str());
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d"), i);
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
+    //for (int i=0; i< components.size(); ++i)
+    //{
+    //    std::string compoName = components[i];
+    //    FString fs_compoName(compoName.c_str());
+    //    //FString fs_compoName("toto");
+    //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d"), i);
+    //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
 
-        ASofaBaseComponent* component = nullptr;
-        //std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
-        ////std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
+    //    ASofaBaseComponent* component = nullptr;
+    //    //std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
+    //    ////std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
 
-        if (m_status == -1) // create actors
-        {
-            FActorSpawnParameters SpawnParams;
-        //    FString fs_compoName(compoName.c_str());
-            //FString fs_displayName(displayName.c_str());
-        //  //  FString fs_baseType(baseType.c_str());
-        //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
+    //    //if (m_status == -1) // create actors
+    //    //{
+    //    //    FActorSpawnParameters SpawnParams;
+    //    ////    FString fs_compoName(compoName.c_str());
+    //    //    //FString fs_displayName(displayName.c_str());
+    //    ////  //  FString fs_baseType(baseType.c_str());
+    //    ////  
+    //    ////  UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
 
-            SpawnParams.Name = FName("SofaComponent");
+    //    //    SpawnParams.Name = FName("SofaComponent");
 
-            component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
-            if (component != nullptr)
-            {
-                bool resAttach = component->AttachToActor(my_DAGNode, FAttachmentTransformRules::KeepRelativeTransform);
-                //if (m_log)
-                //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+    //    //    component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
+    //    //    if (component != nullptr)
+    //    //    {
+    //    //        bool resAttach = component->AttachToActor(my_DAGNode, FAttachmentTransformRules::KeepRelativeTransform);
+    //    //        //if (m_log)
+    //    //        //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
-                //component->setUniqueNameID(FString(compoName.c_str()));
-                //component->setComponentType(FString(baseType.c_str()));
-            }
-            else
-            {
-            }
-        }
-    }
+    //    //        //component->setUniqueNameID(FString(compoName.c_str()));
+    //    //        //component->setComponentType(FString(baseType.c_str()));
+    //    //    }
+    //    //    else
+    //    //    {
+    //    //    }
+    //    //}
+    //}
 }
 
 

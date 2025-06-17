@@ -2,7 +2,7 @@
 
 #include "DAGNode/SofaDAGNode.h"
 #include "SofaUE5.h"
-
+#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 // Sets default values
 ASofaDAGNode::ASofaDAGNode()
@@ -15,7 +15,7 @@ ASofaDAGNode::ASofaDAGNode()
 
 void ASofaDAGNode::PostActorCreated()
 {
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::PostActorCreated: begin Node: %s"), *this->GetName());
+	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::PostActorCreated: Node: %s"), *this->GetName());
 }
 
 
@@ -23,8 +23,21 @@ void ASofaDAGNode::PostActorCreated()
 void ASofaDAGNode::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::BeginPlay: begin Node: %s"), *this->GetName());
+	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::BeginPlay: Node: %s"), *this->GetName());
 	
+}
+
+void ASofaDAGNode::BeginDestroy()
+{
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::BeginDestroy: Node: %s"), *this->GetName());
+
+    if (m_sofaAPI != nullptr)
+    {
+		// do not delete, this is part of the SofaContext job. Check how to use shared::Ptr here.
+		m_sofaAPI = nullptr;
+    }
+
+    Super::BeginDestroy();
 }
 
 
@@ -33,4 +46,20 @@ void ASofaDAGNode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+
+bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
+{
+	m_sofaAPI = _sofaAPI;
+
+	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
+
+	//std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
+	//std::string componentList = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID);
+
+	//FString fs_componentList(componentList.c_str());
+	//UE_LOG(SUnreal_log, Log, TEXT("## Process Node: %s | found component List: %s"), *this->m_uniqueNameID, *fs_componentList);
+
+	return true;
 }
