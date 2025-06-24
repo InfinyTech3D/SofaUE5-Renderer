@@ -24,10 +24,12 @@
 #include "SofaVisualMesh.h"
 #include "SofaUE5.h"
 #include "SofaUE5Library/SofaPhysicsAPI.h"
+#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
     : m_isStatic(false)
+    , m_inverseNormal(true)
     , m_min(FVector(100000, 100000, 100000))
     , m_max(FVector(-100000, -100000, -100000))
 {
@@ -49,6 +51,8 @@ void ASofaVisualMesh::setSofaMesh(SofaPhysicsOutputMesh* sofaMesh)
 void ASofaVisualMesh::BeginPlay()
 {
     Super::BeginPlay();
+    computeComponent();
+
 }
 
 // This is called when actor is spawned (at runtime or when you drop it into the world in editor)
@@ -67,25 +71,29 @@ void ASofaVisualMesh::PostLoad()
 void ASofaVisualMesh::Tick( float DeltaTime )
 {
     Super::Tick( DeltaTime );
-
+   
     if (!m_isStatic)
+    {
         updateMesh();
+    }
 }
 
 
 void ASofaVisualMesh::updateMesh()
 {   
-    if (m_sofaMesh == nullptr)
+    if (m_sofaAPI == nullptr)
         return;
 
+    std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
+
     // Get number of vertices
-    int nbrV = m_sofaMesh->getNbVertices();
+    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID);
 
     // Get the different buffers
     float* sofaVertices = new float[nbrV * 3];
     float* sofaNormals = new float[nbrV * 3];
-    m_sofaMesh->getVPositions(sofaVertices);
-    m_sofaMesh->getVNormals(sofaNormals);
+    m_sofaAPI->getVPositions(nodeUniqID, sofaVertices);
+    m_sofaAPI->getVNormals(nodeUniqID, sofaNormals);
 
     // Copy data into UE structure
     TArray<FVector> vertices;
@@ -111,17 +119,24 @@ void ASofaVisualMesh::updateMesh()
 }
 
 
+void ASofaVisualMesh::computeComponent()
+{
+    createMesh();
+}
+
 void ASofaVisualMesh::createMesh()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("### createMesh"));
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
 
-    if (m_sofaMesh == nullptr)
+    if (m_sofaAPI == nullptr)
         return;
 
+
+    std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
     // Get topology elements numbers
-    int nbrV = m_sofaMesh->getNbVertices();
-    int nbrTri = m_sofaMesh->getNbTriangles();
-    int nbrQuads = m_sofaMesh->getNbQuads();
+    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID);
+    int nbrTri = m_sofaAPI->getNbTriangles(nodeUniqID);
+    int nbrQuads = m_sofaAPI->getNbQuads(nodeUniqID);
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): nbrV: %d | nbrTri: %d | nbrQuads: %d"), nbrV, nbrTri, nbrQuads);
 
     if (nbrV <= 0 || nbrV > 100000)
@@ -137,11 +152,14 @@ void ASofaVisualMesh::createMesh()
     int* sofaQuads = new int[nbrQuads * 3];
 
     // Get the different buffers
-    m_sofaMesh->getVPositions(sofaVertices);
-    m_sofaMesh->getVNormals(sofaNormals);
-    m_sofaMesh->getTriangles(sofaTriangles);
-    m_sofaMesh->getQuads(sofaQuads);
-    m_sofaMesh->getVTexCoords(sofaTexCoords);
+    m_sofaAPI->getVPositions(nodeUniqID, sofaVertices);
+    m_sofaAPI->getVNormals(nodeUniqID, sofaNormals);
+    m_sofaAPI->getTriangles(nodeUniqID, sofaTriangles);
+    m_sofaAPI->getQuads(nodeUniqID, sofaQuads);
+    m_sofaAPI->getVTexCoords(nodeUniqID, sofaTexCoords);
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): TOTO1"));
+
 
     // Convert in Unreal structure
     TArray<FVector> vertices;

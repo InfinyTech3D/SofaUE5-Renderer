@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "GameFramework/Actor.h"
+#include "Base/SofaBaseComponent.h"
 #include "ProceduralMeshComponent.h"
 #include "SofaVisualMesh.generated.h"
 
@@ -33,7 +33,7 @@
 class SofaPhysicsOutputMesh;
 
 UCLASS()
-class SOFAUE5_API ASofaVisualMesh : public AActor
+class SOFAUE5_API ASofaVisualMesh : public ASofaBaseComponent
 {
     GENERATED_BODY()
 
@@ -56,14 +56,16 @@ public:
     void recomputeUV(const TArray<FVector>& vertices, TArray<FVector2D>& UV0);
     void computeBoundingBox(const TArray<FVector>& vertices);
 
-    bool m_isStatic;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+    bool m_isStatic = false;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_inverseNormal;
+    bool m_inverseNormal = true;
 
-protected:
+    void computeComponent() override;
+
     void createMesh();
-
+protected:
     void updateMesh();
 
 private:
