@@ -2,6 +2,7 @@
 
 
 #include "Base/SofaBaseComponent.h"
+#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 // Sets default values
 ASofaBaseComponent::ASofaBaseComponent()
@@ -25,10 +26,14 @@ void ASofaBaseComponent::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ASofaBaseComponent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+void ASofaBaseComponent::setComponentType(const FString& type) 
+{ 
+	m_baseType = type; 
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(*m_baseType);
+}
 
+void ASofaBaseComponent::setSofaAPI(SofaAdvancePhysicsAPI* api)
+{
+	m_sofaAPI = api;
 }
 

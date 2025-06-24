@@ -50,7 +50,7 @@ ASofaContext::ASofaContext()
     PrimaryActorTick.bCanEverTick = true;
 
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaContext"));
-    SetActorScale3D(FVector(-10.0, 10.0, 10.0));
+    SetActorScale3D(FVector(10.0, 10.0, 10.0));
     SetActorRotation(FRotator(0.0, 0.0, 270.0));
     m_log = true;
     if (m_log)
@@ -127,10 +127,12 @@ void ASofaContext::BeginDestroy()
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginDestroy(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
         
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginPlay: m_sofaAPI stop"));
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
         m_sofaAPI->stop();
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
         delete m_sofaAPI;
         m_sofaAPI = NULL;
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
 
     Super::BeginDestroy();
@@ -307,7 +309,33 @@ void ASofaContext::createSofaContext()
     }
     else
     {
+        UWorld* const World = GetWorld();
+        if (World == nullptr)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: GetWorld return a null pointer"));
+            return;
+        }
+
+        TArray<AActor*> ChildActors;
+        UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASofaDAGNode::StaticClass(), ChildActors);
+
+        for (auto actor : ChildActors)
+        {
+            //if (visuMesh->ActorHasTag("SofaVisual"))
+            {
+                //if (m_log)
+                UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+                ASofaDAGNode* dagNode = dynamic_cast<ASofaDAGNode*>(actor);
+                m_dagNodes.push_back(dagNode);
+            }
+        }
+
         // reconnect NodeGraph
+        for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+        {
+            m_dagNodes[i]->reconnectComponents(this->m_sofaAPI);
+        }
+
     }
     //if (m_isMsgHandlerActivated == true)
     //    catchSofaMessages();

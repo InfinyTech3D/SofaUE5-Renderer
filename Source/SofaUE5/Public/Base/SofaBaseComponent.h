@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Actor.h"
 #include "SofaBaseComponent.generated.h"
 
+class SofaAdvancePhysicsAPI;
+
 UCLASS()
-class SOFAUE5_API ASofaBaseComponent : public ACharacter
+class SOFAUE5_API ASofaBaseComponent : public AActor
 {
 	GENERATED_BODY()
 
@@ -23,12 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
 	
 	void setUniqueNameID(const FString& uniqueNameID) { m_uniqueNameID = uniqueNameID; }
-	void setComponentType(const FString& type) { m_baseType = type; }
+	void setComponentType(const FString& type);
 
 	const FString& getComponentType() {
 		return m_baseType;
@@ -38,7 +37,16 @@ public:
 		return m_uniqueNameID;
 	}
 
-private:
+	void setSofaAPI(SofaAdvancePhysicsAPI* api);
+
+	virtual void computeComponent() {}
+
+protected:
+	SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
+
+	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_uniqueNameID;
+	
+	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_baseType;
 };

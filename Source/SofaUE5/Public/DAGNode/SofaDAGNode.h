@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include <vector>
+#include <string>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "SofaDAGNode.generated.h"
@@ -33,6 +34,9 @@ public:
 	void setParentName(const FString& parentName) { m_parentName = parentName; }
 
 	bool loadComponents(SofaAdvancePhysicsAPI* _sofaAPI);
+	void loadComponents();
+
+	void reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI);
 
 
 	const FString& getParentName() {
@@ -43,8 +47,22 @@ public:
 		return m_uniqueNameID;
 	}
 
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
+
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
+	bool ComponentLoaded = false;
+
 private:
 	SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
+	
+	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_uniqueNameID;
+	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_parentName;
+
+	bool m_statusLoaded = false;
+	std::vector<std::string> m_componentsNames;
 };
