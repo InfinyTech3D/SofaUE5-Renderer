@@ -36,18 +36,20 @@ class SOFAUE5_API ASofaContext : public AActor
     GENERATED_BODY()
 
 protected:
+    // Called in editor & runtime when actor is created or property changes
+    virtual void OnConstruction(const FTransform& Transform) override;
+
+    // Called in editor & runtime when actor is deleted
+    virtual void Destroyed() override;
+
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
-    virtual void BeginDestroy() override;
 
 public:
     // Sets default values for this actor's properties
     ASofaContext();
 
-
-    virtual void PostActorCreated() override;
-    
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 #if WITH_EDITOR
@@ -56,7 +58,6 @@ public:
 
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
-
 
     void setDT(float value);
 
@@ -82,13 +83,13 @@ protected:
     void catchSofaMessages();
 
     void createSofaContext();
+    void loadSofaScene();
 
     void loadDefaultPlugin();
 
     void loadNodeGraph();
-
-    void loadComponentsInNode(ASofaDAGNode* my_DAGNode);
-
+    void reconnectNodeGraph();
+    void clearNodeGraph();
 
 private:
     int32 m_dllLoadStatus;
@@ -103,4 +104,6 @@ private:
         int m_status;
 
     std::vector <ASofaDAGNode*> m_dagNodes;
+
+
 };
