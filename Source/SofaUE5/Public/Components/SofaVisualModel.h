@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Base/SofaBaseComponent.h"
 #include "SofaVisualModel.generated.h"
 
 UCLASS()
-class SOFAUE5_API ASofaVisualModel : public AActor
+class SOFAUE5_API ASofaVisualModel : public ASofaBaseComponent
 {
 	GENERATED_BODY()
 	

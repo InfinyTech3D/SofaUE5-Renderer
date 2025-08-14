@@ -20,7 +20,11 @@ public:
 
 	virtual void PostActorCreated() override;
 
+	// Called in editor & runtime when actor is deleted
+	virtual void Destroyed() override;
+
 protected:
+		
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -35,6 +39,7 @@ public:
 
 	bool loadComponents(SofaAdvancePhysicsAPI* _sofaAPI);
 	void loadComponents();
+	void clearComponents();
 
 	void reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI);
 

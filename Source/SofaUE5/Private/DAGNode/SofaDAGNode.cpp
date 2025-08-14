@@ -12,9 +12,9 @@ ASofaDAGNode::ASofaDAGNode()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::ASofaDAGNode"));
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaDAGNode"));
 }
+
 
 void ASofaDAGNode::PostActorCreated()
 {
@@ -22,12 +22,11 @@ void ASofaDAGNode::PostActorCreated()
 }
 
 
-// Called when the game starts or when spawned
-void ASofaDAGNode::BeginPlay()
+void ASofaDAGNode::Destroyed()
 {
-	Super::BeginPlay();
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::BeginPlay: Node: %s"), *this->GetName());
-	
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::Destroyed: Node: %s"), *this->GetName());
+    //clearComponents();
+    Super::Destroyed();
 }
 
 void ASofaDAGNode::BeginDestroy()
@@ -44,13 +43,21 @@ void ASofaDAGNode::BeginDestroy()
 }
 
 
+// Called when the game starts or when spawned
+void ASofaDAGNode::BeginPlay()
+{
+    Super::BeginPlay();
+    //UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::BeginPlay: Node: %s"), *this->GetName());
+}
+
+
 #if WITH_EDITOR
 void ASofaDAGNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
     if (PropertyChangedEvent.MemberProperty != nullptr)
     {
         FString MemberName = PropertyChangedEvent.MemberProperty->GetName();
-        UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty: %s"), *MemberName);
+        //UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty: %s"), *MemberName);
 
 		if (MemberName.Compare(TEXT("ComponentLoaded")) == 0)
 		{
@@ -97,48 +104,43 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         
         UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d | %s"), i, *fs_compoName);
 
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO1"));
         std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO2"));
         std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO3"));
-        FString fs_displayName(displayName.c_str());
-        FString fs_baseType(baseType.c_str());
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO4"));
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = FName(*fs_displayName);
 
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
-        ASofaBaseComponent* component = nullptr;
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO5"));
-        if (baseType.compare("SofaVisualModel") == 0)
-        {
-            component = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass(), SpawnParams);
-            //visuMesh->setSofaMesh(mesh);
-         
-        }
-        else
-        {
-            component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
-        }
-        UE_LOG(SUnreal_log, Log, TEXT("### TOTO6"));
-        if (component != nullptr)
-        {
-            bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            //if (m_log)
-            UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+        //FString fs_displayName(displayName.c_str());
+        //FString fs_baseType(baseType.c_str());
+        //FActorSpawnParameters SpawnParams;
+        //SpawnParams.Name = FName(*fs_displayName);
 
-            component->setUniqueNameID(FString(compoName.c_str()));
-            component->setComponentType(FString(baseType.c_str()));
-            component->SetActorLabel(fs_displayName);
-            component->setSofaAPI(_sofaAPI);
-            component->computeComponent();
-            UE_LOG(SUnreal_log, Log, TEXT("### TOTO7"));
-        }
-        else
-        {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
-        }
+        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
+        //ASofaBaseComponent* component = nullptr;
+        //if (baseType.compare("SofaVisualModel") == 0)
+        //{
+        //    component = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass(), SpawnParams);
+        //    //visuMesh->setSofaMesh(mesh);
+        //}
+        //else
+        //{
+        //    component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
+        //}
+
+
+        //if (component != nullptr)
+        //{
+        //    bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+        //    //if (m_log)
+        //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+
+        //    component->setUniqueNameID(FString(compoName.c_str()));
+        //    component->setComponentType(FString(baseType.c_str()));
+        //    component->SetActorLabel(fs_displayName);
+        //    component->setSofaAPI(_sofaAPI);
+        //    component->computeComponent();
+        //}
+        //else
+        //{
+        //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
+        //}
         UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d END"), i);
     }
 
@@ -189,10 +191,25 @@ void ASofaDAGNode::reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI)
             //if (visuMesh->ActorHasTag("SofaVisual"))
             {
                 //if (m_log)
-                UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+                UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh found!!"));
                 ASofaVisualMesh* visualMesh = dynamic_cast<ASofaVisualMesh*>(actor);
                 visualMesh->setSofaAPI(_sofaAPI);
             }
+        }
+    }
+}
+
+void ASofaDAGNode::clearComponents()
+{
+    // Destroy any attached child actors
+    TArray<AActor*> AttachedActors;
+    GetAttachedActors(AttachedActors);
+
+    for (AActor* Child : AttachedActors)
+    {
+        if (Child)
+        {
+            Child->Destroy();
         }
     }
 }
