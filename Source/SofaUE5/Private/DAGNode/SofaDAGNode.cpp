@@ -86,6 +86,7 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 
 	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
 
+    return true;
 	std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
 	m_componentsNames = m_sofaAPI->getDAGNodeComponentsNames(nodeUniqID);
 
@@ -95,6 +96,7 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
         return false;
     }
+
 
     for (int i=0; i< m_componentsNames.size(); ++i)
     {

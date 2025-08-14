@@ -428,11 +428,11 @@ void ASofaContext::loadNodeGraph()
     }
 
     // Load Components Graph
-    //for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
-    //{
-    //    m_dagNodes[i]->loadComponents(this->m_sofaAPI);
-    //    //loadComponentsInNode(m_dagNodes[i]);
-    //}
+    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    {
+        m_dagNodes[i]->loadComponents(this->m_sofaAPI);
+        //loadComponentsInNode(m_dagNodes[i]);
+    }
 
 }
 
@@ -451,7 +451,7 @@ void ASofaContext::reconnectNodeGraph()
 
     for (auto actor : ChildActors)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("### ACtor found!!"));
+        UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode found!!"));
         ASofaDAGNode* dagNode = dynamic_cast<ASofaDAGNode*>(actor);
 
         if (dagNode == nullptr)
