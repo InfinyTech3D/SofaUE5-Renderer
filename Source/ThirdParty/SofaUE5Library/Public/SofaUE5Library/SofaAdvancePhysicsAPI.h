@@ -196,6 +196,9 @@ public:
     std::vector<std::string> getDAGNodeComponentsNames(const std::string& nodeName);
     std::string getDAGNodeParentAPIName(const std::string& nodeName);
 
+    int getNbrComponentsInNode(const std::string& nodeName);
+    std::string getDAGNodeComponentsName(const std::string& nodeName, int compoID);
+
     std::string getBaseComponentTypes();
     std::string getBaseComponentType(const std::string& componentName);
 

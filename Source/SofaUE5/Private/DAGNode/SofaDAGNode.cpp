@@ -25,7 +25,7 @@ void ASofaDAGNode::PostActorCreated()
 void ASofaDAGNode::Destroyed()
 {
     UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::Destroyed: Node: %s"), *this->GetName());
-    //clearComponents();
+    clearComponents();
     Super::Destroyed();
 }
 
@@ -78,18 +78,25 @@ void ASofaDAGNode::Tick(float DeltaTime)
 
 bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 {
-	m_sofaAPI = _sofaAPI;
+    m_sofaAPI = _sofaAPI;
 
     if (m_sofaAPI == nullptr)
         return false;
 
 
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
 
-    return true;
-	std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
-	m_componentsNames = m_sofaAPI->getDAGNodeComponentsNames(nodeUniqID);
+    std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
+    int nbrCompo = m_sofaAPI->getNbrComponentsInNode(nodeUniqID);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents Nbr: %d ##########"), nbrCompo);
+    
+    if (nbrCompo <= 0)
+    {
+        // Nothing to do; importantly, do NOT call getDAGNodeComponentsName with index 0
+        return true;
+    }
 
+    
     UWorld* const World = GetWorld();
     if (World == nullptr)
     {
@@ -97,57 +104,56 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         return false;
     }
 
-
-    for (int i=0; i< m_componentsNames.size(); ++i)
+    for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d START"), i);
-        std::string compoName = m_componentsNames[i];
-        FString fs_compoName(compoName.c_str());
-        
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d | %s"), i, *fs_compoName);
+        std::string compoName = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID, compoId);
+        FString fs_compoName(compoName.c_str()); // Convert std::string -> FString
 
+        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
         std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
         std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
 
-        //FString fs_displayName(displayName.c_str());
-        //FString fs_baseType(baseType.c_str());
-        //FActorSpawnParameters SpawnParams;
-        //SpawnParams.Name = FName(*fs_displayName);
+        // Deep copy of the strings
+        m_componentsNames.push_back(std::string(compoName));
 
-        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s "), *fs_compoName, *fs_displayName);
-        //ASofaBaseComponent* component = nullptr;
-        //if (baseType.compare("SofaVisualModel") == 0)
-        //{
-        //    component = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass(), SpawnParams);
-        //    //visuMesh->setSofaMesh(mesh);
-        //}
-        //else
-        //{
-        //    component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
-        //}
+        FString fs_displayName(displayName.c_str()); // Convert std::string -> FString
+        FString fs_baseType(baseType.c_str()); // Convert std::string -> FString
 
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Name = FName(*fs_displayName);
 
-        //if (component != nullptr)
-        //{
-        //    bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-        //    //if (m_log)
-        //    UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+        ASofaBaseComponent* component = nullptr;
+        if (baseType.compare("SofaVisualModel") == 0)
+        {
+            component = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass(), SpawnParams);
+            //visuMesh->setSofaMesh(mesh);
+        }
+        else
+        {
+            component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
+        }
 
-        //    component->setUniqueNameID(FString(compoName.c_str()));
-        //    component->setComponentType(FString(baseType.c_str()));
-        //    component->SetActorLabel(fs_displayName);
-        //    component->setSofaAPI(_sofaAPI);
-        //    component->computeComponent();
-        //}
-        //else
-        //{
-        //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
-        //}
-        UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %d END"), i);
+        if (component != nullptr)
+        {
+            bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+            ////if (m_log)
+            //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+
+            component->setUniqueNameID(FString(compoName.c_str()));
+            component->setComponentType(FString(baseType.c_str()));
+            component->SetActorLabel(fs_displayName);
+            component->setSofaAPI(_sofaAPI);
+            component->computeComponent();
+        }
+        else
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
+        }
     }
 
-	return true;
+    return true;
 }
+
 
 void ASofaDAGNode::loadComponents()
 {
@@ -203,6 +209,9 @@ void ASofaDAGNode::reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 
 void ASofaDAGNode::clearComponents()
 {
+    // clear string names
+    m_componentsNames.clear();
+
     // Destroy any attached child actors
     TArray<AActor*> AttachedActors;
     GetAttachedActors(AttachedActors);
