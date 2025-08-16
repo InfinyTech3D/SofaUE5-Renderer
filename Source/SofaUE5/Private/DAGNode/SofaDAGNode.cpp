@@ -24,6 +24,10 @@ void ASofaDAGNode::PostActorCreated()
 
 void ASofaDAGNode::Destroyed()
 {
+    if (this->GetFlags() & RF_Transient) {
+        return;
+    }
+
     UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::Destroyed: Node: %s"), *this->GetName());
     clearComponents();
     Super::Destroyed();
@@ -109,6 +113,8 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         std::string compoName = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID, compoId);
         FString fs_compoName(compoName.c_str()); // Convert std::string -> FString
 
+        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s "), *fs_compoName);
+
         //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
         std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
         std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
@@ -149,6 +155,9 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
         }
+
+        // Sleep for 10 ms (0.01 seconds)
+        FPlatformProcess::Sleep(0.01f);
     }
 
     return true;

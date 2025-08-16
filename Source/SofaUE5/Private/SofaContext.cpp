@@ -78,7 +78,11 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
 
 void ASofaContext::Destroyed()
 {
-    if (m_log && !(this->GetFlags() & RF_Transient))
+    if (this->GetFlags() & RF_Transient) {
+        return;
+    }
+
+    if (m_log)
         UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     
     // Remove UE5 children actor first before deleting SOFA context
@@ -287,7 +291,7 @@ void ASofaContext::createSofaContext()
     }
 
 
-    //if (!filePath.FilePath.IsEmpty())
+    if (!filePath.FilePath.IsEmpty())
         loadSofaScene();
 }
 
@@ -314,6 +318,7 @@ void ASofaContext::loadSofaScene()
         UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::loadSofaScene: Scene loading with success: %s"), *my_filePath);
     }
 
+    FPlatformProcess::Sleep(0.01f);
 
     // Pass default scene parameter
    // this->setDT(Dt);
