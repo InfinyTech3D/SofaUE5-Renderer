@@ -69,5 +69,7 @@ private:
 	FString m_parentName;
 
 	bool m_statusLoaded = false;
+
+	// Populate this before calling CreateChildActorsFromNames
 	std::vector<std::string> m_componentsNames;
 };
