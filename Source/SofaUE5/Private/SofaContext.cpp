@@ -115,6 +115,11 @@ void ASofaContext::BeginPlay()
         UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
     }
 
+    if (m_sofaAPI == nullptr)
+    {
+        createSofaContext();
+    }
+
     if (m_sofaAPI)
     {
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));

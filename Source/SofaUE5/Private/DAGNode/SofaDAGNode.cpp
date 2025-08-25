@@ -107,20 +107,21 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
         return false;
     }
+    
+
 
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
-        std::string compoName = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID, compoId);
-        FString fs_compoName(compoName.c_str()); // Convert std::string -> FString
+        const char* compoName = m_sofaAPI->getDAGNodeComponentName_cstr(nodeUniqID, compoId);
+        std::string compoNameS = std::string(compoName);
 
-        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s "), *fs_compoName);
+        FString fs_compoName(compoName); // Convert std::string -> FString
 
-        //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Processing: %s"), *fs_compoName);
-        std::string displayName = m_sofaAPI->getComponentDisplayName(compoName);
-        std::string baseType = m_sofaAPI->getBaseComponentType(compoName);
+        std::string displayName = m_sofaAPI->getComponentDisplayName(compoNameS);
+        std::string baseType = m_sofaAPI->getBaseComponentType(compoNameS);
 
         // Deep copy of the strings
-        m_componentsNames.push_back(std::string(compoName));
+        m_componentsNames.push_back(std::string(compoNameS));
 
         FString fs_displayName(displayName.c_str()); // Convert std::string -> FString
         FString fs_baseType(baseType.c_str()); // Convert std::string -> FString
@@ -142,11 +143,11 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         if (component != nullptr)
         {
             bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-            ////if (m_log)
-            //UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+            //if (m_log)
+            UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
-            component->setUniqueNameID(FString(compoName.c_str()));
-            component->setComponentType(FString(baseType.c_str()));
+            component->setUniqueNameID(fs_compoName);
+            component->setComponentType(fs_baseType);
             component->SetActorLabel(fs_displayName);
             component->setSofaAPI(_sofaAPI);
             component->computeComponent();
@@ -208,8 +209,9 @@ void ASofaDAGNode::reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI)
             //if (visuMesh->ActorHasTag("SofaVisual"))
             {
                 //if (m_log)
-                UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh found!!"));
+                
                 ASofaVisualMesh* visualMesh = dynamic_cast<ASofaVisualMesh*>(actor);
+                UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh found! | %s"), *visualMesh->getUniqNameID());
                 visualMesh->setSofaAPI(_sofaAPI);
             }
         }
