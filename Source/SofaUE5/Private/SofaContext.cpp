@@ -240,7 +240,7 @@ void ASofaContext::createSofaContext()
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
-        
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 02"));
         // TODO restore that
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
@@ -304,6 +304,8 @@ void ASofaContext::createSofaContext()
 void ASofaContext::loadSofaScene()
 {
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: curPath: %s"), *curPath);
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: filePath.FilePath: %s"), *filePath.FilePath);
     FString sFilename = curPath + "Plugins/SofaUE5/Content/SofaScenes/liver.scn";
     filePath.FilePath = sFilename;
     if (filePath.FilePath.IsEmpty()) {
