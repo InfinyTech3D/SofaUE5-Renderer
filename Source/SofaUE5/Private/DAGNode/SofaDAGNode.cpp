@@ -87,7 +87,6 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
     if (m_sofaAPI == nullptr)
         return false;
 
-
     UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
 
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
@@ -116,10 +115,9 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         std::string compoNameS = std::string(compoName);
 
         FString fs_compoName(compoName); // Convert std::string -> FString
-
         std::string displayName = m_sofaAPI->getComponentDisplayName(compoNameS);
         std::string baseType = m_sofaAPI->getBaseComponentType(compoNameS);
-
+        
         // Deep copy of the strings
         m_componentsNames.push_back(std::string(compoNameS));
 
