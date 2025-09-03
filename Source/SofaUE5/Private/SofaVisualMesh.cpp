@@ -172,7 +172,7 @@ void ASofaVisualMesh::createMesh()
     for (int i = 0; i < nbrV; i++)
     {
         vertices.Add(FVector(sofaVertices[i * 3], sofaVertices[i * 3 + 1], sofaVertices[i * 3 + 2]));
-        UV0.Add(FVector2D(sofaTexCoords[i * 2], sofaTexCoords[i * 2 + 1]));
+        UV0.Add(FVector2D(sofaTexCoords[i * 2], -sofaTexCoords[i * 2 + 1]));
 
         if (m_inverseNormal)
             normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));

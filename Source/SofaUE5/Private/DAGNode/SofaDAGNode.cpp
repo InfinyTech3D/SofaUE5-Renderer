@@ -125,7 +125,7 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         FString fs_baseType(baseType.c_str()); // Convert std::string -> FString
 
         FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = FName(*fs_displayName);
+        SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
 
         ASofaBaseComponent* component = nullptr;
         if (baseType.compare("SofaVisualModel") == 0)
