@@ -66,7 +66,7 @@
     <Node name="flag">
         <EulerImplicitSolver name="cg_odesolver" printLog="false" />
         <CGLinearSolver iterations="25" name="linear solver" tolerance="1.0e-9" threshold="1.0e-9" />
-        <MeshOBJLoader name="meshLoader" filename="mesh/flag.obj" rotation="0 180 0" scale="10" createSubelements="true" translation="0 5 50"/>
+        <MeshOBJLoader name="meshLoader" filename="mesh/flag.obj" rotation="0 0 0" scale="10" createSubelements="true" translation="0 5 50"/>
         <TriangleSetTopologyContainer  name="Container" src="@meshLoader" tags=" " />
 		<TriangleSetTopologyModifier   name="Modifier" />
 		<TriangleSetGeometryAlgorithms name="TopoAlgo"   template="Vec3d" />
