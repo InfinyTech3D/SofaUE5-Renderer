@@ -82,14 +82,17 @@ void ASofaDAGNode::Tick(float DeltaTime)
 
 bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 {
+    return true;
+    
     m_sofaAPI = _sofaAPI;
 
     if (m_sofaAPI == nullptr)
         return false;
 
     UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
-
+    return true;
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
+    
     int nbrCompo = m_sofaAPI->getNbrComponentsInNode(nodeUniqID);
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents Nbr: %d ##########"), nbrCompo);
     
@@ -111,15 +114,24 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
-        const char* compoName = m_sofaAPI->getDAGNodeComponentName_cstr(nodeUniqID, compoId);
-        std::string compoNameS = std::string(compoName);
+        std::string compoName = "";
+        int resCompoName = m_sofaAPI->getDAGNodeComponentName_out(nodeUniqID, compoId, compoName);
 
-        FString fs_compoName(compoName); // Convert std::string -> FString
-        std::string displayName = m_sofaAPI->getComponentDisplayName(compoNameS);
-        std::string baseType = m_sofaAPI->getBaseComponentType(compoNameS);
+        FString fs_compoName(compoName.c_str()); // Convert std::string -> FString
+        std::string displayName = "";
+        int resDName = m_sofaAPI->getComponentDisplayName_out(compoName, displayName);
+        
+        std::string baseType = "";
+        int resType = m_sofaAPI->getBaseComponentType_out(compoName, baseType);
+
+        if (resDName != 0 || resType != 0)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: component name and type returns: %d | %d"), resDName, resType);
+            continue;
+        }
         
         // Deep copy of the strings
-        m_componentsNames.push_back(std::string(compoNameS));
+        m_componentsNames.push_back(compoName);
 
         FString fs_displayName(displayName.c_str()); // Convert std::string -> FString
         FString fs_baseType(baseType.c_str()); // Convert std::string -> FString

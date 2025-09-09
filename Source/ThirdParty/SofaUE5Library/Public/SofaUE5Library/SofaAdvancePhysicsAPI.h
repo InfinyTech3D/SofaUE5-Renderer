@@ -190,26 +190,34 @@ public:
     int logSceneGraph();
     int getNbrDAGNode();
     std::string getDAGNodeAPIName(int nodeID);
+    int getDAGNodeAPIName_out(int nodeID, std::string& outName);
+
     std::string getDAGNodeDisplayName(int nodeID);
+    int getDAGNodeDisplayName_out(int nodeID, std::string& outName);
 
     std::string getDAGNodeComponentsName(const std::string& nodeName);
     std::vector<std::string> getDAGNodeComponentsNames(const std::string& nodeName);
     std::string getDAGNodeParentAPIName(const std::string& nodeName);
+    int getDAGNodeParentAPIName_out(const std::string& nodeName, std::string& outName);
 
     int getNbrComponentsInNode(const std::string& nodeName);
     const char* getDAGNodeComponentName_cstr(const std::string& nodeName, int compoID);
     std::string getDAGNodeComponentName(const std::string& nodeName, int compoID);
+    int getDAGNodeComponentName_out(const std::string& nodeName, int compoID, std::string& outName);
 
     std::string getBaseComponentTypes();
     std::string getBaseComponentType(const std::string& componentName);
     const char* getBaseComponentType_cstr(const std::string& componentName);
+    int getBaseComponentType_out(const std::string& componentName, std::string& outName);
 
     std::string getPossibleTypes(const std::string& componentName);
     std::string getComponentType(const std::string& componentName);
     const char* getComponentType_cstr(const std::string& componentName);
+    int getComponentType_out(const std::string& componentName, std::string& outName);
 
     std::string getComponentDisplayName(const std::string& componentName);
     const char* getComponentDisplayName_cstr(const std::string& componentName);
+    int getComponentDisplayName_out(const std::string& componentName, std::string& outName);
 
     int addDAGNode(const std::string& _DAGName, const std::string& _parentName);
     int changeDAGNodeAPIName(const std::string& _oldDAGName, const std::string& _newDAGName);

@@ -240,7 +240,7 @@ void ASofaContext::createSofaContext()
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 02"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 07"));
         // TODO restore that
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
@@ -378,8 +378,17 @@ void ASofaContext::loadNodeGraph()
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
-        std::string nodeUniqID = m_sofaAPI->getDAGNodeAPIName(nodeId);
-        std::string nodeDisplayName = m_sofaAPI->getDAGNodeDisplayName(nodeId);
+        std::string nodeUniqID = "";
+        std::string nodeDisplayName = "";
+
+        int resNameId = m_sofaAPI->getDAGNodeAPIName_out(nodeId, nodeUniqID);
+        int resDisplayName = m_sofaAPI->getDAGNodeDisplayName_out(nodeId, nodeDisplayName);
+
+        if (resNameId != 0 || resDisplayName != 0)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: node name access return: %d | %d"), resNameId, resDisplayName);
+            continue;
+        }
 
         FString fs_nodeUniqID(nodeUniqID.c_str());
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
@@ -397,14 +406,18 @@ void ASofaContext::loadNodeGraph()
                 //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
                 dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 
-                std::string parentName = m_sofaAPI->getDAGNodeParentAPIName(nodeUniqID);
-                FString fs_parentName(parentName.c_str());
+                std::string parentNameId = "";
+                int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
+                if (resParentNameId != 0)
+                    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
+
+                FString fs_parentName(parentNameId.c_str());
                 dagNode->setUniqueNameID(fs_nodeUniqID);
                 dagNode->setParentName(fs_parentName);
                 dagNode->SetActorLabel(fs_nodeDisplayName);
                 
                 if (m_log)
-                    UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
+                    UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
             }
             else
             {
@@ -439,8 +452,7 @@ void ASofaContext::loadNodeGraph()
     // Load Components Graph
     for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
     {
-        m_dagNodes[i]->loadComponents(this->m_sofaAPI);
-        //loadComponentsInNode(m_dagNodes[i]);
+        //m_dagNodes[i]->loadComponents(this->m_sofaAPI);
     }
 
 }
