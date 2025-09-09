@@ -1,0 +1,5 @@
+<Node name='Visual'>
+    <MeshOBJLoader filename='' name='loader'
+        scale3d='500 500 500' handleSeams='false'/>
+    <OglModel name='Visual' src='@loader' color='1 0.98 0.8 1'/>
+</Node>

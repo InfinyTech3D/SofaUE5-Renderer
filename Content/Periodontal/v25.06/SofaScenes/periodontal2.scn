@@ -1,0 +1,83 @@
+<?xml version='1.0' ?>
+<Node name='lroot' gravity='0 0 0' dt='0.0012'>
+    <include href='modeling/plugins.xml'/>
+    <LightManager/>
+    <PositionalLight name='light1' color='1 1 1' attenuation='0' position='-3 0 30'/>
+    <AddDataRepository path='./'/>
+	<VisualStyle displayFlags='
+        showVisual 
+        showVisualModels
+        hideCollisionModels
+        hideDetectionOutputs
+        hideWireframe
+        hideBehaviorModels 
+        hideForceFields 
+    '/>
+
+    <LineAxis size='1' name='LineAxis' />
+
+	<DefaultVisualManagerLoop />    
+    <FreeMotionAnimationLoop/>
+    <LCPConstraintSolver tolerance='1e-9' maxIt='1000' mu='0.3'/>
+    <!--regularizationTerm='1e-5'/>-->
+    
+    <CollisionPipeline name='pipeline' depth='6' verbose='0'/>
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <CollisionResponse name='response' response='FrictionContactConstraint' />
+	<LocalMinDistance
+        name='Proximity'
+        alarmDistance='0.40'
+        contactDistance='0.07'
+    />
+
+    <Node name='Periodontal'>
+        <Node name='Dental'>
+            <include href='modeling/dental_GumTeethCollision.xml' filename='mesh/Section2/Bone_Collision_Coarse2.obj'/>
+            <include href='modeling/dental_HapticCollision.xml'   filename='mesh/Section2/Bone_Collision2.obj'/>
+            <include href='modeling/dental_Visual.xml' filename='mesh/Section2/Bone_Visual2.obj'/>
+        </Node>
+        <Node name='Gums'>
+            <EulerImplicitSolver name='cg_odesolver' printLog='false' rayleighStiffness='0.0' rayleighMass='0.0' />
+            <PCGLinearSolver iterations='50' name='linear solver' tolerance='1.5e-3'/>
+            <include href='modeling/gum.xml' filename='mesh/Section2/Gum_Filled_Coarse2.msh' 
+                fileCompliance='GumCompliance2.comp'
+                orientedBox='4 -10 25   4 -8 15    -9 -8 10      10.9'/>
+            <include href='modeling/gum_GumTeethCollision.xml' filename='mesh/Section2/Gum_Collision2.obj' />
+            <include href='modeling/gum_Visual.xml'            filename='mesh/Section2/Gum_Visual2.obj' />
+        </Node>
+    </Node>
+
+    <Node name='SphereCollision'>
+        <EulerImplicitSolver name='cg_odesolver' printLog='false' rayleighStiffness='0.0' rayleighMass='0.0' />
+        <SparseLDLSolver name='linear solver'/>
+        <MechanicalObject name='SphereCenterMO' position='-5 -5.8 19.1'/>
+        <LinearSolverConstraintCorrection/>
+        <UniformMass totalMass='1'/>
+        <SphereCollisionModel simulated='true' moving='true' radius='1.3' group='1 2 3' color='white'/>
+        <RestShapeSpringsForceField stiffness='4e7' angularStiffness='4e7' points='0'/>
+    </Node>
+
+
+    <GeomagicDriver 
+        name='GeomagicDevice' 
+        deviceName='Default Device' 
+        scale='1' 
+        drawDeviceFrame='false' 
+        drawDevice='false' 
+        manualStart='0'
+        positionBase='-2 4 20' 
+        orientationBase='-0.087 -0.087 0 1' 
+        forceScale='0.005'
+    />
+ 
+    <Node name='ToolController'>
+        <MechanicalObject 
+            template='Rigid3' 
+            name='DOFs' 
+            position='@GeomagicDevice.positionDevice'
+        />
+    </Node>
+
+    <include href='modeling/haptic.xml'/>
+</Node>

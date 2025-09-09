@@ -1,0 +1,125 @@
+<?xml version='1.0' ?>
+<Node name='lroot' gravity='0 0 0' dt='0.0012'>
+    <include href='modeling/plugins.xml'/>
+    <LightManager/>
+    <PositionalLight name='light1' color='1 1 1' attenuation='0' position='-3 0 30'/>
+    <AddDataRepository path='./'/>
+	<VisualStyle displayFlags='
+        showVisual 
+        showVisualModels
+        hideCollisionModels
+        hideDetectionOutputs
+        hideWireframe
+        hideBehaviorModels 
+        hideForceFields 
+    '/>
+
+    <LineAxis size='1' name='LineAxis' />
+
+	<DefaultVisualManagerLoop />    
+    <FreeMotionAnimationLoop/>
+    <LCPConstraintSolver tolerance='1e-9' maxIt='1000' mu='0.3'/>
+    <!--regularizationTerm='1e-5'/>-->
+    
+    <CollisionPipeline name='pipeline' depth='6' verbose='0'/>
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <CollisionResponse name='response' response='FrictionContactConstraint' />
+	<LocalMinDistance name='Proximity' alarmDistance='0.40' contactDistance='0.07' />
+
+    <Node name='GumTeethCollision'>
+        <MeshOBJLoader filename='mesh/Section1/Bone_Collision_Coarse1.obj' name='loader' scale3d='500 500 500'/>
+        <TriangleSetTopologyContainer name='Container' src='@loader'/>
+        <MechanicalObject name='mstate' src='@loader'/>
+        <LineCollisionModel     simulated='false' moving='false' group='2 7' color='green'/>
+        <PointCollisionModel    simulated='false' moving='false' group='2 7' color='green'/>
+        <TriangleCollisionModel simulated='false' moving='false' group='2 7' color='green'/>
+    </Node>
+    
+    <Node name='HapticCollision'>
+        <MeshOBJLoader filename='mesh/Section1/Bone_Collision1.obj' name='loader' scale3d='500 500 500'/>
+        <TriangleSetTopologyContainer name='Container' src='@loader'/>
+        <MechanicalObject name='mstate' src='@loader'/>
+        <LineCollisionModel     simulated='false' moving='false' group='1 2 3' color='white'/>
+        <PointCollisionModel    simulated='false' moving='false' group='1 2 3' color='white'/>
+        <TriangleCollisionModel simulated='false' moving='false' group='1 2 3' color='white'/>
+    </Node>
+    
+    <Node name='Visual'>
+        <MeshOBJLoader filename='mesh/Section1/Bone_Visual1.obj' name='loader'
+            scale3d='500 500 500' handleSeams='false'/>
+        <OglModel name='Visual' src='@loader' color='1 0.98 0.8 1'/>
+    </Node>
+
+
+    <Node name='GumVolume'>
+        <EulerImplicitSolver name='cg_odesolver' printLog='false' rayleighStiffness='0.0' rayleighMass='0.0' />
+        <PCGLinearSolver iterations='50' name='linear solver' tolerance='1.5e-3'/>
+
+        <MeshGmshLoader filename='mesh/Section1/Gum_Filled_Coarse1.msh' name='loader' 
+            scale3d='500 500 500'/>
+        <MechanicalObject name='mstate' src='@loader'/>
+        <TetrahedronSetTopologyContainer name='Container' src='@loader'/>
+        <TetrahedronSetGeometryAlgorithms name='GeomAlgo' template='Vec3d' drawTetrahedra='0' drawScaleTetrahedra='1'/>
+        <DiagonalMass massDensity='1'/>
+            
+        <TetrahedronFEMForceField name='FEM' youngModulus='8e6' poissonRatio='0.10' method='large' />
+
+        <!--<PrecomputedConstraintCorrection fileCompliance='./compliance/GumCompliance1.comp' recompute='0' printLog='1' />-->
+
+        <BoxROI name='ROI1' orientedBox='-9.5 -10 17.5   -2 -9 14    -7 -5 -5      10.9' drawBoxes='1' />
+        <RestShapeSpringsForceField stiffness='5e7' angularStiffness='5e7' points='@ROI1.indices'
+            external_rest_shape='@mstate' external_points='@ROI1.indices'/>
+
+        <Node name='HapticCollision'>
+            <TriangleSetTopologyContainer name='ContainerTri'/>
+            <TriangleSetTopologyModifier name='Modifier'/>
+            <TriangleSetGeometryAlgorithms name='GeomAlgo'/>
+            <Tetra2TriangleTopologicalMapping input='@../Container' output='@ContainerTri'/>
+            <PointCollisionModel    group='1 2 3' color='red'/>
+            <LineCollisionModel     group='1 2 3' color='red'/>
+            <TriangleCollisionModel group='1 2 3' color='red'/>
+        </Node>
+        
+        <Node name='GumTeethCollision'>
+            <MeshOBJLoader filename='mesh/Section1/Gum_Collision1.obj' name='loader' scale3d='500 500 500'/>
+            <TriangleSetTopologyContainer name='Container' src='@loader'/>
+            <MechanicalObject name='mstate' src='@loader'/>
+            <TriangleCollisionModel simulated='true' moving='true' group='3 8' color='yellow'/>
+            <LineCollisionModel     simulated='true' moving='true' group='3 8' color='yellow'/>
+            <PointCollisionModel    simulated='true' moving='true' group='3 8' color='yellow'/>
+            <BarycentricMapping input='@../mstate' output='@mstate'/>
+        </Node>
+        
+        <Node name='Visual'>
+            <MeshOBJLoader filename='mesh/Section1/Gum_Visual1.obj' name='loader'
+                scale3d='500 500 500' handleSeams='false'/>
+            <OglModel name='Visual' src='@loader' color='0.94 0.5 0.5 1'/>
+            <BarycentricMapping input='@../mstate' output='@Visual'/>
+        </Node>
+    </Node>
+
+<!--
+    <GeomagicDriver 
+        name='GeomagicDevice' 
+        deviceName='Default Device' 
+        scale='1' 
+        drawDeviceFrame='false' 
+        drawDevice='false' 
+        manualStart='1'
+        positionBase='-2 4 20' 
+        orientationBase='-0.087 -0.087 0 1' 
+        forceScale='0.005'
+    />
+ 
+    <Node name='ToolController'>
+        <MechanicalObject 
+            template='Rigid3' 
+            name='DOFs' 
+            position='@GeomagicDevice.positionDevice'
+        />
+    </Node>
+
+    <include href='modeling/haptic.xml'/>
+-->
+</Node>

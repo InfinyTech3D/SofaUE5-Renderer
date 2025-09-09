@@ -1,0 +1,23 @@
+<Node name='GumTeethCollision'>
+    <!--
+    <MechanicalObject template='Rigid3d' name='mstate' position='0 0 0   0 0 0 1' />
+    <RigidDistanceGridCollisionModel
+        filename='mesh/Section1/Bone_Collision_Coarse1.obj'
+        scale='500'
+        usePoints='1'
+        contactFriction='0.0'
+        simulated='false'
+        moving='false'
+        group='2 7'
+        nx='10'
+        ny='30'
+        nz='30'
+    />
+    -->
+    <MeshOBJLoader filename='' name='loader' scale3d='500 500 500'/>
+    <TriangleSetTopologyContainer name='Container' src='@loader'/>
+    <MechanicalObject name='mstate' src='@loader'/>
+    <LineCollisionModel     simulated='false' moving='false' group='2 7' color='green'/>
+    <PointCollisionModel    simulated='false' moving='false' group='2 7' color='green'/>
+    <TriangleCollisionModel simulated='false' moving='false' group='2 7' color='green'/>
+</Node>

@@ -1,0 +1,56 @@
+<Node name='Instrument' >
+    <EulerImplicitSolver name='ODE solver' rayleighStiffness='0' rayleighMass='0' />
+    <SparseLDLSolver template='CompressedRowSparseMatrixMat3x3d'/>
+
+    <MechanicalObject name='instrumentState' template='Rigid3' 
+        tags='GeomagicDevice' position='@../GeomagicDevice.positionBase'/>
+    <UniformMass name='mass' totalMass='0.01' />
+
+    <RestShapeSpringsForceField 
+        stiffness='1e7' 
+        angularStiffness='1e7' 
+        external_rest_shape='@../ToolController/DOFs' 
+        points='0' 
+        external_points='0' 
+    />
+    <LCPForceFeedback activate='1' forceCoef='0.20'/>
+    <LinearSolverConstraintCorrection/>
+
+    <Node name='CollisionModel' >
+        <MeshOBJLoader 
+            filename='mesh/WilliamsProbe_collision_line.obj' 
+            name='loader' 
+            scale3d='50 50 50' 
+            rotation='0 0 0' 
+            translation='0 0 0'
+        />
+        <EdgeSetTopologyContainer src='@loader' name='InstrumentCollisionModel' />
+        <MechanicalObject src='@loader' name='instrumentCollisionState' 
+            dy='-2.5' dz='3.2' rx='15'/>
+        <LineCollisionModel  name='instrumentLine'   group='7 8' 
+            color='0 255 0 1' tags='CarvingTool'/>
+        <PointCollisionModel name='instrumentPoint'  group='7 8' 
+            color='0 255 0 1' tags='CarvingTool'/>
+        <RigidMapping name='MM->CM mapping' input='@instrumentState' 
+            output='@instrumentCollisionState' />
+    </Node>
+
+    <Node name='VisuTool' >
+        <MeshOBJLoader 
+            name='meshLoader_1' 
+            filename='mesh/WilliamsProbe.obj' 
+            handleSeams='1' 
+            scale3d='50 50 50' 
+            rotation='0 0 0' 
+            translation='0 0 0'
+        />
+        <OglModel 
+            name='InstrumentVisualModel' 
+            texturename='../../Materials/textures/WilliamsProbe_BaseColor.png'
+            src='@meshLoader_1' 
+            dy='-2.5' dz='3.2' rx='15'
+        />
+        <RigidMapping name='MM->VM mapping' input='@instrumentState' 
+            output='@InstrumentVisualModel' />
+    </Node>
+</Node>

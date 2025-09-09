@@ -1,0 +1,7 @@
+# Blender 4.3.2
+# www.blender.org
+mtllib WilliamsProbe_collision_line.mtl
+o WilliamsProbe
+v -0.000002 -0.013805 -0.103681
+v -0.000042 0.099106 -0.038877
+l 1 2

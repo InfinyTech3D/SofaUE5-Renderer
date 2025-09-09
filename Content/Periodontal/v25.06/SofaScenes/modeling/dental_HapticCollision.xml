@@ -1,0 +1,8 @@
+<Node name='HapticCollision'>
+    <MeshOBJLoader filename='' name='loader' scale3d='500 500 500'/>
+    <TriangleSetTopologyContainer name='Container' src='@loader'/>
+    <MechanicalObject name='mstate' src='@loader'/>
+    <LineCollisionModel     simulated='false' moving='false' group='1 2 3' color='white'/>
+    <PointCollisionModel    simulated='false' moving='false' group='1 2 3' color='white'/>
+    <TriangleCollisionModel simulated='false' moving='false' group='1 2 3' color='white'/>
+</Node>

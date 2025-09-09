@@ -1,0 +1,9 @@
+<Node name='GumTeethCollision'>
+    <MeshOBJLoader filename='' name='loader' scale3d='500 500 500'/>
+    <TriangleSetTopologyContainer name='Container' src='@loader'/>
+    <MechanicalObject name='mstate' src='@loader'/>
+    <TriangleCollisionModel simulated='true' moving='true' group='3 8' color='yellow'/>
+    <LineCollisionModel     simulated='true' moving='true' group='3 8' color='yellow'/>
+    <PointCollisionModel    simulated='true' moving='true' group='3 8' color='yellow'/>
+    <BarycentricMapping input='@../GumVolume/mstate' output='@mstate'/>
+</Node>

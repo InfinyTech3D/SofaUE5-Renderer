@@ -1,0 +1,36 @@
+<Node name='GumVolume'>
+    <MeshGmshLoader filename='' name='loader' 
+        scale3d='500 500 500'/>
+    <MechanicalObject name='mstate' src='@loader'/>
+    <TetrahedronSetTopologyContainer name='Container' src='@loader'/>
+    <TetrahedronSetGeometryAlgorithms name='GeomAlgo' template='Vec3d' drawTetrahedra='0' drawScaleTetrahedra='1'/>
+    <DiagonalMass massDensity='1'/>
+        
+    <TetrahedronFEMForceField name='FEM' youngModulus='8e6' poissonRatio='0.10' method='large' />
+
+    <PrecomputedConstraintCorrection fileDir='./compliance' fileCompliance='' recompute='0' printLog='1' /><!--regularizationTerm='0.001'/>-->
+
+    <BoxROI name='ROI1' orientedBox='' drawBoxes='1' />
+    <RestShapeSpringsForceField stiffness='5e7' angularStiffness='5e7' points='@ROI1.indices'
+        external_rest_shape='@mstate' external_points='@ROI1.indices'/>
+
+    <Node name='HapticCollision'>
+        <TriangleSetTopologyContainer name='ContainerTri'/>
+        <TriangleSetTopologyModifier name='Modifier'/>
+        <TriangleSetGeometryAlgorithms name='GeomAlgo'/>
+        <Tetra2TriangleTopologicalMapping input='@../Container' output='@ContainerTri'/>
+        <PointCollisionModel    group='1 2 3' color='red'/>
+        <LineCollisionModel     group='1 2 3' color='red'/>
+        <TriangleCollisionModel group='1 2 3' color='red'/>
+
+        <!--
+        <MeshOBJLoader filename='mesh/Section1/Gum_Collision_Coarse1.obj' name='loader' scale3d='500 500 500'/>
+        <TriangleSetTopologyContainer name='Container' src='@loader'/>
+        <MechanicalObject name='mstate' src='@loader'/>
+        <TriangleCollisionModel simulated='true' moving='true' group='1 2 3' color='red'/>
+        <LineCollisionModel     simulated='true' moving='true' group='1 2 3' color='red'/>
+        <PointCollisionModel    simulated='true' moving='true' group='1 2 3' color='red'/>
+        <BarycentricMapping input='@..' output='@mstate'/>
+        -->
+    </Node>
+</Node>
