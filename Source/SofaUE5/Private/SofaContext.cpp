@@ -384,37 +384,35 @@ void ASofaContext::loadNodeGraph()
         FString fs_nodeUniqID(nodeUniqID.c_str());
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
-        ASofaDAGNode* dagNode = nullptr;
-        if (m_status == -1) // create actors
-        {
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
-            SpawnParams.Owner = this;
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
+        SpawnParams.Owner = this;
 
-            dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
-            if (dagNode != nullptr)
-            {                
-                //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-                dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+        ASofaDAGNode* dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
+        
+        if (dagNode != nullptr)
+        {                
+            //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
+            dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 
-                std::string parentNameId = "";
-                int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
-                if (resParentNameId != 0)
-                    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
+            std::string parentNameId = "";
+            int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
+            if (resParentNameId != 0)
+                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
 
-                FString fs_parentName(parentNameId.c_str());
-                dagNode->setUniqueNameID(fs_nodeUniqID);
-                dagNode->setParentName(fs_parentName);
-                dagNode->SetActorLabel(fs_nodeDisplayName);
+            FString fs_parentName(parentNameId.c_str());
+            dagNode->setUniqueNameID(fs_nodeUniqID);
+            dagNode->setParentName(fs_parentName);
+            dagNode->SetActorLabel(fs_nodeDisplayName);
                 
-                if (m_log)
-                    UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
-            }
-            else
-            {
-                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
-            }
+            if (m_log)
+                UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
+            
             m_dagNodes.push_back(dagNode);
+        }
+        else
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
         }
     }
 
@@ -440,10 +438,11 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.size());
     // Load Components Graph
     for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
     {
-        //m_dagNodes[i]->loadComponents(this->m_sofaAPI);
+        m_dagNodes[i]->loadComponents(this->m_sofaAPI);
     }
 
 }
