@@ -375,7 +375,8 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
-    m_dagNodes.clear();
+    clearNodeGraph();
+
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
@@ -403,7 +404,7 @@ void ASofaContext::loadNodeGraph()
         if (dagNode != nullptr)
         {                
             //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-            dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+            //dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 
             std::string parentNameId = "";
             int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
@@ -418,7 +419,7 @@ void ASofaContext::loadNodeGraph()
             if (m_log)
                 UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
             
-            m_dagNodes.push_back(dagNode);
+            m_dagNodes.Add(dagNode);
         }
         else
         {
@@ -428,31 +429,37 @@ void ASofaContext::loadNodeGraph()
 
 
     // Reorder Node using Parent
-    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    for (auto& WeakDagNode : m_dagNodes)
     {
-        ASofaDAGNode* dagNode = m_dagNodes[i];
-        const FString& parentName = dagNode->getParentName();        
-        //UE_LOG(SUnreal_log, Log, TEXT("## Process: %s | %s"), *dagNode->getUniqNameID(), *parentName);
+        ASofaDAGNode* dagNode = WeakDagNode.Get();
+        if (dagNode == nullptr)
+            continue;
 
+        const FString& parentName = dagNode->getParentName();
         auto res = parentName.Compare("None");
         if (res == 0)
             continue;
 
-        for (unsigned int j = 0; j < m_dagNodes.size(); ++j)
+        for (auto& WeakOther : m_dagNodes)
         {
-            ASofaDAGNode* otherDagNode = m_dagNodes[j];
-            if (otherDagNode->getUniqNameID().Compare(parentName) == 0)
+            if (ASofaDAGNode* otherDagNode = WeakOther.Get())
             {
-                dagNode->AttachToActor(otherDagNode, FAttachmentTransformRules::KeepRelativeTransform);                
+                if (otherDagNode->getUniqNameID().Compare(parentName) == 0)
+                {
+                    dagNode->AttachToActor(otherDagNode, FAttachmentTransformRules::KeepRelativeTransform);
+                }
             }
         }
     }
 
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.size());
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.Num());
     // Load Components Graph
-    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    for (auto& WeakDagNode : m_dagNodes)
     {
-        m_dagNodes[i]->loadComponents(this->m_sofaAPI);
+        if (ASofaDAGNode* dagNode = WeakDagNode.Get())
+        {
+            dagNode->loadComponents(m_sofaAPI);
+        }
     }
 
 }
@@ -481,30 +488,36 @@ void ASofaContext::reconnectNodeGraph()
         }
         else
         {
-            m_dagNodes.push_back(dagNode);
+            m_dagNodes.Add(dagNode);
         }
     }
 
     // reconnect NodeGraph
-    for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
+    for (auto& WeakDagNode : m_dagNodes)
     {
-        m_dagNodes[i]->reconnectComponents(this->m_sofaAPI);
+        if (ASofaDAGNode* dagNode = WeakDagNode.Get())
+        {
+            dagNode->reconnectComponents(m_sofaAPI);
+        }
     }
 }
 
 
 void ASofaContext::clearNodeGraph()
 {
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::clearNodeGraph: Number of Node nbr: %d"), m_dagNodes.size());
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::clearNodeGraph: Number of Node nbr: %d"), m_dagNodes.Num());
 
-    for (ASofaDAGNode* node : m_dagNodes)
+    for (auto& WeakDagNode : m_dagNodes)
     {
-        if (node != nullptr)
+        if (ASofaDAGNode* Node = WeakDagNode.Get())
         {
-            node->Destroy();
+            // Optionally destroy existing actors
+            Node->Destroy();
         }
     }
-    m_dagNodes.clear();
+
+    // Clear the array
+    m_dagNodes.Empty();
 }
 
 
