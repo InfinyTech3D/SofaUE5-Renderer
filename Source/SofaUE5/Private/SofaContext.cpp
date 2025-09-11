@@ -193,7 +193,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
         }
         else if (MemberName.Compare(TEXT("filePath")) == 0)
         {
-            //loadSofaScene();
+            loadSofaScene();
         }
     }
 }
@@ -287,8 +287,12 @@ void ASofaContext::createSofaContext()
     }
 
 
-    if (!filePath.FilePath.IsEmpty())
+    if (!filePath.FilePath.IsEmpty()) {
         loadSofaScene();
+
+        if (m_status != -1)
+            this->reconnectNodeGraph();
+    }
 }
 
 
@@ -313,7 +317,7 @@ void ASofaContext::loadSofaScene()
         UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::loadSofaScene: Scene loading with success: %s"), *my_filePath);
     }
 
-    FPlatformProcess::Sleep(0.01f);
+    //FPlatformProcess::Sleep(0.01f);
 
     // Pass default scene parameter
    // this->setDT(Dt);
@@ -321,6 +325,15 @@ void ASofaContext::loadSofaScene()
 
     // Start parsing scene loaded in SOFA
     // Create the actor of the scene:
+   
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
+
+    //m_status++;
+}
+
+void ASofaContext::mapSofaScene()
+{
     if (m_status == -1) {
         this->loadNodeGraph();
     }
@@ -329,9 +342,6 @@ void ASofaContext::loadSofaScene()
         this->reconnectNodeGraph();
 
     }
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
-
     m_status++;
 }
 

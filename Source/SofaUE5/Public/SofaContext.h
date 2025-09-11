@@ -55,6 +55,9 @@ public:
     UFUNCTION(CallInEditor, Category = "Sofa")
     void loadSofaScene();
 
+    UFUNCTION(CallInEditor, Category = "Sofa")
+    void mapSofaScene();
+
 #if WITH_EDITOR
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
