@@ -365,6 +365,8 @@ void ASofaContext::loadNodeGraph()
     if (m_sofaAPI == nullptr)
         return;
     
+    clearNodeGraph();
+
     int nbrNode = m_sofaAPI->getNbrDAGNode();
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load Node nbr: %d"), nbrNode);
 
@@ -375,7 +377,7 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
-    clearNodeGraph();
+    FTransform SpawnTransform = FTransform::Identity;
 
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
@@ -396,10 +398,16 @@ void ASofaContext::loadNodeGraph()
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
         FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
+        //SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
         SpawnParams.Owner = this;
 
-        ASofaDAGNode* dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
+        ASofaDAGNode* dagNode = World->SpawnActorDeferred<ASofaDAGNode>(
+            ASofaDAGNode::StaticClass(),
+            SpawnTransform,
+            this,
+            nullptr,
+            ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+        );
         
         if (dagNode != nullptr)
         {                
@@ -419,6 +427,7 @@ void ASofaContext::loadNodeGraph()
             if (m_log)
                 UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
             
+            UGameplayStatics::FinishSpawningActor(dagNode, SpawnTransform);
             m_dagNodes.Add(dagNode);
         }
         else
