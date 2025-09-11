@@ -41,14 +41,12 @@ public:
     // Sets default values for this actor's properties
     ASofaVisualMesh();
 
-    void setSofaMesh(SofaPhysicsOutputMesh* sofaMesh);
-
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
-    //virtual void EndPlay() override;
-    void PostActorCreated() override;
-    void PostLoad() override;
+    // Called in editor & runtime when actor is deleted
+    virtual void Destroyed() override;
+
     
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
