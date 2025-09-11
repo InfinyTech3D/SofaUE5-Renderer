@@ -240,7 +240,7 @@ void ASofaContext::createSofaContext()
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 07"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 11"));
         // TODO restore that
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
@@ -255,21 +255,15 @@ void ASofaContext::createSofaContext()
         if (m_log)
         {
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
-            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Status: %d"), m_status);
         }
 
         // create scene
-        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Creating Scene..."));
         int resCreate = m_sofaAPI->createScene();
         
-
         if (resCreate < 0) {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
             return;
         }
-        else
-            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
-
         
         //load ini file
         //FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
@@ -288,10 +282,7 @@ void ASofaContext::createSofaContext()
     FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
-    if (resPlug == 0) {
-        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin success, returns: %d"), resPlug);
-    }
-    else {
+    if (resPlug != 0) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
 
