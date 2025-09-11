@@ -52,6 +52,9 @@ public:
 
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+    UFUNCTION(CallInEditor, Category = "Sofa")
+    void loadSofaScene();
+
 #if WITH_EDITOR
     virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
@@ -83,7 +86,7 @@ protected:
     void catchSofaMessages();
 
     void createSofaContext();
-    void loadSofaScene();
+    
 
     void loadDefaultPlugin();
 

@@ -193,7 +193,7 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
         }
         else if (MemberName.Compare(TEXT("filePath")) == 0)
         {
-            loadSofaScene();
+            //loadSofaScene();
         }
     }
 }
