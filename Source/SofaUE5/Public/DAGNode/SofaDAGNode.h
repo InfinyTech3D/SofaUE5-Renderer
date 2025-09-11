@@ -38,7 +38,6 @@ public:
 	void setParentName(const FString& parentName) { m_parentName = parentName; }
 
 	bool loadComponents(SofaAdvancePhysicsAPI* _sofaAPI);
-	void loadComponents();
 	void clearComponents();
 
 	void reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI);
@@ -51,14 +50,6 @@ public:
 	const FString& getUniqNameID() {
 		return m_uniqueNameID;
 	}
-
-#if WITH_EDITOR
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
-
-
-UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-	bool ComponentLoaded = false;
 
 private:
 	SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
