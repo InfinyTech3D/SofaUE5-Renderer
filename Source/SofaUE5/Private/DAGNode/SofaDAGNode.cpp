@@ -82,15 +82,13 @@ void ASofaDAGNode::Tick(float DeltaTime)
 
 bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 {
-    return true;
-    
     m_sofaAPI = _sofaAPI;
 
     if (m_sofaAPI == nullptr)
         return false;
 
     UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
-    return true;
+
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
     
     int nbrCompo = m_sofaAPI->getNbrComponentsInNode(nodeUniqID);
@@ -109,8 +107,6 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
         return false;
     }
-    
-
 
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
