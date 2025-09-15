@@ -41,12 +41,6 @@ ASofaVisualMesh::ASofaVisualMesh()
     RootComponent = mesh;
 }
 
-void ASofaVisualMesh::setSofaMesh(SofaPhysicsOutputMesh* sofaMesh)
-{
-    m_sofaMesh = sofaMesh;
-    createMesh();
-}
-
 // Called when the game starts or when spawned
 void ASofaVisualMesh::BeginPlay()
 {
@@ -55,16 +49,19 @@ void ASofaVisualMesh::BeginPlay()
 
 }
 
-// This is called when actor is spawned (at runtime or when you drop it into the world in editor)
-void ASofaVisualMesh::PostActorCreated()
+void ASofaVisualMesh::Destroyed()
 {
-    Super::PostActorCreated();
-}
+    if (this->GetFlags() & RF_Transient) {
+        return;
+    }
 
-// This is called when actor is already in level and map is opened
-void ASofaVisualMesh::PostLoad()
-{
-    Super::PostLoad();
+    UE_LOG(SUnreal_log, Log, TEXT("## ASofaVisualMesh::Destroyed: Node: %s"), *this->GetName());
+    if (mesh)
+    {
+        mesh->ClearAllMeshSections(); // release mesh buffers if needed
+    }
+
+    Super::Destroyed();
 }
 
 // Called every frame
@@ -157,9 +154,6 @@ void ASofaVisualMesh::createMesh()
     m_sofaAPI->getTriangles(nodeUniqID, sofaTriangles);
     m_sofaAPI->getQuads(nodeUniqID, sofaQuads);
     m_sofaAPI->getVTexCoords(nodeUniqID, sofaTexCoords);
-
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaVisualMesh::createMesh(): TOTO1"));
-
 
     // Convert in Unreal structure
     TArray<FVector> vertices;

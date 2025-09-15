@@ -240,7 +240,7 @@ void ASofaContext::createSofaContext()
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
         m_sofaAPI = new SofaAdvancePhysicsAPI();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 02"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 11"));
         // TODO restore that
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
@@ -255,21 +255,15 @@ void ASofaContext::createSofaContext()
         if (m_log)
         {
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
-            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Status: %d"), m_status);
         }
 
         // create scene
-        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: Creating Scene..."));
         int resCreate = m_sofaAPI->createScene();
         
-
         if (resCreate < 0) {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
             return;
         }
-        else
-            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
-
         
         //load ini file
         //FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
@@ -288,10 +282,7 @@ void ASofaContext::createSofaContext()
     FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
-    if (resPlug == 0) {
-        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin success, returns: %d"), resPlug);
-    }
-    else {
+    if (resPlug != 0) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
 
@@ -378,39 +369,50 @@ void ASofaContext::loadNodeGraph()
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
-        std::string nodeUniqID = m_sofaAPI->getDAGNodeAPIName(nodeId);
-        std::string nodeDisplayName = m_sofaAPI->getDAGNodeDisplayName(nodeId);
+        std::string nodeUniqID = "";
+        std::string nodeDisplayName = "";
+
+        int resNameId = m_sofaAPI->getDAGNodeAPIName_out(nodeId, nodeUniqID);
+        int resDisplayName = m_sofaAPI->getDAGNodeDisplayName_out(nodeId, nodeDisplayName);
+
+        if (resNameId != 0 || resDisplayName != 0)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: node name access return: %d | %d"), resNameId, resDisplayName);
+            continue;
+        }
 
         FString fs_nodeUniqID(nodeUniqID.c_str());
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
-        ASofaDAGNode* dagNode = nullptr;
-        if (m_status == -1) // create actors
-        {
-            FActorSpawnParameters SpawnParams;
-            SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
-            SpawnParams.Owner = this;
+        FActorSpawnParameters SpawnParams;
+        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
+        SpawnParams.Owner = this;
 
-            dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
-            if (dagNode != nullptr)
-            {                
-                //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-                dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+        ASofaDAGNode* dagNode = World->SpawnActor<ASofaDAGNode>(ASofaDAGNode::StaticClass(), SpawnParams);
+        
+        if (dagNode != nullptr)
+        {                
+            //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
+            dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 
-                std::string parentName = m_sofaAPI->getDAGNodeParentAPIName(nodeUniqID);
-                FString fs_parentName(parentName.c_str());
-                dagNode->setUniqueNameID(fs_nodeUniqID);
-                dagNode->setParentName(fs_parentName);
-                dagNode->SetActorLabel(fs_nodeDisplayName);
+            std::string parentNameId = "";
+            int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
+            if (resParentNameId != 0)
+                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
+
+            FString fs_parentName(parentNameId.c_str());
+            dagNode->setUniqueNameID(fs_nodeUniqID);
+            dagNode->setParentName(fs_parentName);
+            dagNode->SetActorLabel(fs_nodeDisplayName);
                 
-                if (m_log)
-                    UE_LOG(SUnreal_log, Warning, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
-            }
-            else
-            {
-                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
-            }
+            if (m_log)
+                UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
+            
             m_dagNodes.push_back(dagNode);
+        }
+        else
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
         }
     }
 
@@ -436,11 +438,11 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.size());
     // Load Components Graph
     for (unsigned int i = 0; i < m_dagNodes.size(); ++i)
     {
         m_dagNodes[i]->loadComponents(this->m_sofaAPI);
-        //loadComponentsInNode(m_dagNodes[i]);
     }
 
 }
