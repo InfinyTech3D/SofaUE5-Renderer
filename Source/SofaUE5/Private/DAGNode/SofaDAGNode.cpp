@@ -5,13 +5,14 @@
 #include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 #include "Base/SofaBaseComponent.h"
 #include "SofaVisualMesh.h"
+#include "Components/SofaComponent.h"
 #include "Engine.h"
 
 // Sets default values
 ASofaDAGNode::ASofaDAGNode()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true; 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SofaDAGNode"));
 }
 
@@ -119,47 +120,44 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         FActorSpawnParameters SpawnParams;
         SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
 
-        ASofaBaseComponent* component = nullptr;
         if (baseType.compare("SofaVisualModel") == 0)
         {
-            component = World->SpawnActorDeferred<ASofaVisualMesh>(
+            ASofaBaseComponent* component = World->SpawnActorDeferred<ASofaVisualMesh>(
                 ASofaVisualMesh::StaticClass(),
                 SpawnTransform,
                 this,
                 nullptr,
                 ESpawnActorCollisionHandlingMethod::AlwaysSpawn
             );
+
+            if (component != nullptr)
+            {
+                //if (m_log)
+                UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+
+                component->setUniqueNameID(fs_compoName);
+                component->setComponentType(fs_baseType);
+                component->SetActorLabel(fs_displayName);
+                component->setSofaAPI(_sofaAPI);
+                component->computeComponent();
+
+                UGameplayStatics::FinishSpawningActor(component, SpawnTransform);
+                bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+            }
+            else
+            {
+                UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
+            }
             //visuMesh->setSofaMesh(mesh);
         }
         else
         {
-            component = World->SpawnActorDeferred<ASofaBaseComponent>(
-                ASofaBaseComponent::StaticClass(),
-                SpawnTransform,
-                this,
-                nullptr,
-                ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-            ); 
+            continue;
+            USofaComponent* NewComp = NewObject<USofaComponent>(this);
+            NewComp->RegisterComponent();
         }
 
-        if (component != nullptr)
-        {
-            //if (m_log)
-            UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
-
-            component->setUniqueNameID(fs_compoName);
-            component->setComponentType(fs_baseType);
-            component->SetActorLabel(fs_displayName);
-            component->setSofaAPI(_sofaAPI);
-            component->computeComponent();
-
-            UGameplayStatics::FinishSpawningActor(component, SpawnTransform);
-            bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-        }
-        else
-        {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
-        }
+        
 
         // Sleep for 10 ms (0.01 seconds)
         //FPlatformProcess::Sleep(0.01f);
