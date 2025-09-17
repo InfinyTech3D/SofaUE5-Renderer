@@ -109,7 +109,6 @@ private:
     UPROPERTY(SaveGame)
         int m_status;
 
-    std::vector <ASofaDAGNode*> m_dagNodes;
-
+    TArray<TWeakObjectPtr<ASofaDAGNode>> m_dagNodes;
 
 };

@@ -55,23 +55,6 @@ void ASofaDAGNode::BeginPlay()
 }
 
 
-#if WITH_EDITOR
-void ASofaDAGNode::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
-{
-    if (PropertyChangedEvent.MemberProperty != nullptr)
-    {
-        FString MemberName = PropertyChangedEvent.MemberProperty->GetName();
-        //UE_LOG(LogTemp, Warning, TEXT("PostEditChangeProperty: %s"), *MemberName);
-
-		if (MemberName.Compare(TEXT("ComponentLoaded")) == 0)
-		{
-			loadComponents();
-		}
-    }
-}
-#endif
-
-
 // Called every frame
 void ASofaDAGNode::Tick(float DeltaTime)
 {
@@ -108,6 +91,7 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         return false;
     }
 
+    FTransform SpawnTransform = FTransform::Identity;
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
         std::string compoName = "";
@@ -138,17 +122,28 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         ASofaBaseComponent* component = nullptr;
         if (baseType.compare("SofaVisualModel") == 0)
         {
-            component = World->SpawnActor<ASofaVisualMesh>(ASofaVisualMesh::StaticClass(), SpawnParams);
+            component = World->SpawnActorDeferred<ASofaVisualMesh>(
+                ASofaVisualMesh::StaticClass(),
+                SpawnTransform,
+                this,
+                nullptr,
+                ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+            );
             //visuMesh->setSofaMesh(mesh);
         }
         else
         {
-            component = World->SpawnActor<ASofaBaseComponent>(ASofaBaseComponent::StaticClass(), SpawnParams);
+            component = World->SpawnActorDeferred<ASofaBaseComponent>(
+                ASofaBaseComponent::StaticClass(),
+                SpawnTransform,
+                this,
+                nullptr,
+                ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+            ); 
         }
 
         if (component != nullptr)
         {
-            bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
             //if (m_log)
             UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
@@ -157,6 +152,9 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
             component->SetActorLabel(fs_displayName);
             component->setSofaAPI(_sofaAPI);
             component->computeComponent();
+
+            UGameplayStatics::FinishSpawningActor(component, SpawnTransform);
+            bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
         }
         else
         {
@@ -164,30 +162,12 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
         }
 
         // Sleep for 10 ms (0.01 seconds)
-        FPlatformProcess::Sleep(0.01f);
+        //FPlatformProcess::Sleep(0.01f);
     }
 
     return true;
 }
 
-
-void ASofaDAGNode::loadComponents()
-{
-	if (m_statusLoaded == true) // only once
-		return;
-
-	UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
-	
-	std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
-	m_componentsNames = m_sofaAPI->getDAGNodeComponentsNames(nodeUniqID);
-	//std::string componentList = m_sofaAPI->getDAGNodeComponentsName(nodeUniqID);
-
-	//FString fs_componentList(componentList.c_str());
-	UE_LOG(SUnreal_log, Log, TEXT("## Process Node: %s | m_componentsNames size: %d"), *this->m_uniqueNameID, m_componentsNames.size());
-
-
-	m_statusLoaded = true;
-}
 
 void ASofaDAGNode::reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 {
