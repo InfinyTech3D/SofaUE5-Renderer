@@ -83,7 +83,6 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         // Nothing to do; importantly, do NOT call getDAGNodeComponentsName with index 0
         return true;
     }
-
     
     UWorld* const World = GetWorld();
     if (World == nullptr)
@@ -91,7 +90,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
         return false;
     }
-
+    
     FTransform SpawnTransform = FTransform::Identity;
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
@@ -133,7 +132,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             if (component != nullptr)
             {
                 //if (m_log)
-                UE_LOG(SUnreal_log, Log, TEXT("### ASofaBaseComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+                UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
                 component->setUniqueNameID(fs_compoName);
                 component->setComponentType(fs_baseType);
@@ -152,9 +151,10 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         }
         else
         {
-            continue;
-            USofaComponent* NewComp = NewObject<USofaComponent>(this);
-            NewComp->RegisterComponent();
+            UE_LOG(SUnreal_log, Log, TEXT("### USofaComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+
+            //USofaComponent* NewComp = NewObject<USofaComponent>(this);
+            //NewComp->RegisterComponent();
         }
 
         
