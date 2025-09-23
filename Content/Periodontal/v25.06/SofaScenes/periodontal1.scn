@@ -1,8 +1,35 @@
 <?xml version='1.0' ?>
 <Node name='lroot' gravity='0 0 0' dt='0.0012'>
-    <include href='modeling/plugins.xml'/>
-    <LightManager/>
-    <PositionalLight name='light1' color='1 1 1' attenuation='0' position='-3 0 30'/>
+       <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->   
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Algorithm"/> <!-- Needed to use components [BVHNarrowPhase,BruteForceBroadPhase,CollisionPipeline] -->   
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Intersection"/> <!-- Needed to use components [MinProximityIntersection] -->   
+    <RequiredPlugin name="Sofa.Component.Collision.Geometry"/> <!-- Needed to use components [LineCollisionModel,TriangleCollisionModel] -->   
+    <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/> <!-- Needed to use components [CollisionResponse] -->   
+    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [LCPConstraintSolver] -->   
+    <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->   
+    <RequiredPlugin name="Sofa.Component.SceneUtility"/> <!-- Needed to use components [AddDataRepository] -->   
+    <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->   
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [TriangleSetTopologyContainer] -->   
+    <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->   
+    <RequiredPlugin name="Sofa.Component.Engine.Select"/> <!-- Needed to use components [BoxROI] -->   
+    <RequiredPlugin name="Sofa.Component.Haptics"/> <!-- Needed to use components [LCPForceFeedback] -->   
+    <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [SparseLDLSolver] -->   
+    <RequiredPlugin name="Sofa.Component.LinearSolver.Iterative"/> <!-- Needed to use components [CGLinearSolver] -->   
+    <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [BarycentricMapping] -->   
+    <RequiredPlugin name="Sofa.Component.Mapping.NonLinear"/> <!-- Needed to use components [RigidMapping] -->   
+    <RequiredPlugin name="Sofa.Component.Mass"/> <!-- Needed to use components [DiagonalMass,UniformMass] -->   
+    <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->   
+    <RequiredPlugin name="Sofa.Component.SolidMechanics.FEM.Elastic"/> <!-- Needed to use components [TetrahedronFEMForceField] -->   
+    <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->   
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->   
+    <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
+    <RequiredPlugin name="Geomagic"/> <!-- Needed to use components [GeomagicDriver] -->
+    <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [LinearSolverConstraintCorrection,UncoupledConstraintCorrection] -->
+    <RequiredPlugin name="Sofa.GL.Component.Shader"/> <!-- Needed to use components [LightManager,PositionalLight] -->
+    <RequiredPlugin name="SofaDistanceGrid"/> <!-- Needed to use components [RigidDistanceGridCollisionModel] -->  
+    <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Tetra2TriangleTopologicalMapping] -->
+
     <AddDataRepository path='./'/>
 	<VisualStyle displayFlags='
         showVisual 
@@ -13,8 +40,6 @@
         hideBehaviorModels 
         hideForceFields 
     '/>
-
-    <LineAxis size='1' name='LineAxis' />
 
 	<DefaultVisualManagerLoop />    
     <FreeMotionAnimationLoop/>
@@ -51,7 +76,7 @@
         <OglModel name='Visual' src='@loader' color='1 0.98 0.8 1'/>
     </Node>
 
-
+<!--
     <Node name='GumVolume'>
         <EulerImplicitSolver name='cg_odesolver' printLog='false' rayleighStiffness='0.0' rayleighMass='0.0' />
         <PCGLinearSolver iterations='50' name='linear solver' tolerance='1.5e-3'/>
@@ -65,7 +90,7 @@
             
         <TetrahedronFEMForceField name='FEM' youngModulus='8e6' poissonRatio='0.10' method='large' />
 
-        <!--<PrecomputedConstraintCorrection fileCompliance='./compliance/GumCompliance1.comp' recompute='0' printLog='1' />-->
+        <PrecomputedConstraintCorrection fileCompliance='./compliance/GumCompliance1.comp' recompute='0' printLog='1' />
 
         <BoxROI name='ROI1' orientedBox='-9.5 -10 17.5   -2 -9 14    -7 -5 -5      10.9' drawBoxes='1' />
         <RestShapeSpringsForceField stiffness='5e7' angularStiffness='5e7' points='@ROI1.indices'
