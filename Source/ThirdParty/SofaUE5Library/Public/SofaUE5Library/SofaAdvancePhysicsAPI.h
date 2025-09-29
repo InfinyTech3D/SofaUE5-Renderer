@@ -139,6 +139,7 @@ public:
     int activateMessageHandler(bool value);
     int getNbMessages();
     std::string getMessage(int messageId, int& msgType);
+    void getMessage_out(int messageId, int& msgType, std::string& outName);
     int clearMessages();
 
     ////////////////////////////////////////////
