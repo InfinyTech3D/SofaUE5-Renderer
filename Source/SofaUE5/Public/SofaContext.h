@@ -104,8 +104,8 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
-    //TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI;
+    TSharedPtr <SofaAdvancePhysicsAPI> m_sofaAPI = nullptr;
+
     UPROPERTY(SaveGame)
         int m_status;
 

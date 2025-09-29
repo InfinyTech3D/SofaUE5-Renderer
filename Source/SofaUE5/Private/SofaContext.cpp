@@ -96,7 +96,7 @@ void ASofaContext::Destroyed()
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
         m_sofaAPI->stop();
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
-        delete m_sofaAPI;
+        //delete m_sofaAPI;
         m_sofaAPI = nullptr;
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
@@ -239,7 +239,7 @@ void ASofaContext::createSofaContext()
     {
         //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
         //m_data.m_sofaAPI = apiRef;
-        m_sofaAPI = new SofaAdvancePhysicsAPI();
+        m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 11"));
         // TODO restore that
         //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
