@@ -93,16 +93,16 @@ void ASofaContext::Destroyed()
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
         
-        if (m_isMsgHandlerActivated == true)
-            catchSofaMessages();
+        //if (m_isMsgHandlerActivated == true)
+        //    catchSofaMessages();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
-        m_sofaAPI->stop();
-        m_sofaAPI->activateMessageHandler(false);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
-        //delete m_sofaAPI;
-        m_sofaAPI = nullptr;
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
+        //m_sofaAPI->stop();
+        //m_sofaAPI->activateMessageHandler(false);
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
+        ////delete m_sofaAPI;
+        //m_sofaAPI = nullptr;
+        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
 
     Super::Destroyed();
@@ -127,7 +127,7 @@ void ASofaContext::BeginPlay()
     if (m_sofaAPI)
     {
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));
-        m_sofaAPI->start();
+        //m_sofaAPI->start();
     }
     else
     {
@@ -144,7 +144,7 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
     if (m_sofaAPI)
     {
-        m_sofaAPI->stop();
+        //m_sofaAPI->stop();
         //m_sofaAPI->activateMessageHandler(false);
     }
     Super::EndPlay(EndPlayReason);
@@ -158,21 +158,21 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ASofaContext::setDT(float value)
 {
-    if (m_sofaAPI)
-        m_sofaAPI->setTimeStep(value);
+    //if (m_sofaAPI)
+    //    m_sofaAPI->setTimeStep(value);
 }
 
 void ASofaContext::setGravity(FVector value)
 {
-    if (m_sofaAPI) 
-    {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
-        double* grav = new double[3];
-        grav[0] = value.X;
-        grav[1] = value.Y;
-        grav[2] = value.Z;
-        m_sofaAPI->setGravity(grav);
-    }
+    //if (m_sofaAPI) 
+    //{
+    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
+    //    double* grav = new double[3];
+    //    grav[0] = value.X;
+    //    grav[1] = value.Y;
+    //    grav[2] = value.Z;
+    //    m_sofaAPI->setGravity(grav);
+    //}
 }
 
 
@@ -210,9 +210,9 @@ void ASofaContext::Tick( float DeltaTime )
     if (m_status != -1 && m_sofaAPI)
     {
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick %d"), m_status);
-        m_sofaAPI->step();
+        //m_sofaAPI->step();
 
-        double stime = m_sofaAPI->getTime();
+        //double stime = m_sofaAPI->getTime();
         
         //if (m_isMsgHandlerActivated == true)
         //    catchSofaMessages();
@@ -228,7 +228,7 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    if (m_log)
+    //if (m_log)
         UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
@@ -242,7 +242,7 @@ void ASofaContext::createSofaContext()
     if (m_sofaAPI == nullptr) 
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 12"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 16"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -250,8 +250,8 @@ void ASofaContext::createSofaContext()
             return;
         }
 
-        // activate message handler
-        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+    //    // activate message handler
+    //    m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
         m_apiName = m_sofaAPI->APIName();
 
@@ -260,13 +260,13 @@ void ASofaContext::createSofaContext()
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
         }
 
-        // create scene
-        int resCreate = m_sofaAPI->createScene();
-        
-        if (resCreate < 0) {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
-            return;
-        }
+    //    // create scene
+    //    int resCreate = m_sofaAPI->createScene();
+    //    
+    //    if (resCreate < 0) {
+    //        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
+    //        return;
+    //    }
         
         //load ini file
         //FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
@@ -275,59 +275,59 @@ void ASofaContext::createSofaContext()
         //m_sofaAPI->loadSofaIni(pathchar);
     }
 
-    if (m_sofaAPI == nullptr)
-    {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: No SofaAdvancePhysicsAPI Available."));
-        return;
-    }
-    
-    // Load default plugins at start before loading SOFA scene
-    loadDefaultPlugin();
+    //if (m_sofaAPI == nullptr)
+    //{
+    //    UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: No SofaAdvancePhysicsAPI Available."));
+    //    return;
+    //}
+    //
+    //// Load default plugins at start before loading SOFA scene
+    //loadDefaultPlugin();
 
 
-    // If file is already set will load directly the file
-    if (!filePath.FilePath.IsEmpty()) {
-        loadSofaScene();
+    //// If file is already set will load directly the file
+    //if (!filePath.FilePath.IsEmpty()) {
+    //    loadSofaScene();
 
-        if (m_status != -1)
-            this->reconnectNodeGraph();
-    }
+    //    if (m_status != -1)
+    //        this->reconnectNodeGraph();
+    //}
 }
 
 
 void ASofaContext::loadSofaScene()
 {
-    FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
+   // FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
 
-    if (filePath.FilePath.IsEmpty()) {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadSofaScene: No filePath set."));
-        return;
-    }
+   // if (filePath.FilePath.IsEmpty()) {
+   //     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadSofaScene: No filePath set."));
+   //     return;
+   // }
 
-    FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
-    const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
-    int resScene = m_sofaAPI->load(pathfile);
+   // FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+   // const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
+   // int resScene = m_sofaAPI->load(pathfile);
 
-    if (resScene < 0) {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadSofaScene: Scene loading failed: %s | Error returned: %d"), *my_filePath, resScene);
-        return;
-    }
-    else {
-        UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::loadSofaScene: Scene loading with success: %s"), *my_filePath);
-    }
+   // if (resScene < 0) {
+   //     UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadSofaScene: Scene loading failed: %s | Error returned: %d"), *my_filePath, resScene);
+   //     return;
+   // }
+   // else {
+   //     UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::loadSofaScene: Scene loading with success: %s"), *my_filePath);
+   // }
 
  
-    // Pass default scene parameter
-   // this->setDT(Dt);
-   // this->setGravity(Gravity);
+   // // Pass default scene parameter
+   //// this->setDT(Dt);
+   //// this->setGravity(Gravity);
 
-    // Start parsing scene loaded in SOFA
-    // Create the actor of the scene:
-   
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+   // // Start parsing scene loaded in SOFA
+   // // Create the actor of the scene:
+   //
+   // if (m_isMsgHandlerActivated == true)
+   //     catchSofaMessages();
 
-    //m_status++;
+   // //m_status++;
 }
 
 void ASofaContext::loadDefaultPlugin()
