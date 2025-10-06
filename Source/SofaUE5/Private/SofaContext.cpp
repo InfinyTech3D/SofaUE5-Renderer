@@ -93,10 +93,14 @@ void ASofaContext::Destroyed()
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
         
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
+
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
         m_sofaAPI->stop();
+        m_sofaAPI->activateMessageHandler(false);
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
-        delete m_sofaAPI;
+        //delete m_sofaAPI;
         m_sofaAPI = nullptr;
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
@@ -237,18 +241,17 @@ void ASofaContext::createSofaContext()
     // create a new sofa context through sofaAdvancePhysicsAPI    
     if (m_sofaAPI == nullptr) 
     {
-        //TSharedRef<SofaAdvancePhysicsAPI> apiRef(new SofaAdvancePhysicsAPI());
-        //m_data.m_sofaAPI = apiRef;
-        m_sofaAPI = new SofaAdvancePhysicsAPI();
+        m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 12"));
-        // TODO restore that
-        //m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
         
         if (m_sofaAPI == nullptr)
         {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext SofaAdvancePhysicsAPI creation failed."));
             return;
         }
+
+        // activate message handler
+        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
         m_apiName = m_sofaAPI->APIName();
 
@@ -321,8 +324,8 @@ void ASofaContext::loadSofaScene()
     // Start parsing scene loaded in SOFA
     // Create the actor of the scene:
    
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 
     //m_status++;
 }
@@ -340,8 +343,8 @@ void ASofaContext::loadDefaultPlugin()
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
 
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 
@@ -498,6 +501,9 @@ void ASofaContext::reconnectNodeGraph()
             dagNode->reconnectComponents(m_sofaAPI);
         }
     }
+
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 
@@ -523,12 +529,17 @@ void ASofaContext::clearNodeGraph()
 void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
+
     int* type = new int[1];
     type[0] = -1;
+    std::string rawMsg;
     for (int i = 0; i < nbrMsgs; ++i)
     {
-        const char* rawMsg = m_sofaAPI->getMessage(i, *type).c_str();
-        FString FMessage(rawMsg);
+
+        //const char* rawMsg = m_sofaAPI->getMessage(i, *type).c_str();
+        m_sofaAPI->getMessage_out(i, *type, rawMsg);
+        FString FMessage(rawMsg.c_str());
 
         if (type[0] == -1) {
             continue;

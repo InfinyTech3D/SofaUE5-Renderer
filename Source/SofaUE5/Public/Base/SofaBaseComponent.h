@@ -37,12 +37,12 @@ public:
 		return m_uniqueNameID;
 	}
 
-	void setSofaAPI(SofaAdvancePhysicsAPI* api);
+	void setSofaAPI(const TSharedPtr<SofaAdvancePhysicsAPI>& api);
 
 	virtual void computeComponent() {}
 
 protected:
-	SofaAdvancePhysicsAPI* m_sofaAPI = nullptr;
+	TSharedPtr <SofaAdvancePhysicsAPI> m_sofaAPI = nullptr;
 
 	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_uniqueNameID;

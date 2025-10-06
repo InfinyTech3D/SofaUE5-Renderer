@@ -63,7 +63,7 @@ void ASofaDAGNode::Tick(float DeltaTime)
 }
 
 
-bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
+bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI)
 {
     m_sofaAPI = _sofaAPI;
 
@@ -169,7 +169,7 @@ bool ASofaDAGNode::loadComponents(SofaAdvancePhysicsAPI* _sofaAPI)
 }
 
 
-void ASofaDAGNode::reconnectComponents(SofaAdvancePhysicsAPI* _sofaAPI)
+void ASofaDAGNode::reconnectComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI)
 {
     m_sofaAPI = _sofaAPI;
 

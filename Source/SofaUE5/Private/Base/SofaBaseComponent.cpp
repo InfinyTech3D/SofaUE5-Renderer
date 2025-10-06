@@ -32,7 +32,7 @@ void ASofaBaseComponent::setComponentType(const FString& type)
 	//RootComponent = CreateDefaultSubobject<USceneComponent>(*m_baseType);
 }
 
-void ASofaBaseComponent::setSofaAPI(SofaAdvancePhysicsAPI* api)
+void ASofaBaseComponent::setSofaAPI(const TSharedPtr<SofaAdvancePhysicsAPI>& api)
 {
 	m_sofaAPI = api;
 }
