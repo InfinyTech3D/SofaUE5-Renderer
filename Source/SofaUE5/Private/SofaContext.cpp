@@ -242,7 +242,7 @@ void ASofaContext::createSofaContext()
     if (m_sofaAPI == nullptr) 
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 11"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 12"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -281,15 +281,11 @@ void ASofaContext::createSofaContext()
         return;
     }
     
-    // Load default plugins
-    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
-    const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
-    int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
-    if (resPlug != 0) {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
-    }
+    // Load default plugins at start before loading SOFA scene
+    loadDefaultPlugin();
 
 
+    // If file is already set will load directly the file
     if (!filePath.FilePath.IsEmpty()) {
         loadSofaScene();
 
@@ -320,8 +316,7 @@ void ASofaContext::loadSofaScene()
         UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::loadSofaScene: Scene loading with success: %s"), *my_filePath);
     }
 
-    //FPlatformProcess::Sleep(0.01f);
-
+ 
     // Pass default scene parameter
    // this->setDT(Dt);
    // this->setGravity(Gravity);
@@ -335,28 +330,18 @@ void ASofaContext::loadSofaScene()
     //m_status++;
 }
 
-void ASofaContext::mapSofaScene()
-{
-    if (m_status == -1) {
-        this->loadNodeGraph();
-    }
-    else
-    {
-        this->reconnectNodeGraph();
-
-    }
-    m_status++;
-}
-
-
 void ASofaContext::loadDefaultPlugin()
 {
     if (m_sofaAPI == nullptr)
         return;
 
-    //m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.Component.dll");
-    //m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GL.Component.dll");
-    //m_sofaAPI->loadPlugin("C:/projects/UnrealEngine/SOFA_test2/Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Sofa.GUI.Component.dll");
+    FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
+    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
+    const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
+    int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
+    if (resPlug != 0) {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
+    }
 
     if (m_isMsgHandlerActivated == true)
         catchSofaMessages();
@@ -401,7 +386,7 @@ void ASofaContext::loadNodeGraph()
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
         FActorSpawnParameters SpawnParams;
-        //SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
+        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
         SpawnParams.Owner = this;
 
         ASofaDAGNode* dagNode = World->SpawnActorDeferred<ASofaDAGNode>(
@@ -414,9 +399,6 @@ void ASofaContext::loadNodeGraph()
         
         if (dagNode != nullptr)
         {                
-            //FAttachmentTransformRules att = FAttachmentTransformRules(EAttachmentRule::KeepRelative, true);
-            //dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-
             std::string parentNameId = "";
             int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
             if (resParentNameId != 0)
@@ -449,8 +431,10 @@ void ASofaContext::loadNodeGraph()
 
         const FString& parentName = dagNode->getParentName();
         auto res = parentName.Compare("None");
-        if (res == 0)
+        if (res == 0) {
+            dagNode->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
             continue;
+        }
 
         for (auto& WeakOther : m_dagNodes)
         {
@@ -464,6 +448,12 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
+    m_status++;
+}
+
+
+void ASofaContext::loadSofaComponents()
+{
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.Num());
     // Load Components Graph
     for (auto& WeakDagNode : m_dagNodes)
@@ -473,7 +463,6 @@ void ASofaContext::loadNodeGraph()
             dagNode->loadComponents(m_sofaAPI);
         }
     }
-
 }
 
 
