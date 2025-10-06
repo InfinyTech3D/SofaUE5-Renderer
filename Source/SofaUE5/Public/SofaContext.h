@@ -45,22 +45,12 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 
 public:
     // Sets default values for this actor's properties
     ASofaContext();
-
-    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-    UFUNCTION(CallInEditor, Category = "Sofa")
-    void loadSofaScene();
-
-    UFUNCTION(CallInEditor, Category = "Sofa")
-    void mapSofaScene();
-
-#if WITH_EDITOR
-    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
 
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
@@ -70,32 +60,45 @@ public:
     void setGravity(FVector value);
 
 public:
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        FFilePath filePath;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
+    FFilePath filePath;
+ 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
+    float Dt;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        float Dt;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
+    FVector Gravity;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        FVector Gravity;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
+    bool m_isMsgHandlerActivated = false;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_isMsgHandlerActivated = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
+    bool m_log = true;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa Parameters")
-        bool m_log = true;
+    UFUNCTION(CallInEditor, Category = "Sofa")
+    void loadNodeGraph();
+
+    UFUNCTION(CallInEditor, Category = "Sofa")
+    void loadSofaComponents();
+
+#if WITH_EDITOR
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
 
 protected:
-    void catchSofaMessages();
-
     void createSofaContext();
     
+    // Internal method to load SOFA scene inside the SofaContext
+    void loadSofaScene();
 
+    // Method to internally load SOFA default plugin dll
     void loadDefaultPlugin();
 
-    void loadNodeGraph();
+    
     void reconnectNodeGraph();
     void clearNodeGraph();
+
+    void catchSofaMessages();
 
 private:
     int32 m_dllLoadStatus;
