@@ -53,7 +53,7 @@ ASofaContext::ASofaContext()
     m_log = true;
     
     if (m_log && !(this->GetFlags() & RF_Transient))
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::ASofaContext(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::ASofaContext(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
 }
 
 
@@ -63,7 +63,9 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
         return;
     }
 
-    UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::OnConstruction(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+    if (m_log)
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::OnConstruction(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+    
     Super::OnConstruction(Transform);
 
 #if WITH_EDITOR
@@ -81,27 +83,29 @@ void ASofaContext::Destroyed()
     }
 
     if (m_log)
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::Destroyed(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     
     // Remove UE5 children actor first before deleting SOFA context
     clearNodeGraph();
 
     if (m_sofaAPI.IsValid())
     {
-        if (m_log)
-            UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
-        
+        // First stop SOFA simulation 
+        m_sofaAPI->stop();
+
         if (m_isMsgHandlerActivated == true)
             catchSofaMessages();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
-        m_sofaAPI->stop();
+        if (m_log)
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
+
+		// Deactivate message handler
         m_sofaAPI->activateMessageHandler(false);
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
-        //delete m_sofaAPI;
-        //m_sofaAPI = nullptr;
+		// Free SOFA context Ptr
         m_sofaAPI.Reset();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
+
+        if (m_log)
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
 
     Super::Destroyed();
@@ -114,8 +118,8 @@ void ASofaContext::BeginPlay()
 {
     if (m_log)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::BeginPlay(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::BeginPlay(): %d ##########"), m_status);
     }
 
     if (m_sofaAPI == nullptr)
@@ -125,7 +129,10 @@ void ASofaContext::BeginPlay()
 
     if (m_sofaAPI)
     {
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));
+        if (m_log)
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));
+
+		// Start SOFA simulation on UE play
         m_sofaAPI->start();
     }
     else
@@ -139,13 +146,17 @@ void ASofaContext::BeginPlay()
 void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     if (m_log)
-        UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::EndPlay(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
+        UE_LOG(SUnreal_log, Log, TEXT("######### ASofaContext::EndPlay(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
 
     if (m_sofaAPI)
     {
+        // Stop SOFA simulation on UE play
         m_sofaAPI->stop();
-        m_sofaAPI->activateMessageHandler(false);
+
+		if (m_isMsgHandlerActivated == true)
+			catchSofaMessages();
     }
+
     Super::EndPlay(EndPlayReason);
 }
 
@@ -203,14 +214,12 @@ void ASofaContext::Tick( float DeltaTime )
 {   
     if (m_status != -1 && m_sofaAPI)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick %d"), m_status);
+		// Step SOFA simulation on each UE tick
         m_sofaAPI->step();
-
-        //double stime = m_sofaAPI->getTime();
         
-        //if (m_isMsgHandlerActivated == true)
-        //    catchSofaMessages();
         float value = this->GetGameTimeSinceCreation();
+        //double stime = m_sofaAPI->getTime();
+
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f %f"), value, stime);
     }
     
@@ -237,7 +246,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 26"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 28"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -443,6 +452,9 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
+
     m_status++;
 }
 
@@ -458,6 +470,9 @@ void ASofaContext::loadSofaComponents()
             dagNode->loadComponents(m_sofaAPI);
         }
     }
+
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 
@@ -531,8 +546,6 @@ void ASofaContext::catchSofaMessages()
     std::string rawMsg;
     for (int i = 0; i < nbrMsgs; ++i)
     {
-
-        //const char* rawMsg = m_sofaAPI->getMessage(i, *type).c_str();
         m_sofaAPI->getMessage_out(i, *type, rawMsg);
         FString FMessage(rawMsg.c_str());
 
