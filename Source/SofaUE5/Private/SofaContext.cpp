@@ -88,7 +88,7 @@ void ASofaContext::Destroyed()
     // Remove UE5 children actor first before deleting SOFA context
     clearNodeGraph();
 
-    if (m_sofaAPI)
+    if (m_sofaAPI.IsValid())
     {
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
@@ -96,13 +96,14 @@ void ASofaContext::Destroyed()
         //if (m_isMsgHandlerActivated == true)
         //    catchSofaMessages();
 
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
         //m_sofaAPI->stop();
         //m_sofaAPI->activateMessageHandler(false);
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
-        ////delete m_sofaAPI;
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
+        //delete m_sofaAPI;
         //m_sofaAPI = nullptr;
-        //UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
+        m_sofaAPI.Reset();
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI deleted"));
     }
 
     Super::Destroyed();
@@ -242,7 +243,8 @@ void ASofaContext::createSofaContext()
     if (m_sofaAPI == nullptr) 
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 16"));
+
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 24"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -253,20 +255,20 @@ void ASofaContext::createSofaContext()
     //    // activate message handler
     //    m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
-        m_apiName = m_sofaAPI->APIName();
+        //m_apiName = m_sofaAPI->APIName();
 
         if (m_log)
         {
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
         }
 
-    //    // create scene
-    //    int resCreate = m_sofaAPI->createScene();
-    //    
-    //    if (resCreate < 0) {
-    //        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
-    //        return;
-    //    }
+        // create scene
+        int resCreate = 0;//m_sofaAPI->createScene();
+        
+        if (resCreate < 0) {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
+            return;
+        }
         
         //load ini file
         //FString iniPath = curPath + "Plugins/SofaUE5/Source/ThirdParty/SofaUE5Library/sofa.ini";
