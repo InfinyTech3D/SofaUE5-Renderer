@@ -28,12 +28,16 @@ def sync_folder(src, dst):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print("Usage: python copySOFALibs.py SOFA_BUILD_PATH SOFAUE5_PLUGIN_PATH")
+    if len(sys.argv) < 3:
+        print("Usage: python copySOFALibs.py SOFA_BUILD_PATH SOFAUE5_PLUGIN_PATH Debug_Mode(optional)")
         sys.exit(1)
 
     sofa_path, sofaUE_path = sys.argv[1], sys.argv[2]
     
+    debugMode = False
+    if len(sys.argv) == 4:
+        debugMode = sys.argv[3]
+        
     #sofa_path = "C:\projects\sofa-build\"
     #sofaUE_path = "C:\projects\UE5\SofaIntegration\Plugins\SofaUE5\"
 
@@ -44,8 +48,13 @@ if __name__ == "__main__":
     #os.makedirs(sofaUE_path, exist_ok=True)
     
     # first copy dll
-    srcPath = os.path.join(sofa_path, "bin/Release/")
-    dstPath = os.path.join(sofaUE_path, "Binaries/ThirdParty/SofaUE5Library/Win64/")
+    if (debugMode):
+        srcPath = os.path.join(sofa_path, "bin/Debug/")
+        dstPath = os.path.join(sofaUE_path, "Binaries/ThirdParty/SofaUE5Library/Win64/Debug/")
+    else:
+        srcPath = os.path.join(sofa_path, "bin/Release/")
+        dstPath = os.path.join(sofaUE_path, "Binaries/ThirdParty/SofaUE5Library/Win64/Release/")
+        
     print(f"Syncing {srcPath} -> {dstPath}")
     
     if not os.path.exists(srcPath):
@@ -55,8 +64,13 @@ if __name__ == "__main__":
 
 
     # copy lib
-    srcPath = os.path.join(sofa_path, "lib/Release/")
-    dstPath = os.path.join(sofaUE_path, "Source/ThirdParty/SofaUE5Library/x64/Release/")
+    if (debugMode):
+        srcPath = os.path.join(sofa_path, "lib/Debug/")
+        dstPath = os.path.join(sofaUE_path, "Source/ThirdParty/SofaUE5Library/x64/Debug/")
+    else:
+        srcPath = os.path.join(sofa_path, "lib/Release/")
+        dstPath = os.path.join(sofaUE_path, "Source/ThirdParty/SofaUE5Library/x64/Release/")
+        
     print(f"Syncing {srcPath} -> {dstPath}")
     
     if not os.path.exists(srcPath):
