@@ -25,13 +25,11 @@
 #include "SofaUE5.h"
 #include "Engine.h"
 #include "CoreMinimal.h"
-//#include "SofaVisualMesh.h"
 #include "DAGNode/SofaDAGNode.h"
 #include "Base/SofaBaseComponent.h"
 #include <vector>
 #include <string>
 
-//#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 
@@ -93,12 +91,12 @@ void ASofaContext::Destroyed()
         if (m_log)
             UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::Destroyed(): Delete SofaAdvancePhysicsAPI: %s"), *this->GetName());
         
-        //if (m_isMsgHandlerActivated == true)
-        //    catchSofaMessages();
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
 
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stop"));
-        //m_sofaAPI->stop();
-        //m_sofaAPI->activateMessageHandler(false);
+        m_sofaAPI->stop();
+        m_sofaAPI->activateMessageHandler(false);
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
         //delete m_sofaAPI;
         //m_sofaAPI = nullptr;
@@ -128,7 +126,7 @@ void ASofaContext::BeginPlay()
     if (m_sofaAPI)
     {
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));
-        //m_sofaAPI->start();
+        m_sofaAPI->start();
     }
     else
     {
@@ -145,16 +143,11 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
     if (m_sofaAPI)
     {
-        //m_sofaAPI->stop();
-        //m_sofaAPI->activateMessageHandler(false);
+        m_sofaAPI->stop();
+        m_sofaAPI->activateMessageHandler(false);
     }
     Super::EndPlay(EndPlayReason);
 }
-
-
-
-
-
 
 
 void ASofaContext::setDT(float value)
@@ -211,7 +204,7 @@ void ASofaContext::Tick( float DeltaTime )
     if (m_status != -1 && m_sofaAPI)
     {
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick %d"), m_status);
-        //m_sofaAPI->step();
+        m_sofaAPI->step();
 
         //double stime = m_sofaAPI->getTime();
         
@@ -229,7 +222,7 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    //if (m_log)
+    if (m_log)
         UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
@@ -244,7 +237,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 25"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 26"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -252,11 +245,11 @@ void ASofaContext::createSofaContext()
             return;
         }
 
-    //    // activate message handler
-    //    m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        // activate message handler
+        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
+        // Test api Name
         m_apiName = m_sofaAPI->APIName();
-
         if (m_log)
         {
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
