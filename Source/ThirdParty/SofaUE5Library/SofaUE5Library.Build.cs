@@ -12,7 +12,7 @@ public class SofaUE5Library : ModuleRules
 		if (Target.Platform == UnrealTargetPlatform.Win64)
 		{
             PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
-            PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
+            //PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 
             string SofaLibPath;
             string SofaBinName;

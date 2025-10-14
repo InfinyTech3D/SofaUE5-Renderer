@@ -97,6 +97,8 @@ void FSofaUE5Module::StartupModule()
 	{
 		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaVerseAPI GetDllHandle error"));
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("_ITERATOR_DEBUG_LEVEL = %d"), _ITERATOR_DEBUG_LEVEL);
 }
 
 void FSofaUE5Module::ShutdownModule()
