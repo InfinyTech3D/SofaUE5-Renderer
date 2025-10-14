@@ -65,8 +65,6 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
         return;
     }
 
-   
-
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::OnConstruction(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     Super::OnConstruction(Transform);
     UE_LOG(LogTemp, Warning, TEXT("_ITERATOR_DEBUG_LEVEL = %d"), _ITERATOR_DEBUG_LEVEL);
@@ -125,7 +123,7 @@ void ASofaContext::BeginPlay()
 
     if (m_sofaAPI == nullptr)
     {
-        //createSofaContext();
+        createSofaContext();
     }
 
     if (m_sofaAPI)
@@ -247,7 +245,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 26"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 28"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -266,7 +264,7 @@ void ASofaContext::createSofaContext()
         }
 
         // create scene
-        int resCreate = 0;//m_sofaAPI->createScene();
+        int resCreate = m_sofaAPI->createScene();
         
         if (resCreate < 0) {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
@@ -287,7 +285,7 @@ void ASofaContext::createSofaContext()
     }
     
     // Load default plugins at start before loading SOFA scene
-    //loadDefaultPlugin();
+    loadDefaultPlugin();
 
 
     // If file is already set will load directly the file
@@ -340,8 +338,19 @@ void ASofaContext::loadDefaultPlugin()
     if (m_sofaAPI == nullptr)
         return;
 
+    bool debugMode = false;
+
+#if (UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !UE_BUILD_SHIPPING
+    debugMode = true;
+#endif
+
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
-    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Debug/";
+    FString pluginPaths;
+	if (debugMode)
+		pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Debug/";
+	else
+		pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Release/";
+
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
     if (resPlug != 0) {
