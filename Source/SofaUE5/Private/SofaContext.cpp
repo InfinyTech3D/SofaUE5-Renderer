@@ -69,6 +69,7 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
     Super::OnConstruction(Transform);
 
 #if WITH_EDITOR
+    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext:: BEfore createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     if (m_sofaAPI == nullptr)
     {
         createSofaContext();
@@ -93,15 +94,16 @@ void ASofaContext::Destroyed()
         // First stop SOFA simulation 
         m_sofaAPI->stop();
 
-        if (m_isMsgHandlerActivated == true)
-            catchSofaMessages();
+        //if (m_isMsgHandlerActivated == true)
+        //    catchSofaMessages();
 
         if (m_log)
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
 
-		// Deactivate message handler
+        // Deactivate message handler
         m_sofaAPI->activateMessageHandler(false);
-		// Free SOFA context Ptr
+
+        // Free SOFA context Ptr
         m_sofaAPI.Reset();
 
         if (m_log)
@@ -134,6 +136,9 @@ void ASofaContext::BeginPlay()
 
 		// Start SOFA simulation on UE play
         m_sofaAPI->start();
+
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
     }
     else
     {
@@ -153,8 +158,8 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
         // Stop SOFA simulation on UE play
         m_sofaAPI->stop();
 
-		if (m_isMsgHandlerActivated == true)
-			catchSofaMessages();
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
     }
 
     Super::EndPlay(EndPlayReason);
@@ -214,12 +219,14 @@ void ASofaContext::Tick( float DeltaTime )
 {   
     if (m_status != -1 && m_sofaAPI)
     {
-		// Step SOFA simulation on each UE tick
+        // Step SOFA simulation on each UE tick
         m_sofaAPI->step();
         
-        float value = this->GetGameTimeSinceCreation();
         //double stime = m_sofaAPI->getTime();
-
+        
+        //if (m_isMsgHandlerActivated == true)
+        //    catchSofaMessages();
+        float value = this->GetGameTimeSinceCreation();
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f %f"), value, stime);
     }
     
@@ -231,8 +238,8 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    if (m_log)
-        UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
+    //if (m_log)
+    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext is called with a SofaAPI already created."));
@@ -324,14 +331,9 @@ void ASofaContext::loadSofaScene()
     // Pass default scene parameter
    // this->setDT(Dt);
    // this->setGravity(Gravity);
-
-    // Start parsing scene loaded in SOFA
-    // Create the actor of the scene:
    
     if (m_isMsgHandlerActivated == true)
         catchSofaMessages();
-
-    //m_status++;
 }
 
 void ASofaContext::loadDefaultPlugin()
@@ -339,24 +341,38 @@ void ASofaContext::loadDefaultPlugin()
     if (m_sofaAPI == nullptr)
         return;
 
+    bool debugMode = false;
+
+#if (UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !UE_BUILD_SHIPPING
+    debugMode = true;
+#endif
+
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
-    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
+    FString pluginPaths;
+	if (debugMode)
+		pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Debug/";
+	else
+		pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Release/";
+
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
     if (resPlug != 0) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
 
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 }
 
+
+// Start parsing scene loaded in SOFA
+// Create the actor of the scene:
 
 void ASofaContext::loadNodeGraph()
 {
     if (m_sofaAPI == nullptr)
         return;
-    
+
     clearNodeGraph();
 
     int nbrNode = m_sofaAPI->getNbrDAGNode();
@@ -540,25 +556,23 @@ void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
-
-    int* type = new int[1];
-    type[0] = -1;
-    std::string rawMsg;
+    
     for (int i = 0; i < nbrMsgs; ++i)
     {
-        m_sofaAPI->getMessage_out(i, *type, rawMsg);
+        std::string rawMsg;
+        int type = m_sofaAPI->getMessage_out(i, rawMsg);
         FString FMessage(rawMsg.c_str());
 
-        if (type[0] == -1) {
+        if (type == -1) {
             continue;
         }
-        else if (type[0] == 3) {
+        else if (type == 3) {
             UE_LOG(SofaLog, Warning, TEXT("%s"), *FMessage);
         }
-        else if (type[0] == 4) {
+        else if (type == 4) {
             UE_LOG(SofaLog, Error, TEXT("%s"), *FMessage);
         }
-        else if (type[0] == 5) {
+        else if (type == 5) {
             UE_LOG(SofaLog, Fatal, TEXT("%s"), *FMessage);
         }
         else {
@@ -567,6 +581,4 @@ void ASofaContext::catchSofaMessages()
     }
 
     m_sofaAPI->clearMessages();
-
-    delete[] type;
 }
