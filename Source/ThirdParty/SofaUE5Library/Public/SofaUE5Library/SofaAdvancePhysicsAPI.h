@@ -52,6 +52,9 @@ namespace sofaVerseAPI
     class SofaBaseComponentAPI;
 
     class SofaBaseMeshAPI;
+
+    class SofaPliersManager;
+
 }
 
 
@@ -265,12 +268,14 @@ public:
     int setToolAttribute(const std::string& name, const std::string& dataName, float* value);
     const std::string& getInteractObjectName(const std::string& name);
 
-    int createPliers(const std::string& pliersName, const std::string& nameMord1, const std::string& nameMord2, const std::string& nameModel, float _stiffness);
+    int createPliers(const std::string& pliersName);
 
     int unactivePliers(const std::string& pliersName);
     int reactivePliers(const std::string& pliersName);
     int closePliers(const std::string& pliersName);
     int releasePliers(const std::string& pliersName);
+    int performAction(const std::string& pliersName);
+    int stopAction(const std::string& pliersName);
     int idGrabed(const std::string& pliersName, int* ids);
 
     int createEntactManager(const std::string& toolName);
@@ -412,23 +417,30 @@ public:
     int registerRenderEvent(SofaRenderEventPtr event);
 
 protected:
-    sofaVerseAPI::SofaDAGNodesManager* m_sofaNodeManager = nullptr;
     /// Internal implementation sub-class
-    sofaVerseAPI::SofaSimulationManager* m_simulationMgr;
-    sofaVerseAPI::SofaComponentsManager* m_sofaComponentManager = nullptr;
+    std::shared_ptr <sofaVerseAPI::SofaSimulationManager> m_simulationMgr = nullptr;
+    std::shared_ptr <sofaVerseAPI::SofaDAGNodesManager> m_sofaNodeManager = nullptr;
+    std::shared_ptr <sofaVerseAPI::SofaComponentsManager> m_sofaComponentManager = nullptr;
 
-    SofaPhysicsObjectsManager* m_3DObjectManager = nullptr;
-    SofaPhysicsInteractionsManager* m_3DInteractionsManager = nullptr;
+    std::shared_ptr <SofaPhysicsObjectsManager> m_3DObjectManager = nullptr;
+    std::shared_ptr <SofaPhysicsInteractionsManager> m_3DInteractionsManager = nullptr;
 
-    SofaPliersManager* m_pliersManager = nullptr;
-    SofaEntactManager* m_entactManager = nullptr;
-    SofaGeomagicManager* m_geomagicManager = nullptr;
-    SofaHaplyRoboticsManager* m_haplyManager = nullptr;
-    SofaKeyEventManager* m_keyEventManager = nullptr;
+    std::shared_ptr <sofaVerseAPI::SofaPliersManager> m_pliersManager = nullptr;
 
-    SofaGraphicManager* m_graphicManager = nullptr;
+#ifdef HAS_ENTACT_PLUGIN
+    std::shared_ptr <SofaEntactManager> m_entactManager = nullptr;
+#endif
 
-    std::string m_APIName;
+    std::shared_ptr <SofaGeomagicManager> m_geomagicManager = nullptr;
+
+#ifdef HAS_HAPLY_PLUGIN
+    std::shared_ptr <SofaHaplyRoboticsManager> m_haplyManager = nullptr;
+#endif
+    std::shared_ptr <SofaGraphicManager> m_graphicManager = nullptr;
+    std::shared_ptr <SofaKeyEventManager> m_keyEventManager = nullptr;
+
+
+    std::string m_APIName = "SofaAdvancePhysicsAPI";
 
     int m_stateMachine;
 };

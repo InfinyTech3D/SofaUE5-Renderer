@@ -65,10 +65,13 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
         return;
     }
 
+   
+
     UE_LOG(SUnreal_log, Warning, TEXT("######### ASofaContext::OnConstruction(): %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     Super::OnConstruction(Transform);
-
+    UE_LOG(LogTemp, Warning, TEXT("_ITERATOR_DEBUG_LEVEL = %d"), _ITERATOR_DEBUG_LEVEL);
 #if WITH_EDITOR
+    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext:: BEfore createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     if (m_sofaAPI == nullptr)
     {
         createSofaContext();
@@ -122,7 +125,7 @@ void ASofaContext::BeginPlay()
 
     if (m_sofaAPI == nullptr)
     {
-        createSofaContext();
+        //createSofaContext();
     }
 
     if (m_sofaAPI)
@@ -230,7 +233,7 @@ void ASofaContext::Tick( float DeltaTime )
 void ASofaContext::createSofaContext()
 {
     //if (m_log)
-        UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
+    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext is called with a SofaAPI already created."));
@@ -255,15 +258,15 @@ void ASofaContext::createSofaContext()
     //    // activate message handler
     //    m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
-        m_apiName = m_sofaAPI->APIName();
+        //m_apiName = m_sofaAPI->APIName();
 
-        if (m_log)
-        {
-            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
-        }
+        //if (m_log)
+        //{
+        //    UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
+        //}
 
         // create scene
-        int resCreate = m_sofaAPI->createScene();
+        int resCreate = 0;//m_sofaAPI->createScene();
         
         if (resCreate < 0) {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: m_sofaAPI createScene result: %d"), resCreate);
@@ -284,7 +287,7 @@ void ASofaContext::createSofaContext()
     }
     
     // Load default plugins at start before loading SOFA scene
-    loadDefaultPlugin();
+    //loadDefaultPlugin();
 
 
     // If file is already set will load directly the file
@@ -338,7 +341,7 @@ void ASofaContext::loadDefaultPlugin()
         return;
 
     FString curPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir());
-    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64";
+    FString pluginPaths = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Debug/";
     const char* pluginPchar = TCHAR_TO_ANSI(*pluginPaths);
     int resPlug = m_sofaAPI->loadDefaultPlugins(pluginPchar);
     if (resPlug != 0) {
