@@ -142,7 +142,10 @@ public:
     int activateMessageHandler(bool value);
     int getNbMessages();
     std::string getMessage(int messageId, int& msgType);
-    void getMessage_out(int messageId, int& msgType, std::string& outName);
+
+    /// Return the message type and copy the message in @param outName of the message id @param messageId
+    int getMessage_out(int messageId, std::string& outName);
+    /// Clear all stored in memory messages
     int clearMessages();
 
     ////////////////////////////////////////////
