@@ -247,7 +247,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 25"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 26"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -258,12 +258,12 @@ void ASofaContext::createSofaContext()
     //    // activate message handler
     //    m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
-        //m_apiName = m_sofaAPI->APIName();
+        m_apiName = m_sofaAPI->APIName();
 
-        //if (m_log)
-        //{
-        //    UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
-        //}
+        if (m_log)
+        {
+            UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::createSofaContext: API Name: %s"), *m_apiName);
+        }
 
         // create scene
         int resCreate = 0;//m_sofaAPI->createScene();
