@@ -26,7 +26,6 @@
 #include "Misc/MessageDialog.h"
 #include "Modules/ModuleManager.h"
 #include "Interfaces/IPluginManager.h"
-#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "Misc/Paths.h"
 #include "HAL/PlatformProcess.h"
 
@@ -42,10 +41,22 @@ void FSofaUE5Module::StartupModule()
 	// Get the base directory of this plugin
 	FString BaseDir = IPluginManager::Get().FindPlugin("SofaUE5")->GetBaseDir();
 
+	bool debugMode = false;
+
+#if (UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !UE_BUILD_SHIPPING
+	debugMode = true;
+#endif
+
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
+
 #if PLATFORM_WINDOWS
-	LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/SofaVerseAPI.dll"));
+	//LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/SofaVerseAPI.dll"));
+	if (debugMode)
+		LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/Debug/SofaVerseAPI_d.dll"));
+	else
+		LibraryPath = FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/Release/SofaVerseAPI.dll"));
+
 #elif PLATFORM_MAC
     LibraryPath = FPaths::Combine(*BaseDir, TEXT("Source/ThirdParty/SofaUE5Library/Mac/Release/libSofaVerseAPI.dylib"));
 #elif PLATFORM_LINUX
@@ -66,7 +77,11 @@ void FSofaUE5Module::StartupModule()
 		return;
 	}
 
-	FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/")));
+	if (debugMode)
+		FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/Debug/")));
+	else
+		FPlatformProcess::AddDllDirectory(*FPaths::Combine(*BaseDir, TEXT("Binaries/ThirdParty/SofaUE5Library/Win64/Release/")));
+
 	ExampleLibraryHandle = FPlatformProcess::GetDllHandle(*LibraryPath);
 	
 	if (ExampleLibraryHandle)

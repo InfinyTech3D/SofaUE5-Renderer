@@ -23,7 +23,6 @@
  ****************************************************************************/
 #include "SofaVisualMesh.h"
 #include "SofaUE5.h"
-#include "SofaUE5Library/SofaPhysicsAPI.h"
 #include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
 
 // Sets default values
