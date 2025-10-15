@@ -388,13 +388,15 @@ void ASofaContext::loadNodeGraph()
     }
 
     FTransform SpawnTransform = FTransform::Identity;
+    std::string nodeUniqID = "";
+    std::string nodeDisplayName = "";
+
+    static FCriticalSection SofaAPILock;
+    FScopeLock _(&SofaAPILock);
 
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
-        std::string nodeUniqID = "";
-        std::string nodeDisplayName = "";
-
         int resNameId = m_sofaAPI->getDAGNodeAPIName_out(nodeId, nodeUniqID);
         int resDisplayName = m_sofaAPI->getDAGNodeDisplayName_out(nodeId, nodeDisplayName);
 
@@ -441,8 +443,15 @@ void ASofaContext::loadNodeGraph()
         {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
         }
+
+        // Set to null to be sure garbage collector do not mess it
+        dagNode = nullptr;
     }
 
+    if (GEngine)
+    {
+        GEngine->ForceGarbageCollection(true); // Only in Editor builds
+    }
 
     // Reorder Node using Parent
     for (auto& WeakDagNode : m_dagNodes)
@@ -472,6 +481,11 @@ void ASofaContext::loadNodeGraph()
 
     if (m_isMsgHandlerActivated == true)
         catchSofaMessages();
+
+    if (GEngine)
+    {
+        GEngine->ForceGarbageCollection(true); // Only in Editor builds
+    }
 
     m_status++;
 }
