@@ -387,7 +387,6 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
-    FTransform SpawnTransform = FTransform::Identity;
     std::string nodeUniqID = "";
     std::string nodeDisplayName = "";
     m_dagNodes.Reserve(nbrNode);
@@ -406,18 +405,13 @@ void ASofaContext::loadNodeGraph()
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: node name access return: %d | %d"), resNameId, resDisplayName);
             continue;
         }
-
         
         FString fs_nodeUniqID = UTF8_TO_TCHAR(nodeUniqID.c_str());
         FString fs_nodeDisplayName = UTF8_TO_TCHAR(nodeDisplayName.c_str());
 
-        //FActorSpawnParameters SpawnParams;
-        //SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
-        //SpawnParams.Owner = this;
-
         ASofaDAGNode* dagNode = World->SpawnActorDeferred<ASofaDAGNode>(
             ASofaDAGNode::StaticClass(),
-            SpawnTransform,
+            FTransform::Identity,
             this,
             nullptr,
             ESpawnActorCollisionHandlingMethod::AlwaysSpawn
@@ -438,7 +432,7 @@ void ASofaContext::loadNodeGraph()
             if (m_log)
                 UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
             
-            UGameplayStatics::FinishSpawningActor(dagNode, SpawnTransform);
+            UGameplayStatics::FinishSpawningActor(dagNode, FTransform::Identity);
             m_dagNodes.Add(dagNode);
         }
         else
