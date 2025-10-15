@@ -390,6 +390,7 @@ void ASofaContext::loadNodeGraph()
     FTransform SpawnTransform = FTransform::Identity;
     std::string nodeUniqID = "";
     std::string nodeDisplayName = "";
+    m_dagNodes.Reserve(nbrNode);
 
     static FCriticalSection SofaAPILock;
     FScopeLock _(&SofaAPILock);
@@ -406,8 +407,9 @@ void ASofaContext::loadNodeGraph()
             continue;
         }
 
-        FString fs_nodeUniqID(nodeUniqID.c_str());
-        FString fs_nodeDisplayName(nodeDisplayName.c_str());
+        
+        FString fs_nodeUniqID = UTF8_TO_TCHAR(nodeUniqID.c_str());
+        FString fs_nodeDisplayName = UTF8_TO_TCHAR(nodeDisplayName.c_str());
 
         //FActorSpawnParameters SpawnParams;
         //SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
@@ -428,7 +430,7 @@ void ASofaContext::loadNodeGraph()
             if (resParentNameId != 0)
                 UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
 
-            FString fs_parentName(parentNameId.c_str());
+            FString fs_parentName = UTF8_TO_TCHAR(parentNameId.c_str());
             dagNode->setUniqueNameID(fs_nodeUniqID);
             dagNode->setParentName(fs_parentName);
             dagNode->SetActorLabel(fs_nodeDisplayName);
