@@ -37,7 +37,7 @@
 ASofaContext::ASofaContext()
     : Dt(0.02)
     , Gravity(0, -9.8, 0)
-    , m_isMsgHandlerActivated(true)
+    , m_isMsgHandlerActivated(false)
     , m_dllLoadStatus(0)
     , m_apiName("")
     , m_isInit(false)
@@ -93,14 +93,15 @@ void ASofaContext::Destroyed()
         // First stop SOFA simulation 
         m_sofaAPI->stop();
 
-        //if (m_isMsgHandlerActivated == true)
-        //    catchSofaMessages();
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
 
         if (m_log)
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
 
         // Deactivate message handler
-        m_sofaAPI->activateMessageHandler(false);
+        if (m_isMsgHandlerActivated)
+            m_sofaAPI->activateMessageHandler(false);
 
         // Free SOFA context Ptr
         m_sofaAPI.Reset();
@@ -263,7 +264,8 @@ void ASofaContext::createSofaContext()
         }
 
         // activate message handler
-        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        if (m_isMsgHandlerActivated)
+            m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
         // Test api Name
         m_apiName = m_sofaAPI->APIName();
@@ -333,8 +335,8 @@ void ASofaContext::loadSofaScene()
    // this->setDT(Dt);
    // this->setGravity(Gravity);
    
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 void ASofaContext::loadDefaultPlugin()
@@ -468,8 +470,8 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 
     m_status++;
 }
@@ -487,8 +489,8 @@ void ASofaContext::loadSofaComponents()
         }
     }
 
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 
@@ -528,8 +530,8 @@ void ASofaContext::reconnectNodeGraph()
         }
     }
 
-    //if (m_isMsgHandlerActivated == true)
-    //    catchSofaMessages();
+    if (m_isMsgHandlerActivated == true)
+        catchSofaMessages();
 }
 
 
@@ -555,8 +557,13 @@ void ASofaContext::clearNodeGraph()
 void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
     
+    
+    if (nbrMsgs == 0)
+        return;
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
+
     for (int i = 0; i < nbrMsgs; ++i)
     {
         std::string rawMsg;
