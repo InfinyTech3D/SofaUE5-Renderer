@@ -71,12 +71,12 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
     if (m_sofaAPI == nullptr)
         return false;
 
-    UE_LOG(SUnreal_log, Log, TEXT("## ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
+    UE_LOG(SUnreal_log, Log, TEXT("#### ASofaDAGNode::loadComponents: %s | UniqueID: %s"), *this->GetName(), *this->m_uniqueNameID);
 
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
     
     int nbrCompo = m_sofaAPI->getNbrComponentsInNode(nodeUniqID);
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents Nbr: %d ##########"), nbrCompo);
+    UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents Nbr: %d"), nbrCompo);
     
     if (nbrCompo <= 0)
     {
@@ -84,45 +84,51 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         return true;
     }
     
-    UWorld* const World = GetWorld();
+    UWorld* World = GetWorld();
     if (World == nullptr)
     {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
         return false;
     }
     
-    FTransform SpawnTransform = FTransform::Identity;
+    UE_LOG(SUnreal_log, Log, TEXT("#### ASofaDAGNode::loadComponents start on thread %u"), FPlatformTLS::GetCurrentThreadId());
+
+    m_componentsNames.reserve(nbrCompo);
+    std::string compoName = "";
+    std::string displayName = "";
+    std::string baseType = "";
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
-        std::string compoName = "";
+        UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents: Load compo %d / %d"), compoId+1, nbrCompo);        
         int resCompoName = m_sofaAPI->getDAGNodeComponentName_out(nodeUniqID, compoId, compoName);
+                
+        if (resCompoName != 0)
+        {
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: Get component name returns: %d"), resCompoName);
+            continue;
+        }
 
-        FString fs_compoName(compoName.c_str()); // Convert std::string -> FString
-        std::string displayName = "";
         int resDName = m_sofaAPI->getComponentDisplayName_out(compoName, displayName);
-        
-        std::string baseType = "";
         int resType = m_sofaAPI->getBaseComponentType_out(compoName, baseType);
 
         if (resDName != 0 || resType != 0)
         {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: component name and type returns: %d | %d"), resDName, resType);
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: component Display name and type returns: %d | %d"), resDName, resType);
             continue;
         }
         
         // Deep copy of the strings
-        m_componentsNames.push_back(compoName);
-
-        FString fs_displayName(displayName.c_str()); // Convert std::string -> FString
-        FString fs_baseType(baseType.c_str()); // Convert std::string -> FString
+        m_componentsNames.push_back(compoName);        
 
         if (baseType.compare("SofaVisualModel") == 0)
         {
+            //FTransform SpawnTransform = FTransform::Identity;
+            UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents: Add SofaVisualModel"));
             //FActorSpawnParameters SpawnParams;
             //SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
             ASofaBaseComponent* component = World->SpawnActorDeferred<ASofaVisualMesh>(
                 ASofaVisualMesh::StaticClass(),
-                SpawnTransform,
+                FTransform::Identity,
                 this,
                 nullptr,
                 ESpawnActorCollisionHandlingMethod::AlwaysSpawn
@@ -132,6 +138,9 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             {
                 //if (m_log)
                 //UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+                FString fs_compoName = UTF8_TO_TCHAR(compoName.c_str()); // Convert std::string -> FString
+                FString fs_displayName = UTF8_TO_TCHAR(displayName.c_str()); // Convert std::string -> FString
+                FString fs_baseType = UTF8_TO_TCHAR(baseType.c_str()); // Convert std::string -> FString
 
                 component->setUniqueNameID(fs_compoName);
                 component->setComponentType(fs_baseType);
@@ -139,7 +148,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
                 component->setSofaAPI(_sofaAPI);
                 component->computeComponent();
 
-                UGameplayStatics::FinishSpawningActor(component, SpawnTransform);
+                UGameplayStatics::FinishSpawningActor(component, FTransform::Identity);
                 bool resAttach = component->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
             }
             else
@@ -163,16 +172,19 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             //}
         }
 
-        
-
         // Sleep for 10 ms (0.01 seconds)
         FPlatformProcess::Sleep(0.01f);
     }
+//
+//#if WITH_EDITOR
+//        ReregisterAllComponents();
+//        Modify();
+//#endif
 
-#if WITH_EDITOR
-        ReregisterAllComponents();
-        Modify();
-#endif
+    if (GEngine)
+    {
+        GEngine->ForceGarbageCollection(true); // Only in Editor builds
+    }
 
     return true;
 }
@@ -206,7 +218,7 @@ void ASofaDAGNode::reconnectComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& 
                 //if (m_log)
                 
                 ASofaVisualMesh* visualMesh = dynamic_cast<ASofaVisualMesh*>(actor);
-                UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh found! | %s"), *visualMesh->getUniqNameID());
+                //UE_LOG(SUnreal_log, Warning, TEXT("### ASofaVisualMesh found! | %s"), *visualMesh->getUniqNameID());
                 visualMesh->setSofaAPI(_sofaAPI);
             }
         }
