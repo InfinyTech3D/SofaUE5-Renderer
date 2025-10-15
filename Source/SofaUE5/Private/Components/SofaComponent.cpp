@@ -19,8 +19,6 @@ void USofaComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
 }
 
 
@@ -28,7 +26,10 @@ void USofaComponent::BeginPlay()
 void USofaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
+void USofaComponent::setComponentType(const FString& type)
+{
+	m_baseType = type;
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(*m_baseType);
+}

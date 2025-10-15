@@ -16,6 +16,17 @@ public:
 	// Sets default values for this component's properties
 	USofaComponent();
 
+	void setUniqueNameID(const FString& uniqueNameID) { m_uniqueNameID = uniqueNameID; }
+	void setComponentType(const FString& type);
+
+	const FString& getComponentType() {
+		return m_baseType;
+	}
+
+	const FString& getUniqNameID() {
+		return m_uniqueNameID;
+	}
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -24,5 +35,10 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+protected:
+	UPROPERTY(SaveGame, VisibleAnywhere)
+	FString m_uniqueNameID;
+	
+	UPROPERTY(SaveGame, VisibleAnywhere)
+	FString m_baseType;
 };

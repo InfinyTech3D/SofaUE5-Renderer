@@ -116,11 +116,10 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         FString fs_displayName(displayName.c_str()); // Convert std::string -> FString
         FString fs_baseType(baseType.c_str()); // Convert std::string -> FString
 
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
-
         if (baseType.compare("SofaVisualModel") == 0)
         {
+            //FActorSpawnParameters SpawnParams;
+            //SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
             ASofaBaseComponent* component = World->SpawnActorDeferred<ASofaVisualMesh>(
                 ASofaVisualMesh::StaticClass(),
                 SpawnTransform,
@@ -132,7 +131,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             if (component != nullptr)
             {
                 //if (m_log)
-                UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+                //UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
                 component->setUniqueNameID(fs_compoName);
                 component->setComponentType(fs_baseType);
@@ -151,17 +150,29 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         }
         else
         {
-            UE_LOG(SUnreal_log, Log, TEXT("### USofaComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
+           // UE_LOG(SUnreal_log, Log, TEXT("### USofaComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
-            //USofaComponent* NewComp = NewObject<USofaComponent>(this);
-            //NewComp->RegisterComponent();
+            //USofaComponent* NewComp = NewObject<USofaComponent>(this, USofaComponent::StaticClass(), *fs_compoName);
+            //if (NewComp)
+            //{
+            //    NewComp->RegisterComponent();
+            //    // Make sure it’s editable and visible in the details panel
+            //    NewComp->bEditableWhenInherited = true;
+            //    NewComp->setUniqueNameID(fs_compoName);
+            //    NewComp->setComponentType(fs_baseType);
+            //}
         }
 
         
 
         // Sleep for 10 ms (0.01 seconds)
-        //FPlatformProcess::Sleep(0.01f);
+        FPlatformProcess::Sleep(0.01f);
     }
+
+#if WITH_EDITOR
+        ReregisterAllComponents();
+        Modify();
+#endif
 
     return true;
 }
