@@ -84,7 +84,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         return true;
     }
     
-    UWorld* World = GetWorld();
+    UWorld* const World = GetWorld();
     if (World == nullptr)
     {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: GetWorld return a null pointer"));
@@ -185,6 +185,8 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
     {
         GEngine->ForceGarbageCollection(true); // Only in Editor builds
     }
+
+    UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents Done"));
 
     return true;
 }
