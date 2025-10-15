@@ -76,7 +76,7 @@
         <OglModel name='Visual' src='@loader' color='1 0.98 0.8 1'/>
     </Node>
 
-<!--
+
     <Node name='GumVolume'>
         <EulerImplicitSolver name='cg_odesolver' printLog='false' rayleighStiffness='0.0' rayleighMass='0.0' />
         <PCGLinearSolver iterations='50' name='linear solver' tolerance='1.5e-3'/>
@@ -124,7 +124,7 @@
         </Node>
     </Node>
 
-<!--
+
     <GeomagicDriver 
         name='GeomagicDevice' 
         deviceName='Default Device' 
@@ -146,5 +146,5 @@
     </Node>
 
     <include href='modeling/haptic.xml'/>
--->
+
 </Node>
