@@ -69,7 +69,6 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
     Super::OnConstruction(Transform);
 
 #if WITH_EDITOR
-    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext:: BEfore createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     if (m_sofaAPI == nullptr)
     {
         createSofaContext();
@@ -226,10 +225,12 @@ void ASofaContext::Tick( float DeltaTime )
         
         //if (m_isMsgHandlerActivated == true)
         //    catchSofaMessages();
-        float value = this->GetGameTimeSinceCreation();
+        
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f %f"), value, stime);
     }
-    
+    float value = this->GetGameTimeSinceCreation();
+    UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f"), value);
+
     Super::Tick(DeltaTime);
 }
 
@@ -238,8 +239,8 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    //if (m_log)
-    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
+    if (m_log)
+        UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext is called with a SofaAPI already created."));
@@ -253,7 +254,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 28"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 29"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -332,8 +333,8 @@ void ASofaContext::loadSofaScene()
    // this->setDT(Dt);
    // this->setGravity(Gravity);
    
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 }
 
 void ASofaContext::loadDefaultPlugin()
@@ -367,7 +368,6 @@ void ASofaContext::loadDefaultPlugin()
 
 // Start parsing scene loaded in SOFA
 // Create the actor of the scene:
-
 void ASofaContext::loadNodeGraph()
 {
     if (m_sofaAPI == nullptr)
@@ -405,9 +405,9 @@ void ASofaContext::loadNodeGraph()
         FString fs_nodeUniqID(nodeUniqID.c_str());
         FString fs_nodeDisplayName(nodeDisplayName.c_str());
 
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
-        SpawnParams.Owner = this;
+        //FActorSpawnParameters SpawnParams;
+        //SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
+        //SpawnParams.Owner = this;
 
         ASofaDAGNode* dagNode = World->SpawnActorDeferred<ASofaDAGNode>(
             ASofaDAGNode::StaticClass(),
@@ -468,8 +468,8 @@ void ASofaContext::loadNodeGraph()
         }
     }
 
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 
     m_status++;
 }
@@ -487,8 +487,8 @@ void ASofaContext::loadSofaComponents()
         }
     }
 
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 }
 
 
@@ -528,8 +528,8 @@ void ASofaContext::reconnectNodeGraph()
         }
     }
 
-    if (m_isMsgHandlerActivated == true)
-        catchSofaMessages();
+    //if (m_isMsgHandlerActivated == true)
+    //    catchSofaMessages();
 }
 
 
