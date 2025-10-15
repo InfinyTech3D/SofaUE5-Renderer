@@ -387,6 +387,7 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
+    std::string parentNameId = "";
     std::string nodeUniqID = "";
     std::string nodeDisplayName = "";
     m_dagNodes.Reserve(nbrNode);
@@ -419,7 +420,6 @@ void ASofaContext::loadNodeGraph()
         
         if (dagNode != nullptr)
         {                
-            std::string parentNameId = "";
             int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
             if (resParentNameId != 0)
                 UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
