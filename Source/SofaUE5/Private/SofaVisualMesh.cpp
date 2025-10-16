@@ -89,7 +89,7 @@ void ASofaVisualMesh::updateMesh()
         return;
     else if (nbrV < 0)
     {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaVisualMesh::updateMesh: getNbVertices returns: %d"), nbrV);
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaVisualMesh::updateMesh: %s | getNbVertices returns: %d"), *this->GetName(), nbrV);
         return;
     }
 
