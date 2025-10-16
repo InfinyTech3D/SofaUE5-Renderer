@@ -106,6 +106,9 @@ protected:
 
     void catchSofaMessages();
 
+    bool useHaptic = true;
+    void connectGeomagicDevice();
+
 private:
     int32 m_dllLoadStatus;
     FString m_apiName;

@@ -134,6 +134,11 @@ void ASofaContext::BeginPlay()
         if (m_log)
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginPlay: m_sofaAPI start"));
 
+        if (useHaptic)
+        {
+			connectGeomagicDevice();
+        }
+
 		// Start SOFA simulation on UE play
         m_sofaAPI->start();
 
@@ -241,7 +246,7 @@ void ASofaContext::Tick( float DeltaTime )
     if (m_status != -1 && m_sofaAPI)
     {
         float value = this->GetGameTimeSinceCreation();
-		if (value >= nextime)
+		//if (value >= nextime)
 		{
             cptStep++;
 			nextime = value + Dt;
@@ -385,6 +390,15 @@ void ASofaContext::loadDefaultPlugin()
     if (resPlug != 0) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: loadDefaultPlugin failed, returns: %d"), resPlug);
     }
+
+    //if (useHaptic)
+    //{
+    //    FString pluginGeo = curPath + "Plugins/SofaUE5/Binaries/ThirdParty/SofaUE5Library/Win64/Release/Geomagic.dll";
+    //    const char* pluginGeoChar = TCHAR_TO_ANSI(*pluginGeo);
+    //    int resPlugGeo = m_sofaAPI->loadPlugin(pluginGeoChar);
+
+    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::createSofaContext: loadPlugin Geomagic, returns: %d"), resPlugGeo);
+    //}
 
     //if (m_isMsgHandlerActivated == true)
     //    catchSofaMessages();
@@ -589,6 +603,32 @@ void ASofaContext::clearNodeGraph()
 }
 
 
+//SofaDefines.msg_error[-700] = "SOFA Geomagic Plugin has not been activated.";
+//SofaDefines.msg_error[-701] = "SOFA Geomagic manager creation failed.";
+//SofaDefines.msg_error[-702] = "No SOFA Geomagic Drivers found in the scene.";
+//SofaDefines.msg_error[-703] = "SOFA Geomagic Driver object is invalid.";
+//SofaDefines.msg_error[-704] = "No SOFA Geomagic Driver found with this name in the scene.";
+//SofaDefines.msg_error[-705] = "SOFA Geomagic Driver not registered in Geomagic manager.";
+//SofaDefines.msg_error[-708] = "SOFA Geomagic manager can't access to simulation thread.";
+void ASofaContext::connectGeomagicDevice()
+{
+    if (m_sofaAPI == nullptr)
+        return;
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::connectGeomagicDevice start!"));
+
+    std::string deviceName = "GeomagicDevice";
+    int resCreate = m_sofaAPI->createGeomagicManager(deviceName);
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::connectGeomagicDevice: createGeomagicManager returns: %d"), resCreate);
+
+    int resInit = m_sofaAPI->initGeomagicDevice(deviceName);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::connectGeomagicDevice: initGeomagicDevice returns: %d"), resInit);
+    
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::connectGeomagicDevice end!"));
+}
+
+
 
 void ASofaContext::catchSofaMessages()
 {
@@ -604,7 +644,7 @@ void ASofaContext::catchSofaMessages()
     {
         std::string rawMsg;
         int type = m_sofaAPI->getMessage_out(i, rawMsg);
-        FString FMessage(rawMsg.c_str());
+        FString FMessage = UTF8_TO_TCHAR(rawMsg.c_str());
 
         if (type == -1) {
             continue;
