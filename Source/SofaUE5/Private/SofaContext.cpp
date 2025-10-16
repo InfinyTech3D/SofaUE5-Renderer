@@ -168,23 +168,43 @@ void ASofaContext::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ASofaContext::setDT(float value)
 {
-    //if (m_sofaAPI)
-    //    m_sofaAPI->setTimeStep(value);
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setDT: %f"), value);
+    if (m_sofaAPI)
+        m_sofaAPI->setTimeStep(value);
+}
+
+void ASofaContext::getDT()
+{
+	if (m_sofaAPI) 
+	{
+	    double dt = m_sofaAPI->getTimeStep();
+	    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::getDT: %f"), dt);
+        Dt = float(dt);
+	}
 }
 
 void ASofaContext::setGravity(FVector value)
 {
-    //if (m_sofaAPI) 
-    //{
-    //    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
-    //    double* grav = new double[3];
-    //    grav[0] = value.X;
-    //    grav[1] = value.Y;
-    //    grav[2] = value.Z;
-    //    m_sofaAPI->setGravity(grav);
-    //}
+    if (m_sofaAPI) 
+    {
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::setGravity: %f, %f, %f"), value.X, value.Y, value.Z);
+        double grav[3] = { value.X, value.Y, value.Z };
+        m_sofaAPI->setGravity(grav);
+    }
 }
 
+void ASofaContext::getGravity()
+{
+	if (m_sofaAPI)
+	{
+		double grav[3] = { 0.0, 0.0, 0.0 };
+		m_sofaAPI->getGravity(grav);
+		UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::getGravity: %f, %f, %f"), grav[0], grav[1], grav[2]);
+		Gravity.X = float(grav[0]);
+		Gravity.Y = float(grav[1]);
+		Gravity.Z = float(grav[2]);
+	}
+}
 
 
 
@@ -332,8 +352,8 @@ void ASofaContext::loadSofaScene()
 
  
     // Pass default scene parameter
-   // this->setDT(Dt);
-   // this->setGravity(Gravity);
+    this->getGravity();
+	this->getDT();
    
     if (m_isMsgHandlerActivated == true)
         catchSofaMessages();

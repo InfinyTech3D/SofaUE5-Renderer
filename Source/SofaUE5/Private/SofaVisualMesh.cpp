@@ -83,7 +83,15 @@ void ASofaVisualMesh::updateMesh()
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
 
     // Get number of vertices
-    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID);
+    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID); // -83 == SAPAPI_INVALID_MESH_ID
+
+    if (nbrV == 0)
+        return;
+    else if (nbrV < 0)
+    {
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaVisualMesh::updateMesh: getNbVertices returns: %d"), nbrV);
+        return;
+    }
 
     // Get the different buffers
     float* sofaVertices = new float[nbrV * 3];
@@ -112,6 +120,9 @@ void ASofaVisualMesh::updateMesh()
         }
     }
     mesh->UpdateMeshSection(0, vertices, normals, TArray<FVector2D>(), TArray<FColor>(), TArray<FProcMeshTangent>());
+
+    delete[] sofaVertices;
+    delete[] sofaNormals;
 }
 
 
@@ -145,7 +156,7 @@ void ASofaVisualMesh::createMesh()
     float* sofaNormals = new float[nbrV*3];
     float* sofaTexCoords = new float[nbrV * 2];
     int* sofaTriangles = new int[nbrTri*3];
-    int* sofaQuads = new int[nbrQuads * 3];
+    int* sofaQuads = new int[nbrQuads * 4];
 
     // Get the different buffers
     m_sofaAPI->getVPositions(nodeUniqID, sofaVertices);
