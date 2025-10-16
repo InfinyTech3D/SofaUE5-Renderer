@@ -491,11 +491,14 @@ void ASofaContext::loadSofaComponents()
 {
     UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load all components | nbr Nodes: %d"), m_dagNodes.Num());
     // Load Components Graph
+    int cptNode = 0;
     for (auto& WeakDagNode : m_dagNodes)
     {
         if (ASofaDAGNode* dagNode = WeakDagNode.Get())
         {
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadNodeGraph: Load Node %d / %d"), cptNode+1, m_dagNodes.Num());
             dagNode->loadComponents(m_sofaAPI);
+            cptNode++;
         }
     }
 
