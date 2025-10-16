@@ -37,7 +37,7 @@
 ASofaContext::ASofaContext()
     : Dt(0.02)
     , Gravity(0, -9.8, 0)
-    , m_isMsgHandlerActivated(true)
+    , m_isMsgHandlerActivated(false)
     , m_dllLoadStatus(0)
     , m_apiName("")
     , m_isInit(false)
@@ -69,7 +69,6 @@ void ASofaContext::OnConstruction(const FTransform& Transform)
     Super::OnConstruction(Transform);
 
 #if WITH_EDITOR
-    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext:: BEfore createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));
     if (m_sofaAPI == nullptr)
     {
         createSofaContext();
@@ -94,14 +93,15 @@ void ASofaContext::Destroyed()
         // First stop SOFA simulation 
         m_sofaAPI->stop();
 
-        //if (m_isMsgHandlerActivated == true)
-        //    catchSofaMessages();
+        if (m_isMsgHandlerActivated == true)
+            catchSofaMessages();
 
         if (m_log)
             UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext::BeginDestroy: m_sofaAPI stopped"));
 
         // Deactivate message handler
-        m_sofaAPI->activateMessageHandler(false);
+        if (m_isMsgHandlerActivated)
+            m_sofaAPI->activateMessageHandler(false);
 
         // Free SOFA context Ptr
         m_sofaAPI.Reset();
@@ -226,10 +226,12 @@ void ASofaContext::Tick( float DeltaTime )
         
         //if (m_isMsgHandlerActivated == true)
         //    catchSofaMessages();
-        float value = this->GetGameTimeSinceCreation();
+        
         //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f %f"), value, stime);
     }
-    
+    float value = this->GetGameTimeSinceCreation();
+    UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f"), value);
+
     Super::Tick(DeltaTime);
 }
 
@@ -238,8 +240,8 @@ void ASofaContext::Tick( float DeltaTime )
 
 void ASofaContext::createSofaContext()
 {
-    //if (m_log)
-    UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
+    if (m_log)
+        UE_LOG(SUnreal_log, Log, TEXT("########## ASofaContext::createSofaContext: %s | %s ##########"), *this->GetName(), *LexToString(this->GetFlags()));   
 
     if (m_sofaAPI != nullptr) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext is called with a SofaAPI already created."));
@@ -253,7 +255,7 @@ void ASofaContext::createSofaContext()
     {
         m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
 
-        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 28"));
+        UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 29"));
         
         if (m_sofaAPI == nullptr)
         {
@@ -262,7 +264,8 @@ void ASofaContext::createSofaContext()
         }
 
         // activate message handler
-        m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
+        if (m_isMsgHandlerActivated)
+            m_sofaAPI->activateMessageHandler(m_isMsgHandlerActivated);
 
         // Test api Name
         m_apiName = m_sofaAPI->APIName();
@@ -367,7 +370,6 @@ void ASofaContext::loadDefaultPlugin()
 
 // Start parsing scene loaded in SOFA
 // Create the actor of the scene:
-
 void ASofaContext::loadNodeGraph()
 {
     if (m_sofaAPI == nullptr)
@@ -385,14 +387,17 @@ void ASofaContext::loadNodeGraph()
         return;
     }
 
-    FTransform SpawnTransform = FTransform::Identity;
+    std::string parentNameId = "";
+    std::string nodeUniqID = "";
+    std::string nodeDisplayName = "";
+    m_dagNodes.Reserve(nbrNode);
+
+    static FCriticalSection SofaAPILock;
+    FScopeLock _(&SofaAPILock);
 
     // First create all Nodes
     for (int nodeId = 0; nodeId < nbrNode; nodeId++)
     {
-        std::string nodeUniqID = "";
-        std::string nodeDisplayName = "";
-
         int resNameId = m_sofaAPI->getDAGNodeAPIName_out(nodeId, nodeUniqID);
         int resDisplayName = m_sofaAPI->getDAGNodeDisplayName_out(nodeId, nodeDisplayName);
 
@@ -401,17 +406,13 @@ void ASofaContext::loadNodeGraph()
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: node name access return: %d | %d"), resNameId, resDisplayName);
             continue;
         }
-
-        FString fs_nodeUniqID(nodeUniqID.c_str());
-        FString fs_nodeDisplayName(nodeDisplayName.c_str());
-
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Name = MakeUniqueObjectName(World, ASofaDAGNode::StaticClass(), FName(*fs_nodeDisplayName));
-        SpawnParams.Owner = this;
+        
+        FString fs_nodeUniqID = UTF8_TO_TCHAR(nodeUniqID.c_str());
+        FString fs_nodeDisplayName = UTF8_TO_TCHAR(nodeDisplayName.c_str());
 
         ASofaDAGNode* dagNode = World->SpawnActorDeferred<ASofaDAGNode>(
             ASofaDAGNode::StaticClass(),
-            SpawnTransform,
+            FTransform::Identity,
             this,
             nullptr,
             ESpawnActorCollisionHandlingMethod::AlwaysSpawn
@@ -419,12 +420,11 @@ void ASofaContext::loadNodeGraph()
         
         if (dagNode != nullptr)
         {                
-            std::string parentNameId = "";
             int resParentNameId = m_sofaAPI->getDAGNodeParentAPIName_out(nodeUniqID, parentNameId);
             if (resParentNameId != 0)
                 UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: Getting parent name Id returns: %d"), resParentNameId);
 
-            FString fs_parentName(parentNameId.c_str());
+            FString fs_parentName = UTF8_TO_TCHAR(parentNameId.c_str());
             dagNode->setUniqueNameID(fs_nodeUniqID);
             dagNode->setParentName(fs_parentName);
             dagNode->SetActorLabel(fs_nodeDisplayName);
@@ -432,15 +432,22 @@ void ASofaContext::loadNodeGraph()
             if (m_log)
                 UE_LOG(SUnreal_log, Log, TEXT("### ASofaDAGNode Created: %s | parent: %s | displayName: %s"), *fs_nodeUniqID, *fs_parentName, *fs_nodeDisplayName);
             
-            UGameplayStatics::FinishSpawningActor(dagNode, SpawnTransform);
+            UGameplayStatics::FinishSpawningActor(dagNode, FTransform::Identity);
             m_dagNodes.Add(dagNode);
         }
         else
         {
             UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadNodeGraph: ASofaDAGNode actor not created: %s"), *fs_nodeDisplayName);
         }
+
+        // Set to null to be sure garbage collector do not mess it
+        dagNode = nullptr;
     }
 
+    if (GEngine)
+    {
+        GEngine->ForceGarbageCollection(true); // Only in Editor builds
+    }
 
     // Reorder Node using Parent
     for (auto& WeakDagNode : m_dagNodes)
@@ -470,6 +477,11 @@ void ASofaContext::loadNodeGraph()
 
     if (m_isMsgHandlerActivated == true)
         catchSofaMessages();
+
+    if (GEngine)
+    {
+        GEngine->ForceGarbageCollection(true); // Only in Editor builds
+    }
 
     m_status++;
 }
@@ -555,8 +567,13 @@ void ASofaContext::clearNodeGraph()
 void ASofaContext::catchSofaMessages()
 {
     int nbrMsgs = m_sofaAPI->getNbMessages();
-    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
     
+    
+    if (nbrMsgs == 0)
+        return;
+
+    UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::catchSofaMessages: nbr message: %d"), nbrMsgs);
+
     for (int i = 0; i < nbrMsgs; ++i)
     {
         std::string rawMsg;
