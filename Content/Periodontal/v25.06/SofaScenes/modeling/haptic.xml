@@ -46,7 +46,6 @@
         />
         <OglModel 
             name='InstrumentVisualModel' 
-            texturename='../../Materials/textures/WilliamsProbe_BaseColor.png'
             src='@meshLoader_1' 
             dy='-2.5' dz='3.2' rx='15'
         />

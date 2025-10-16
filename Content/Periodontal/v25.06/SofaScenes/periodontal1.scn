@@ -120,7 +120,7 @@
             <MeshOBJLoader filename='mesh/Section1/Gum_Visual1.obj' name='loader'
                 scale3d='500 500 500' handleSeams='false'/>
             <OglModel name='GumVisual' src='@loader' color='0.94 0.5 0.5 1'/>
-            <BarycentricMapping input='@../mstate' output='@Visual'/>
+            <BarycentricMapping input='@../mstate' output='@GumVisual'/>
         </Node>
     </Node>
 
