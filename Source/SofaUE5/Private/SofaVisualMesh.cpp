@@ -24,6 +24,7 @@
 #include "SofaVisualMesh.h"
 #include "SofaUE5.h"
 #include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
+#include "KismetProceduralMeshLibrary.h"
 
 // Sets default values
 ASofaVisualMesh::ASofaVisualMesh()
@@ -170,8 +171,12 @@ void ASofaVisualMesh::createMesh()
     TArray<int32> Triangles;
     TArray<FVector> normals;
     TArray<FVector2D> UV0;
-    TArray<FProcMeshTangent> tangents;
-    TArray<FLinearColor> vertexColors;
+    //TArray<FProcMeshTangent> tangents;
+    //TArray<FLinearColor> vertexColors;
+
+    vertices.Reserve(nbrV);
+    normals.Reserve(nbrV);
+    UV0.Reserve(nbrV);
 
     for (int i = 0; i < nbrV; i++)
     {
@@ -182,9 +187,6 @@ void ASofaVisualMesh::createMesh()
             normals.Add(FVector(-sofaNormals[i * 3], -sofaNormals[i * 3 + 1], -sofaNormals[i * 3 + 2]));
         else
             normals.Add(FVector(sofaNormals[i * 3], sofaNormals[i * 3 + 1], sofaNormals[i * 3 + 2]));
-
-        tangents.Add(FProcMeshTangent(0, 1, 0));
-        vertexColors.Add(FLinearColor(0.75, 0.75, 0.75, 1.0));
     }
 
     // Add triangles
@@ -206,14 +208,24 @@ void ASofaVisualMesh::createMesh()
         Triangles.Add(sofaQuads[i * 4 + 2]);
         Triangles.Add(sofaQuads[i * 4 + 3]);
     }
+
+
+    // Generate tangents for correct lighting
+    TArray<FVector> CalcNormals;
+    TArray<FProcMeshTangent> CalcTangents;
+    UKismetProceduralMeshLibrary::CalculateTangentsForMesh(vertices, Triangles, UV0, CalcNormals, CalcTangents);
+
+    mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, CalcNormals, UV0, {}, CalcTangents, true);
+
+    mesh->SetCastShadow(true);
+    mesh->bCastDynamicShadow = true;
+    mesh->bAffectDistanceFieldLighting = true;
     
     delete[] sofaVertices;
     delete[] sofaNormals;
     delete[] sofaTexCoords;
     delete[] sofaTriangles;
     delete[] sofaQuads;
-    
-    mesh->CreateMeshSection_LinearColor(0, vertices, Triangles, normals, UV0, vertexColors, tangents, true);
 
     // Enable collision data
     //mesh->ContainsPhysicsTriMeshData(true);
