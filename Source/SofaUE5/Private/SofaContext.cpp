@@ -233,24 +233,26 @@ void ASofaContext::PostEditChangeProperty(FPropertyChangedEvent & PropertyChange
 }
 #endif
 
-
+double nextime = 0.0;
+int cptStep = 0;
 // Called every frame
 void ASofaContext::Tick( float DeltaTime )
 {   
     if (m_status != -1 && m_sofaAPI)
     {
-        // Step SOFA simulation on each UE tick
-        m_sofaAPI->step();
-        
-        //double stime = m_sofaAPI->getTime();
-        
-        //if (m_isMsgHandlerActivated == true)
-        //    catchSofaMessages();
-        
-        //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f %f"), value, stime);
+        float value = this->GetGameTimeSinceCreation();
+		if (value >= nextime)
+		{
+            cptStep++;
+			nextime = value + Dt;
+			//UE_LOG(SUnreal_log, Log, TEXT("## ASofaContext: Tick %d: %f"), cptStep, value);
+
+            // Step SOFA simulation on each UE tick
+            m_sofaAPI->step();
+		}
+              
+        //UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f"), value);
     }
-    float value = this->GetGameTimeSinceCreation();
-    UE_LOG(LogTemp, Warning, TEXT("## ASofaContext: Tick: %f"), value);
 
     Super::Tick(DeltaTime);
 }
