@@ -97,6 +97,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
     std::string compoName = "";
     std::string displayName = "";
     std::string baseType = "";
+    std::string compoType = "";
     for (int compoId = 0; compoId < nbrCompo; compoId++)
     {
         UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents: Load compo %d / %d"), compoId+1, nbrCompo);        
@@ -109,11 +110,11 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         }
 
         int resDName = m_sofaAPI->getComponentDisplayName_out(compoName, displayName);
-        int resType = m_sofaAPI->getBaseComponentType_out(compoName, baseType);
+        int resBType = m_sofaAPI->getBaseComponentType_out(compoName, baseType);
 
-        if (resDName != 0 || resType != 0)
+        if (resDName != 0 || resBType != 0)
         {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: component Display name and type returns: %d | %d"), resDName, resType);
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaDAGNode::loadComponents: component Display name and type returns: %d | %d"), resDName, resBType);
             continue;
         }
         
@@ -159,7 +160,10 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         {
            // UE_LOG(SUnreal_log, Log, TEXT("### USofaComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
-            USofaComponent* NewComp = NewObject<USofaComponent>(this, USofaComponent::StaticClass(), *fs_displayName, RF_Transactional);
+            int resType = m_sofaAPI->getComponentType_out(compoName, compoType);
+            FString fs_type = UTF8_TO_TCHAR(compoType.c_str()); // Convert std::string -> FString
+
+            USofaComponent* NewComp = NewObject<USofaComponent>(this, USofaComponent::StaticClass(), *fs_type, RF_Transactional);
             if (NewComp)
             {
                 // Make the UObject visible/transactional
