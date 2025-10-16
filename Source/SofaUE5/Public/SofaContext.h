@@ -55,9 +55,15 @@ public:
     // Called every frame
     virtual void Tick( float DeltaSeconds ) override;
 
+    /// Set SOFA dt to the given input value @param value
     void setDT(float value);
+    /// Retrieve float dt value from SOFA
+    void getDT();
 
+    /// Set SOFA gravity to the input @param value
     void setGravity(FVector value);
+    /// Retrieve gravity vector3 value from SOFA
+    void getGravity();
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sofa")
