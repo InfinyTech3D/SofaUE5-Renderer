@@ -42,10 +42,11 @@ void FSofaUE5Module::StartupModule()
 	FString BaseDir = IPluginManager::Get().FindPlugin("SofaUE5")->GetBaseDir();
 
 	bool debugMode = false;
-
-#if (UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !UE_BUILD_SHIPPING
+	
+#if UE_DEBUGGAME
 	debugMode = true;
 #endif
+	UE_LOG(LogTemp, Warning, TEXT("FSofaUE5Module::StartupModule debug = %d"), debugMode);
 
 	// Add on the relative location of the third party dll and load it
 	FString LibraryPath;
@@ -98,6 +99,7 @@ void FSofaUE5Module::StartupModule()
 		FMessageDialog::Open(EAppMsgType::Ok, LOCTEXT("ThirdPartyLibraryError", "Failed to load SofaVerseAPI GetDllHandle error"));
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("LibraryPath = %s"), *LibraryPath);
 	UE_LOG(LogTemp, Warning, TEXT("_ITERATOR_DEBUG_LEVEL = %d"), _ITERATOR_DEBUG_LEVEL);
 }
 
