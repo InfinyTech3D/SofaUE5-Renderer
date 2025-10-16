@@ -83,7 +83,7 @@ void ASofaVisualMesh::updateMesh()
     std::string nodeUniqID = std::string(TCHAR_TO_UTF8(*m_uniqueNameID));
 
     // Get number of vertices
-    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID);
+    int nbrV = m_sofaAPI->getNbVertices(nodeUniqID); // -83 == SAPAPI_INVALID_MESH_ID
 
     if (nbrV == 0)
         return;
