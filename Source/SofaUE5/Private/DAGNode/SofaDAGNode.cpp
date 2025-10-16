@@ -118,14 +118,16 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
         }
         
         // Deep copy of the strings
-        m_componentsNames.push_back(compoName);        
+        m_componentsNames.push_back(compoName);
+        FString fs_compoName = UTF8_TO_TCHAR(compoName.c_str()); // Convert std::string -> FString
+        FString fs_displayName = UTF8_TO_TCHAR(displayName.c_str()); // Convert std::string -> FString
+        FString fs_baseType = UTF8_TO_TCHAR(baseType.c_str()); // Convert std::string -> FString
 
         if (baseType.compare("SofaVisualModel") == 0)
         {
             //FTransform SpawnTransform = FTransform::Identity;
             UE_LOG(SUnreal_log, Warning, TEXT("#### ASofaDAGNode::loadComponents: Add SofaVisualModel"));
-            //FActorSpawnParameters SpawnParams;
-            //SpawnParams.Name = MakeUniqueObjectName(World, ASofaBaseComponent::StaticClass(), FName(*fs_displayName));
+
             ASofaBaseComponent* component = World->SpawnActorDeferred<ASofaVisualMesh>(
                 ASofaVisualMesh::StaticClass(),
                 FTransform::Identity,
@@ -137,10 +139,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             if (component != nullptr)
             {
                 //if (m_log)
-                //UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
-                FString fs_compoName = UTF8_TO_TCHAR(compoName.c_str()); // Convert std::string -> FString
-                FString fs_displayName = UTF8_TO_TCHAR(displayName.c_str()); // Convert std::string -> FString
-                FString fs_baseType = UTF8_TO_TCHAR(baseType.c_str()); // Convert std::string -> FString
+                //UE_LOG(SUnreal_log, Log, TEXT("### ASofaVisualMesh Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);                
 
                 component->setUniqueNameID(fs_compoName);
                 component->setComponentType(fs_baseType);
@@ -155,21 +154,43 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
             {
                 UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadComponents: component creation is null"));
             }
-            //visuMesh->setSofaMesh(mesh);
         }
         else
         {
            // UE_LOG(SUnreal_log, Log, TEXT("### USofaComponent Created: %s | %s | %s"), *fs_compoName, *fs_displayName, *fs_baseType);
 
-            //USofaComponent* NewComp = NewObject<USofaComponent>(this, USofaComponent::StaticClass(), *fs_compoName);
-            //if (NewComp)
-            //{
-            //    NewComp->RegisterComponent();
-            //    // Make sure it’s editable and visible in the details panel
-            //    NewComp->bEditableWhenInherited = true;
-            //    NewComp->setUniqueNameID(fs_compoName);
-            //    NewComp->setComponentType(fs_baseType);
-            //}
+            USofaComponent* NewComp = NewObject<USofaComponent>(this, USofaComponent::StaticClass(), *fs_displayName, RF_Transactional);
+            if (NewComp)
+            {
+                // Make the UObject visible/transactional
+                NewComp->SetFlags(RF_Public | RF_Transactional);
+
+                // Tell the actor to own this instance (important for editor visibility)
+                AddInstanceComponent(NewComp);
+
+                // If component hasn't been created yet, notify creation (safe guard)
+                if (!NewComp->HasBeenCreated())
+                {
+                    NewComp->OnComponentCreated();
+                    NewComp->bEditableWhenInherited = true;
+                }
+
+                // Finally register with the world
+                if (!NewComp->IsRegistered())
+                {
+                    NewComp->RegisterComponent();
+                }
+
+                // Custom initialization
+                NewComp->setUniqueNameID(fs_compoName);
+                NewComp->setComponentType(fs_baseType);
+
+#if WITH_EDITOR
+                // Mark owning actor dirty so changes are saved
+                Modify();
+                MarkPackageDirty();
+#endif
+            }
         }
 
         // Sleep for 10 ms (0.01 seconds)
