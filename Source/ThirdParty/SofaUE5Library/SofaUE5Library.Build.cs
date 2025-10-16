@@ -26,12 +26,15 @@ public class SofaUE5Library : ModuleRules
                 SofaBinPath = Path.Combine("$(PluginDir)/Binaries/ThirdParty/SofaUE5Library/Win64/", "Debug", SofaBinName);
 
                 PublicDefinitions.Add("WITH_SOFA_DEBUG=1");
+                PublicDefinitions.Add("UE_DEBUGGAME=1");
             }
             else
             {
                 SofaLibPath = Path.Combine(ModuleDirectory, "x64", "Release", "SofaVerseAPI.lib");
                 SofaBinName = "SofaVerseAPI.dll";
                 SofaBinPath = Path.Combine("$(PluginDir)/Binaries/ThirdParty/SofaUE5Library/Win64/", "Release", SofaBinName);
+
+                PublicDefinitions.Add("UE_DEBUGGAME=0");
             }
 
             // Add the import library

@@ -366,7 +366,8 @@ void ASofaContext::loadDefaultPlugin()
 
     bool debugMode = false;
 
-#if (UE_BUILD_DEBUG || UE_BUILD_DEVELOPMENT) && !UE_BUILD_SHIPPING
+
+#if UE_DEBUGGAME
     debugMode = true;
 #endif
 
