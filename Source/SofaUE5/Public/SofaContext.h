@@ -100,7 +100,6 @@ protected:
     // Method to internally load SOFA default plugin dll
     void loadDefaultPlugin();
 
-    
     void reconnectNodeGraph();
     void clearNodeGraph();
 
