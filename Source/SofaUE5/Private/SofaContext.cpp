@@ -340,10 +340,30 @@ void ASofaContext::loadSofaScene()
         return;
     }
 
+    // If the original path exists, just use it
     FString my_filePath = FPaths::ConvertRelativePathToFull(filePath.FilePath);
+    if (!FPaths::FileExists(my_filePath)) // try to fix path
+    {
+        FString SubPath;
+        int32 Index = my_filePath.Find(TEXT("Plugins\\"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+        if (Index == INDEX_NONE)
+            Index = my_filePath.Find(TEXT("Plugins/"), ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+
+        if (Index != INDEX_NONE)
+        {
+            SubPath = my_filePath.Mid(Index); // skip "Content/"
+            my_filePath = FPaths::Combine(curPath, SubPath);
+        }
+        else
+        {
+            UE_LOG(SUnreal_log, Warning, TEXT("## ASofaContext::loadSofaScene: filePath is set but can't be loaded nor fixed: %s"), *my_filePath);
+            return;
+        }
+	}
+    
     const char* pathfile = TCHAR_TO_ANSI(*my_filePath);
     int resScene = m_sofaAPI->load(pathfile);
-
+    
     if (resScene < 0) {
         UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::loadSofaScene: Scene loading failed: %s | Error returned: %d"), *my_filePath, resScene);
         return;
