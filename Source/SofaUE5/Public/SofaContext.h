@@ -27,7 +27,7 @@
 #include <vector>
 #include "SofaContext.generated.h"
 
-class SofaAdvancePhysicsAPI;
+class SofaVerseBridge;
 class ASofaDAGNode;
 
 UCLASS()
@@ -113,7 +113,7 @@ private:
     bool m_isInit;
     
     //UPROPERTY(SaveGame)
-    TSharedPtr <SofaAdvancePhysicsAPI> m_sofaAPI = nullptr;
+    TSharedPtr <SofaVerseBridge> m_sofaAPI = nullptr;
 
     UPROPERTY(SaveGame)
         int m_status;

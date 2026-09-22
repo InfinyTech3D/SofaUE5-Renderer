@@ -30,7 +30,7 @@
 #include <vector>
 #include <string>
 
-#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
+#include "SofaUE5Library/SofaVerseBridge.h"
 
 
 // Sets default values
@@ -275,13 +275,13 @@ void ASofaContext::createSofaContext()
     // create a new sofa context through sofaAdvancePhysicsAPI    
     if (m_sofaAPI == nullptr) 
     {
-        m_sofaAPI = MakeShared<SofaAdvancePhysicsAPI>();
+        m_sofaAPI = MakeShared<SofaVerseBridge>();
 
         UE_LOG(SUnreal_log, Warning, TEXT("## ASofaDAGNode::loadComponents TEST 29"));
         
         if (m_sofaAPI == nullptr)
         {
-            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext SofaAdvancePhysicsAPI creation failed."));
+            UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext SofaVerseBridge creation failed."));
             return;
         }
 
@@ -313,7 +313,7 @@ void ASofaContext::createSofaContext()
 
     if (m_sofaAPI == nullptr)
     {
-        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: No SofaAdvancePhysicsAPI Available."));
+        UE_LOG(SUnreal_log, Error, TEXT("## ASofaContext::createSofaContext: No SofaVerseBridge Available."));
         return;
     }
     
