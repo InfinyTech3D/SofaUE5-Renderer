@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "SofaDAGNode.generated.h"
 
-class SofaAdvancePhysicsAPI;
+class SofaVerseBridge;
 
 UCLASS()
 class SOFAUE5_API ASofaDAGNode : public AActor
@@ -37,10 +37,10 @@ public:
 	void setUniqueNameID(const FString& uniqueNameID) { m_uniqueNameID = uniqueNameID; }
 	void setParentName(const FString& parentName) { m_parentName = parentName; }
 
-	bool loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI);
+	bool loadComponents(const TSharedPtr<SofaVerseBridge>& _sofaAPI);
 	void clearComponents();
 
-	void reconnectComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI);
+	void reconnectComponents(const TSharedPtr<SofaVerseBridge>& _sofaAPI);
 
 
 	const FString& getParentName() {
@@ -52,7 +52,7 @@ public:
 	}
 
 private:
-	TSharedPtr<SofaAdvancePhysicsAPI> m_sofaAPI = nullptr;
+	TSharedPtr<SofaVerseBridge> m_sofaAPI = nullptr;
 	
 	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_uniqueNameID;

@@ -2,7 +2,7 @@
 
 #include "DAGNode/SofaDAGNode.h"
 #include "SofaUE5.h"
-#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
+#include "SofaUE5Library/SofaVerseBridge.h"
 #include "Base/SofaBaseComponent.h"
 #include "SofaVisualMesh.h"
 #include "Components/SofaComponent.h"
@@ -64,7 +64,7 @@ void ASofaDAGNode::Tick(float DeltaTime)
 }
 
 
-bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI)
+bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaVerseBridge>& _sofaAPI)
 {
     m_sofaAPI = _sofaAPI;
 
@@ -217,7 +217,7 @@ bool ASofaDAGNode::loadComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofa
 }
 
 
-void ASofaDAGNode::reconnectComponents(const TSharedPtr<SofaAdvancePhysicsAPI>& _sofaAPI)
+void ASofaDAGNode::reconnectComponents(const TSharedPtr<SofaVerseBridge>& _sofaAPI)
 {
     m_sofaAPI = _sofaAPI;
 
