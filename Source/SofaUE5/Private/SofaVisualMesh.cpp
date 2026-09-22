@@ -23,7 +23,7 @@
  ****************************************************************************/
 #include "SofaVisualMesh.h"
 #include "SofaUE5.h"
-#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
+#include "SofaUE5Library/SofaVerseBridge.h"
 #include "KismetProceduralMeshLibrary.h"
 
 // Sets default values
