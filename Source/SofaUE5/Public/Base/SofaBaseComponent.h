@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "SofaBaseComponent.generated.h"
 
-class SofaAdvancePhysicsAPI;
+class SofaVerseBridge;
 
 UCLASS()
 class SOFAUE5_API ASofaBaseComponent : public AActor
@@ -37,12 +37,12 @@ public:
 		return m_uniqueNameID;
 	}
 
-	void setSofaAPI(const TSharedPtr<SofaAdvancePhysicsAPI>& api);
+	void setSofaAPI(const TSharedPtr<SofaVerseBridge>& api);
 
 	virtual void computeComponent() {}
 
 protected:
-	TSharedPtr <SofaAdvancePhysicsAPI> m_sofaAPI = nullptr;
+	TSharedPtr <SofaVerseBridge> m_sofaAPI = nullptr;
 
 	UPROPERTY(SaveGame, VisibleAnywhere)
 	FString m_uniqueNameID;

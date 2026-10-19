@@ -2,7 +2,7 @@
 
 
 #include "Base/SofaBaseComponent.h"
-#include "SofaUE5Library/SofaAdvancePhysicsAPI.h"
+#include "SofaUE5Library/SofaVerseBridge.h"
 
 // Sets default values
 ASofaBaseComponent::ASofaBaseComponent()
@@ -32,7 +32,7 @@ void ASofaBaseComponent::setComponentType(const FString& type)
 	//RootComponent = CreateDefaultSubobject<USceneComponent>(*m_baseType);
 }
 
-void ASofaBaseComponent::setSofaAPI(const TSharedPtr<SofaAdvancePhysicsAPI>& api)
+void ASofaBaseComponent::setSofaAPI(const TSharedPtr<SofaVerseBridge>& api)
 {
 	m_sofaAPI = api;
 }
